@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tinted Translucent Statusbar</string>
+    <string name="str_action_add">Activity hinzufügen</string>
+    <string name="title_activity_details">Einstellungen für</string>
+    <string name="select_app_from_list">App wählen</string>
+    <string name="select_activity_from_list">Activity wählen</string>
+    <string name="enableTranslucent">Translucent Tinting aktivieren</string>
+    <string name="color">Farbe (hexadezimal):</string>
+    <string name="doNotMoveLayout">Layout nicht verschieben (Inhalt wird hinter Statusbar verschwinden)</string>
+    <string name="moveLayoutPrior1">Layout vollständig verschieben (für Apps ohne ActionBar)</string>
+    <string name="moveLayoutPrior2">Layput verschieben, ActionBar berücksichtigen</string>
+    <string name="saved_info">Einstellungen für diese Activity gespeichert. Starte die entsprechende App neu, um die Änderungen anzuwenden.</string>
+    <string name="title_activity_settings">TTSB - Allgemeine Einstellungen</string>
+    <string name="str_action_settings">Allgemeine Einstellungen</string>
+    <string name="showActivityToasts">Activity-Name und Pfad anzeigen, wenn Activity geöffnet wird (um den Namen herauszufinden)</string>
+    <string name="version_prefix">Version</string>
+    <string name="copyright_info">Entwickelt von Woalk Software\nxda-developers-User woalk</string>
+
+</resources>
