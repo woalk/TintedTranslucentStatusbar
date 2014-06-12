@@ -1,6 +1,8 @@
 package com.woalk.apps.xposed.ttsb;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
@@ -31,6 +34,9 @@ public class MainActivity extends Activity {
 	public List<PackageInfo> installedPkg;
 	protected SharedPreferences sPref;
 	protected List<ActivityInfo> loadedActivities = new ArrayList<ActivityInfo>();
+	
+	String[] pkgNames;
+	String[] appNames;
 	
 	private ListView listView1;
 	private ArrayAdapter<String> arrAdapter;
@@ -44,7 +50,6 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		pkgMan = getPackageManager();
-		installedPkg = pkgMan.getInstalledPackages(PackageManager.GET_ACTIVITIES);
 		sPref = getApplicationContext().getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
 		
 		listView1 = (ListView) findViewById(R.id.listView1);
@@ -58,6 +63,32 @@ public class MainActivity extends Activity {
 		
 		arrAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arr_activities);
 		listView1.setAdapter(arrAdapter);
+		
+		// Load list of names and sort
+		// TODO: Inefficient! Use Asynchronous Task!
+		installedPkg = pkgMan.getInstalledPackages(PackageManager.GET_ACTIVITIES);
+		pkgNames = new String[installedPkg.size()];
+		ArrayList<String> appNamesList = new ArrayList<String>();
+		for (int i = 0; i < installedPkg.size(); i++) {
+			appNamesList.add(pkgMan.getApplicationLabel(installedPkg.get(i).applicationInfo).toString() + "::" + String.valueOf(i));
+			pkgNames[i] = installedPkg.get(i).packageName;
+			List<ActivityInfo> listActvt;
+			if (installedPkg.get(i).activities != null) { 
+				listActvt = new ArrayList<ActivityInfo>(Arrays.asList(installedPkg.get(i).activities));
+			}
+			else {
+				listActvt = new ArrayList<ActivityInfo>();
+			}
+			ActivityInfo inf = new ActivityInfo();
+			inf.name = pkgNames[i] + ".[ALL]";
+			inf.packageName = pkgNames[i];
+			listActvt.add(0, inf);
+			installedPkg.get(i).activities = listActvt.toArray(new ActivityInfo[listActvt.size()]);
+		}
+		
+		Collections.sort(appNamesList);
+		
+		appNames = appNamesList.toArray(new String[appNamesList.size()]);
 	}
 	
 	@Override
@@ -76,16 +107,24 @@ public class MainActivity extends Activity {
 					String pkgName = sPref.getString(entry.getKey() + "+p", null);
 					if (pkgName != null) {
 						String activityClass = entry.getKey();
-						ComponentName cName = new ComponentName(pkgName, activityClass);
-						ActivityInfo entryInfo;
-						try {
-							entryInfo = pkgMan.getActivityInfo(cName, 0);
-						} catch (NameNotFoundException e) {
-							e.printStackTrace();
-							return;
+						if (!activityClass.endsWith(".[ALL]")) {
+							ComponentName cName = new ComponentName(pkgName, activityClass);
+							ActivityInfo entryInfo;
+							try {
+								entryInfo = pkgMan.getActivityInfo(cName, 0);
+							} catch (NameNotFoundException e) {
+								e.printStackTrace();
+								return;
+							}
+							loadedActivities.add(entryInfo);
+							arr_activities.add(activityClass);
+						} else {
+							ActivityInfo inf = new ActivityInfo();
+							inf.name = activityClass;
+							inf.packageName = pkgName;
+							loadedActivities.add(inf);
+							arr_activities.add(activityClass);
 						}
-						loadedActivities.add(entryInfo);
-						arr_activities.add(entry.getKey());
 					}
 				}
 			}
@@ -116,13 +155,9 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void addItem() {
-		String[] pkgNames = new String[installedPkg.size()];
-		for (int i = 0; i < installedPkg.size(); i++) {
-			pkgNames[i] = pkgMan.getApplicationLabel(installedPkg.get(i).applicationInfo) + " (" + installedPkg.get(i).packageName + ")";
-		}
 		
 		Dialogs.SelectPkgDialog dialog1 = new Dialogs.SelectPkgDialog();
-		dialog1.setPkgNames(pkgNames);
+		dialog1.setPkgNames(pkgNames, appNames);
 		dialog1.setOnClick(ocl1);
 		dialog1.show(getFragmentManager(), "SelectPkg");
 	}
@@ -135,19 +170,29 @@ public class MainActivity extends Activity {
 	};
 	
 	ActivityInfo[] activities = null;
+	String[] activityAlphabeticalNames = null;
 	
 	private void addItem_part2(int result1) {
-		activities = installedPkg.get(result1).activities;
-		String[] activityNames = new String[activities.length];
-		for (int i = 0; i < activities.length; i++) {
-			activityNames[i] = activities[i].name;
-		}
+		int index = Integer.valueOf(appNames[result1].substring(appNames[result1].lastIndexOf("::") + 2));
+		activities = installedPkg.get(index).activities;
+		if (activities.length > 1) {
+			List<String> activityNames = new ArrayList<String>();
+			for (int i = 0; i < activities.length; i++) {
+				activityNames.add(activities[i].name + "::" + String.valueOf(i));
+			}
+			
+			Collections.sort(activityNames, String.CASE_INSENSITIVE_ORDER);
+			activityAlphabeticalNames = activityNames.toArray(new String[activityNames.size()]);
 		
-		Dialogs.SelectActivityDialog dialog2 = new Dialogs.SelectActivityDialog();
-		dialog2.setPkgName(pkgMan.getApplicationLabel(installedPkg.get(result1).applicationInfo).toString());
-		dialog2.setActivityNames(activityNames);
-		dialog2.setOnClick(ocl2);
-		dialog2.show(getFragmentManager(), "SelectActivity");
+			Dialogs.SelectActivityDialog dialog2 = new Dialogs.SelectActivityDialog();
+			dialog2.setPkgName(pkgMan.getApplicationLabel(installedPkg.get(index).applicationInfo).toString());
+			dialog2.setActivityNames(activityAlphabeticalNames);
+			dialog2.setOnClick(ocl2);
+			dialog2.show(getFragmentManager(), "SelectActivity");
+		} else {
+			Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.no_activities_info), Toast.LENGTH_LONG);
+			toast.show();
+		}
 	}
 	
 	private DialogInterface.OnClickListener ocl2 = new DialogInterface.OnClickListener() {
@@ -158,14 +203,21 @@ public class MainActivity extends Activity {
 	};
 	
 	private void addItem_part3(int result2) {
-		launchDetails(activities[result2]);
+		int index = Integer.valueOf(activityAlphabeticalNames[result2].substring(activityAlphabeticalNames[result2].lastIndexOf("::") + 2));
+		launchDetails(activities[index]);
 		
 		activities = null;
+		activityAlphabeticalNames = null;
 	}
 	
 	private void launchDetails(ActivityInfo activity) {
 		Intent add_Intent = new Intent(this, DetailsActivity.class);
-		add_Intent.putExtra(DetailsActivity.SEL_PACKAGE_ACTIVITY_INFO, activity);
+		if (activity.name.endsWith(".[ALL]")) {
+			add_Intent.putExtra(DetailsActivity.SEL_PACKAGE_ALL_PKGNAME, activity.name);
+		}
+		else {
+			add_Intent.putExtra(DetailsActivity.SEL_PACKAGE_ACTIVITY_INFO, activity);
+		}
 		startActivity(add_Intent);
 	}
 	

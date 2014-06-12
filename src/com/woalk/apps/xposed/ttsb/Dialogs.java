@@ -11,8 +11,19 @@ public class Dialogs {
 		private String[] pkgNames;
 		private DialogInterface.OnClickListener ocl;
 		
-		public void setPkgNames(String[] pkgs) {
-			pkgNames = pkgs;
+		public void setPkgNames(String[] pkgs, String[] appNamesAlphabetical) {
+			if (pkgs.length == appNamesAlphabetical.length) {
+				String[] appNames = new String[pkgs.length]; 
+				for (int i = 0; i < pkgs.length; i++) {
+					String appName = appNamesAlphabetical[i];
+					int index_startName = appName.lastIndexOf("::");
+					int i_pkgs = Integer.valueOf(appName.substring(index_startName + 2));
+					appNames[i] = appName.substring(0, index_startName) + "\n (" + pkgs[i_pkgs] + ")";
+				}
+				pkgNames = appNames;
+			} else {
+				throw new IllegalArgumentException("Arrays must have the same length.");
+			}
 		}
 		
 		public void setOnClick(DialogInterface.OnClickListener listener) {
@@ -38,7 +49,10 @@ public class Dialogs {
 		}
 		
 		public void setActivityNames(String[] actvts) {
-			activityNames = actvts;
+			activityNames = new String[actvts.length];
+			for (int i = 0; i < actvts.length; i++) {
+				activityNames[i] = actvts[i].substring(0, actvts[i].lastIndexOf("::"));
+			}
 		}
 
 		public void setOnClick(DialogInterface.OnClickListener listener) {

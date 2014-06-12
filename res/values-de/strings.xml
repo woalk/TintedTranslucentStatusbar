@@ -6,15 +6,20 @@
     <string name="title_activity_details">Einstellungen für</string>
     <string name="select_app_from_list">App wählen</string>
     <string name="select_activity_from_list">Activity wählen</string>
-    <string name="enableTranslucent">Translucent Tinting aktivieren</string>
+    <string name="enableTranslucentStat">Translucent Tinting für StatusBar aktivieren</string>
+    <string name="enableTranslucentNav">>Translucent Tinting für Navigation Bar aktivieren</string>
     <string name="color">Farbe (hexadezimal):</string>
-    <string name="doNotMoveLayout">Layout nicht verschieben (Inhalt wird hinter Statusbar verschwinden)</string>
+    <string name="doNotMoveLayout">Layout nicht verschieben (Inhalt wird hinter StatusBar verschwinden)</string>
     <string name="moveLayoutPrior1">Layout vollständig verschieben (für Apps ohne ActionBar)</string>
-    <string name="moveLayoutPrior2">Layput verschieben, ActionBar berücksichtigen</string>
+    <string name="moveLayoutPrior2">Layout verschieben, ActionBar berücksichtigen</string>
+    <string name="doNotMoveLayout_nav">Layout nicht verschieben (Inhalt wird hinter NavBar verschwinden)</string>
+    <string name="moveLayout_nav">Layout verschieben</string>
     <string name="saved_info">Einstellungen für diese Activity gespeichert. Starte die entsprechende App neu, um die Änderungen anzuwenden.</string>
+    <string name="no_activities_info">Diese App hat keine Benutzeroberfläche (es wurde keine Activity gefunden).</string>
     <string name="title_activity_settings">TTSB - Allgemeine Einstellungen</string>
     <string name="str_action_settings">Allgemeine Einstellungen</string>
     <string name="showActivityToasts">Activity-Name und Pfad anzeigen, wenn Activity geöffnet wird (um den Namen herauszufinden)</string>
+    <string name="overwriteSettings">Einstellungen einer App überschreiben, wenn die App bereits einen eigenen Translucent Modus benutzt (kann u.U. Vollbildlayouts unschön machen)</string>
     <string name="version_prefix">Version</string>
     <string name="copyright_info">Entwickelt von Woalk Software\nxda-developers-User woalk</string>
 

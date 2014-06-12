@@ -6,16 +6,21 @@
     <string name="title_activity_details">Settings for</string>
     <string name="select_app_from_list">Pick an app</string>
     <string name="select_activity_from_list">Pick the Activity from</string>
-    <string name="enableTranslucent">Enable Translucent tinting here</string>
+    <string name="enableTranslucentStat">Enable Translucent tinting of status bar</string>
+    <string name="enableTranslucentNav">Enable Translucent tinting of navigation bar</string>
     <string name="color">Color (hexadecimal):</string>
     <string name="doNotMoveLayout">Don\'t move the layout (content will move behind status bar)</string>
     <string name="moveLayoutPrior1">Move full layout (for apps without ActionBar)</string>
     <string name="moveLayoutPrior2">Move layout without actionbar (for apps with ActionBar)</string>
+    <string name="doNotMoveLayout_nav">Don\'t move the layout (content will move behind navigation bar)</string>
+    <string name="moveLayout_nav">Move layout</string>
     <string name="defaultColorCode" translatable="false">FF000000</string>
     <string name="saved_info">Settings for this Activity saved.\nYou need to restart the edited app to apply changes.</string>
+    <string name="no_activities_info">This app doesn\'t provide any direct user interface (no Activity was found).</string>
     <string name="title_activity_settings">TTSB General Settings</string>
     <string name="str_action_settings">General Settings</string>
     <string name="showActivityToasts">Show the Activity name on entering an activity to determine their names</string>
+    <string name="overwriteSettings">Overwrite translucent settings of Activities which are already having such (may result in strange fullscreen layout)</string>
     <string name="version_prefix">Version</string>
     <string name="copyright_info">Developed by Woalk Software\nxda-developers user woalk</string>
 

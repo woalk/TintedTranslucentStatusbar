@@ -47,5 +47,15 @@ public class SettingsActivity extends Activity {
 				edit.commit();
 			}
 		});
+		CheckBox checkBox2 = (CheckBox) findViewById(R.id.checkBox2);
+		checkBox2.setChecked(sPref.getBoolean(Helpers.TTSB_OVERWRITE_EXISTING, false));
+		checkBox2.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				SharedPreferences.Editor edit = sPref.edit();
+				edit.putBoolean(Helpers.TTSB_OVERWRITE_EXISTING, isChecked);
+				edit.commit();
+			}
+		});
 	}
 }

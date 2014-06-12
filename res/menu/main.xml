@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/action_add" android:icon="@drawable/ic_action_add" android:enabled="true" android:showAsAction="always" android:visible="true" android:title="@string/str_action_add"></item>
-    <item android:id="@+id/action_settings" android:title="@string/str_action_settings" android:icon="@drawable/ic_action_settings" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/action_settings" android:title="@string/str_action_settings" android:icon="@drawable/ic_action_settings" android:showAsAction="ifRoom" android:visible="true" android:enabled="true"></item>
     
-
 </menu>

@@ -12,6 +12,7 @@ public final class Helpers {
 	public static String TTSB_PACKAGE_NAME = "com.woalk.apps.xposed.ttsb";
 	public static String TTSB_PREFERENCES = "com.woalk.apps.xposed.ttsb.TTSB_PREFERENCES";
 	public static String TTSB_SHOW_ACTIVITY_TOAST = "com.woalk.apps.xposed.ttsb.SHOW_TOAST";
+	public static String TTSB_OVERWRITE_EXISTING = "com.woalk.apps.xposed.ttsb.OVERWRITE_EXISTING";
 
 	public static void setTranslucentStatus(Activity activity, boolean on) {
 		Window win = activity.getWindow();
@@ -26,18 +27,26 @@ public final class Helpers {
 		win.setAttributes(winParams);
 	}
 	
+	public static void setTranslucentNavigation(Activity activity, boolean on) {
+		Window win = activity.getWindow();
+		WindowManager.LayoutParams winParams = win.getAttributes();
+		if (on) {
+			winParams.flags |= WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
+			
+		} else {
+			winParams.flags &= ~WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
+		}
+		win.getDecorView().setFitsSystemWindows(true);
+		win.setAttributes(winParams);
+	}
+	
 	public static boolean isTranslucencyAllowed(Activity activity) {
 		WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
 		int i = lp.flags;
 		boolean fullScreen = (i & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0;
 		boolean forceNotFullScreen = (i & WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN) != 0;
 		boolean translucentStatus = (i & WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) != 0;
-		if (!fullScreen || forceNotFullScreen && !translucentStatus) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (!fullScreen || forceNotFullScreen && !translucentStatus);
 	}
 	
 	public static void logContentView(View parent, String indent) {
