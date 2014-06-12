@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.woalk.apps.xposed.ttsb"
-    android:versionCode="1"
-    android:versionName="Beta 1.0" >
+<manifest package="com.woalk.apps.xposed.ttsb"
+    android:versionCode="2"
+    android:versionName="Beta 1.1" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -32,7 +31,7 @@
         <meta-data
             android:name="xposedminversion"
             android:value="30" />
-
+        
         <activity
             android:name="com.woalk.apps.xposed.ttsb.DetailsActivity"
             android:label="@string/title_activity_details"
