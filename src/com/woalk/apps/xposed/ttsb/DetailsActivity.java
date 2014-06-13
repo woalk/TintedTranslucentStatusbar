@@ -25,6 +25,8 @@ public class DetailsActivity extends Activity {
 	
 	private boolean isTranslucentChecked = false;
 	private boolean isNavBarChecked = false;
+	private boolean isTranslucentExcluded = false;
+	private boolean isNavBarExcluded = false;
 	
 	protected SharedPreferences sPref;
 	
@@ -32,6 +34,8 @@ public class DetailsActivity extends Activity {
 	private TextView textView01;
 	private CheckBox checkBox1;
 	private CheckBox checkBox01;
+	private CheckBox checkBox2;
+	private CheckBox checkBox02;
 	private EditText editText1;
 	private EditText editText01;
 	private RadioGroup radioGroup1;
@@ -69,6 +73,8 @@ public class DetailsActivity extends Activity {
 		textView01 = (TextView) findViewById(R.id.textView01);
 		checkBox1 = (CheckBox) findViewById(R.id.checkBox1);
 		checkBox01 = (CheckBox) findViewById(R.id.checkBox01);
+		checkBox2 = (CheckBox) findViewById(R.id.checkBox2);
+		checkBox02 = (CheckBox) findViewById(R.id.checkBox02);
 		editText1 = (EditText) findViewById(R.id.editText1);
 		editText01 = (EditText) findViewById(R.id.editText01);
 		radioGroup1 = (RadioGroup) findViewById(R.id.radioGroup1);
@@ -97,6 +103,22 @@ public class DetailsActivity extends Activity {
 				radio00.setEnabled(isChecked);
 				radio01.setEnabled(isChecked);
 				isNavBarChecked = isChecked;
+			}
+		});
+		checkBox2.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) checkBox1.setChecked(false);
+				checkBox1.setEnabled(!isChecked);
+				isTranslucentExcluded = isChecked;
+			}
+		});
+		checkBox02.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked) checkBox01.setChecked(false);
+				checkBox01.setEnabled(!isChecked);
+				isNavBarExcluded = isChecked;
 			}
 		});
 
@@ -133,13 +155,20 @@ public class DetailsActivity extends Activity {
 			checkBox01.setChecked(true);
 			checkBox01.setChecked(false);
 		}
+		if (sPref.contains(sActivity.name + "+e")) {
+			checkBox2.setChecked(true);
+		}
+		if (sPref.contains(sActivity.name + "+en")) {
+			checkBox02.setChecked(true);
+		}
 	}
 	
+	@SuppressLint("DefaultLocale")
 	@Override
 	protected void onPause() {
 		SharedPreferences.Editor sPrefEdit = sPref.edit();
 		if (isTranslucentChecked) {
-			sPrefEdit.putString(sActivity.name, editText1.getText().toString());
+			sPrefEdit.putString(sActivity.name, editText1.getText().toString().toUpperCase());
 			int radioVal1;
 			switch (radioGroup1.getCheckedRadioButtonId()) {
 			case R.id.radio0:
@@ -162,8 +191,9 @@ public class DetailsActivity extends Activity {
 			sPrefEdit.remove(sActivity.name);
 			sPrefEdit.remove(sActivity.name + "+s");
 		}
+		
 		if (isNavBarChecked) {
-			sPrefEdit.putString(sActivity.name + "+n", editText01.getText().toString());
+			sPrefEdit.putString(sActivity.name + "+n", editText01.getText().toString().toUpperCase());
 			int radioVal2;
 			switch (radioGroup01.getCheckedRadioButtonId()) {
 			case R.id.radio00:
@@ -176,15 +206,42 @@ public class DetailsActivity extends Activity {
 				radioVal2 = 1;
 			}
 			sPrefEdit.putInt(sActivity.name + "+sn", radioVal2);
+			
+			sPrefEdit.putString(sActivity.name + "+p", sActivity.packageName);
 		}
 		else {
 			sPrefEdit.remove(sActivity.name + "+n");
 			sPrefEdit.remove(sActivity.name + "+sn");
 		}
-		if (!sPref.contains(sActivity.name) && !sPref.contains(sActivity.name + "+n")) {
-			sPrefEdit.remove(sActivity.name + "+p");
+		sPrefEdit.apply();
+		
+		if (isTranslucentExcluded) {
+			sPrefEdit.putBoolean(sActivity.name + "+e", true);
+
+			sPrefEdit.putString(sActivity.name + "+p", sActivity.packageName);
+			
+			sPrefEdit.apply();
 		}
-		sPrefEdit.commit();
+		else {
+			sPrefEdit.remove(sActivity.name + "+e");
+		}
+
+		if (isNavBarExcluded) {
+			sPrefEdit.putBoolean(sActivity.name + "+en", true);
+
+			sPrefEdit.putString(sActivity.name + "+p", sActivity.packageName);
+			
+			sPrefEdit.apply();
+		}
+		else {
+			sPrefEdit.remove(sActivity.name + "+en");
+			
+		}
+		
+		if (!sPref.contains(sActivity.name) && !sPref.contains(sActivity.name + "+n") && !sPref.contains(sActivity.name + "+e") && !sPref.contains(sActivity.name + "+en")) {
+			sPrefEdit.remove(sActivity.name + "+p");
+			sPrefEdit.apply();
+		}
 		Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.saved_info), Toast.LENGTH_SHORT);
 		toast.show();
 		super.onStop();

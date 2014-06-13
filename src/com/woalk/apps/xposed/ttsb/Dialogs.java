@@ -18,7 +18,7 @@ public class Dialogs {
 					String appName = appNamesAlphabetical[i];
 					int index_startName = appName.lastIndexOf("::");
 					int i_pkgs = Integer.valueOf(appName.substring(index_startName + 2));
-					appNames[i] = appName.substring(0, index_startName) + "\n (" + pkgs[i_pkgs] + ")";
+					appNames[i] = appName.substring(0, index_startName) + "\n(" + pkgs[i_pkgs] + ")";
 				}
 				pkgNames = appNames;
 			} else {

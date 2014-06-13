@@ -1,7 +1,10 @@
 package com.woalk.apps.xposed.ttsb;
 
+import java.util.List;
+
 import de.robv.android.xposed.XposedBridge;
 import android.app.Activity;
+import android.content.pm.PackageInfo;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -13,6 +16,11 @@ public final class Helpers {
 	public static String TTSB_PREFERENCES = "com.woalk.apps.xposed.ttsb.TTSB_PREFERENCES";
 	public static String TTSB_SHOW_ACTIVITY_TOAST = "com.woalk.apps.xposed.ttsb.SHOW_TOAST";
 	public static String TTSB_OVERWRITE_EXISTING = "com.woalk.apps.xposed.ttsb.OVERWRITE_EXISTING";
+	
+	public static List<PackageInfo> installedPkg;
+
+	public static String[] pkgNames;
+	public static String[] appNames;
 
 	public static void setTranslucentStatus(Activity activity, boolean on) {
 		Window win = activity.getWindow();

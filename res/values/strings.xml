@@ -8,6 +8,8 @@
     <string name="select_activity_from_list">Pick the Activity from</string>
     <string name="enableTranslucentStat">Enable Translucent tinting of status bar</string>
     <string name="enableTranslucentNav">Enable Translucent tinting of navigation bar</string>
+    <string name="excludeTranslucentStat">Exclude this activity from an [ALL] status bar tinting</string>
+    <string name="excludeTranslucentNav">Exclude this activity from an [ALL] navigation bar tinting</string>
     <string name="color">Color (hexadecimal):</string>
     <string name="doNotMoveLayout">Don\'t move the layout (content will move behind status bar)</string>
     <string name="moveLayoutPrior1">Move full layout (for apps without ActionBar)</string>

@@ -21,10 +21,9 @@
             android:id="@+id/relativeLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
-            android:layout_marginTop="14dp" >
+            android:layout_marginTop="16dp" >
 
             <RadioGroup
                 android:id="@+id/radioGroup1"
@@ -63,8 +62,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_toRightOf="@+id/textView1"
-                android:digits="0123456789ABCDEF"
-                android:inputType="textNoSuggestions"
+                android:digits="0123456789ABCDEFabcdef"
+                android:inputType="textCapCharacters|textVisiblePassword"
                 android:labelFor="@id/textView1"
                 android:maxLength="8"
                 android:text="@string/defaultColorCode" />
@@ -80,10 +79,17 @@
         </RelativeLayout>
 
         <CheckBox
-            android:id="@+id/checkBox01"
+            android:id="@+id/checkBox2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:text="@string/excludeTranslucentStat" />
+
+        <CheckBox
+            android:id="@+id/checkBox01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:text="@string/enableTranslucentNav" />
 
         <RelativeLayout
@@ -125,8 +131,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_toRightOf="@+id/textView01"
-                android:digits="0123456789ABCDEF"
-                android:inputType="textNoSuggestions|textFilter"
+                android:digits="0123456789ABCDEFabcdef"
+                android:inputType="textCapCharacters|textVisiblePassword"
                 android:labelFor="@id/textView1"
                 android:maxLength="8"
                 android:text="@string/defaultColorCode" />
@@ -141,6 +147,14 @@
                 android:labelFor="@id/editText01"
                 android:text="@string/color" />
         </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/checkBox02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/excludeTranslucentNav" />
+
     </LinearLayout>
 
 </ScrollView>

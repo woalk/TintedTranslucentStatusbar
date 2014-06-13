@@ -42,6 +42,8 @@ public class XposedSysModifying implements IXposedHookZygoteInit {
 					return;
 				}
 				
+				if (currentActivity.getPackageManager().getActivityInfo(currentActivity.getComponentName(), 0).theme == android.R.style.Theme_Dialog) return;
+				
 				//de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] Package is " + currentActivity.getPackageName());
 				
 				/*if (currentActivity.getPackageName().equals("de.robv.android.xposed.installer")) {
@@ -61,7 +63,7 @@ public class XposedSysModifying implements IXposedHookZygoteInit {
 				if (!XsPref.contains(activityFullName + "+n") && !XsPref.contains(currentActivity.getPackageName() + ".[ALL]+n") && !XsPref.contains(activityFullName) && !XsPref.contains(currentActivity.getPackageName() + ".[ALL]")) return;
 				
 				// statusbar
-				if (XsPref.contains(activityFullName) || XsPref.contains(currentActivity.getPackageName() + ".[ALL]")) {
+				if (XsPref.contains(activityFullName) || XsPref.contains(currentActivity.getPackageName() + ".[ALL]") && !XsPref.contains(activityFullName + "+e")) {
 					String activityParsedName = activityFullName;
 					if (!XsPref.contains(activityFullName)) activityParsedName = currentActivity.getPackageName() + ".[ALL]";
 					
@@ -108,7 +110,7 @@ public class XposedSysModifying implements IXposedHookZygoteInit {
 				}
 				
 				// navbar
-				if (XsPref.contains(activityFullName + "+n") || XsPref.contains(currentActivity.getPackageName() + ".[ALL]+n")) {
+				if (XsPref.contains(activityFullName + "+n") || XsPref.contains(currentActivity.getPackageName() + ".[ALL]+n") && !XsPref.contains(activityFullName + "+en")) {
 					String activityParsedName = activityFullName;
 					if (!XsPref.contains(activityFullName)) activityParsedName = currentActivity.getPackageName() + ".[ALL]";
 					

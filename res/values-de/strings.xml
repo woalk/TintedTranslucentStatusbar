@@ -5,9 +5,11 @@
     <string name="str_action_add">Activity hinzufügen</string>
     <string name="title_activity_details">Einstellungen für</string>
     <string name="select_app_from_list">App wählen</string>
-    <string name="select_activity_from_list">Activity wählen</string>
-    <string name="enableTranslucentStat">Translucent Tinting für StatusBar aktivieren</string>
-    <string name="enableTranslucentNav">>Translucent Tinting für Navigation Bar aktivieren</string>
+    <string name="select_activity_from_list">Activity wählen von</string>
+    <string name="enableTranslucentStat">Translucent-Färben für StatusBar aktivieren</string>
+    <string name="enableTranslucentNav">>Translucent-Färben für Navigation Bar aktivieren</string>
+    <string name="excludeTranslucentStat">Von einem [ALL]-Färben für StatusBar ausschließen</string>
+    <string name="excludeTranslucentNav">Von einem [ALL]-Färben für NavBar ausschließen</string>
     <string name="color">Farbe (hexadezimal):</string>
     <string name="doNotMoveLayout">Layout nicht verschieben (Inhalt wird hinter StatusBar verschwinden)</string>
     <string name="moveLayoutPrior1">Layout vollständig verschieben (für Apps ohne ActionBar)</string>

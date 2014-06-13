@@ -14,7 +14,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -31,12 +30,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 	
 	private PackageManager pkgMan;
-	public List<PackageInfo> installedPkg;
-	protected SharedPreferences sPref;
 	protected List<ActivityInfo> loadedActivities = new ArrayList<ActivityInfo>();
-	
-	String[] pkgNames;
-	String[] appNames;
+	protected SharedPreferences sPref;
 	
 	private ListView listView1;
 	private ArrayAdapter<String> arrAdapter;
@@ -65,30 +60,37 @@ public class MainActivity extends Activity {
 		listView1.setAdapter(arrAdapter);
 		
 		// Load list of names and sort
-		// TODO: Inefficient! Use Asynchronous Task!
-		installedPkg = pkgMan.getInstalledPackages(PackageManager.GET_ACTIVITIES);
-		pkgNames = new String[installedPkg.size()];
-		ArrayList<String> appNamesList = new ArrayList<String>();
-		for (int i = 0; i < installedPkg.size(); i++) {
-			appNamesList.add(pkgMan.getApplicationLabel(installedPkg.get(i).applicationInfo).toString() + "::" + String.valueOf(i));
-			pkgNames[i] = installedPkg.get(i).packageName;
-			List<ActivityInfo> listActvt;
-			if (installedPkg.get(i).activities != null) { 
-				listActvt = new ArrayList<ActivityInfo>(Arrays.asList(installedPkg.get(i).activities));
+		if (Helpers.installedPkg == null) {
+			Helpers.installedPkg = pkgMan.getInstalledPackages(PackageManager.GET_ACTIVITIES);
+			Helpers.pkgNames = new String[Helpers.installedPkg.size()];
+			ArrayList<String> appNamesList = new ArrayList<String>();
+			for (int i = 0; i < Helpers.installedPkg.size(); i++) {
+				String label;
+				try {
+					label = pkgMan.getApplicationLabel(Helpers.installedPkg.get(i).applicationInfo).toString();
+				} catch (Throwable e) {
+					label = "";
+				}
+				appNamesList.add(label + "::" + String.valueOf(i));
+				Helpers.pkgNames[i] = Helpers.installedPkg.get(i).packageName;
+				List<ActivityInfo> listActvt;
+				if (Helpers.installedPkg.get(i).activities != null) { 
+					listActvt = new ArrayList<ActivityInfo>(Arrays.asList(Helpers.installedPkg.get(i).activities));
+				}
+				else {
+					listActvt = new ArrayList<ActivityInfo>();
+				}
+				ActivityInfo inf = new ActivityInfo();
+				inf.name = Helpers.pkgNames[i] + ".[ALL]";
+				inf.packageName = Helpers.pkgNames[i];
+				listActvt.add(0, inf);
+				Helpers.installedPkg.get(i).activities = listActvt.toArray(new ActivityInfo[listActvt.size()]);
 			}
-			else {
-				listActvt = new ArrayList<ActivityInfo>();
-			}
-			ActivityInfo inf = new ActivityInfo();
-			inf.name = pkgNames[i] + ".[ALL]";
-			inf.packageName = pkgNames[i];
-			listActvt.add(0, inf);
-			installedPkg.get(i).activities = listActvt.toArray(new ActivityInfo[listActvt.size()]);
+			
+			Collections.sort(appNamesList);
+			
+			Helpers.appNames = appNamesList.toArray(new String[appNamesList.size()]);
 		}
-		
-		Collections.sort(appNamesList);
-		
-		appNames = appNamesList.toArray(new String[appNamesList.size()]);
 	}
 	
 	@Override
@@ -103,10 +105,17 @@ public class MainActivity extends Activity {
 		Map<String, ?> sPrefAll = sPref.getAll();
 		if (sPrefAll != null) {
 			for (Map.Entry<String, ?> entry : sPrefAll.entrySet()) {
-				if (!entry.getKey().endsWith("+s")) {
-					String pkgName = sPref.getString(entry.getKey() + "+p", null);
+				String key = entry.getKey();
+				if (!key.endsWith("+s") && !key.endsWith("+ns") && !key.endsWith("+p")) {
+					if (key.endsWith("+n") || key.endsWith("+e")) {
+						key = key.substring(0, key.length() - 2);
+					}
+					else if (key.endsWith("+ne")) {
+						key = key.substring(0, key.length() - 3);
+					}
+					String pkgName = sPref.getString(key + "+p", null);
 					if (pkgName != null) {
-						String activityClass = entry.getKey();
+						String activityClass = key;
 						if (!activityClass.endsWith(".[ALL]")) {
 							ComponentName cName = new ComponentName(pkgName, activityClass);
 							ActivityInfo entryInfo;
@@ -155,9 +164,9 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void addItem() {
-		
+		if (Helpers.installedPkg == null) return;
 		Dialogs.SelectPkgDialog dialog1 = new Dialogs.SelectPkgDialog();
-		dialog1.setPkgNames(pkgNames, appNames);
+		dialog1.setPkgNames(Helpers.pkgNames, Helpers.appNames);
 		dialog1.setOnClick(ocl1);
 		dialog1.show(getFragmentManager(), "SelectPkg");
 	}
@@ -173,8 +182,8 @@ public class MainActivity extends Activity {
 	String[] activityAlphabeticalNames = null;
 	
 	private void addItem_part2(int result1) {
-		int index = Integer.valueOf(appNames[result1].substring(appNames[result1].lastIndexOf("::") + 2));
-		activities = installedPkg.get(index).activities;
+		int index = Integer.valueOf(Helpers.appNames[result1].substring(Helpers.appNames[result1].lastIndexOf("::") + 2));
+		activities = Helpers.installedPkg.get(index).activities;
 		if (activities.length > 1) {
 			List<String> activityNames = new ArrayList<String>();
 			for (int i = 0; i < activities.length; i++) {
@@ -185,7 +194,7 @@ public class MainActivity extends Activity {
 			activityAlphabeticalNames = activityNames.toArray(new String[activityNames.size()]);
 		
 			Dialogs.SelectActivityDialog dialog2 = new Dialogs.SelectActivityDialog();
-			dialog2.setPkgName(pkgMan.getApplicationLabel(installedPkg.get(index).applicationInfo).toString());
+			dialog2.setPkgName(pkgMan.getApplicationLabel(Helpers.installedPkg.get(index).applicationInfo).toString());
 			dialog2.setActivityNames(activityAlphabeticalNames);
 			dialog2.setOnClick(ocl2);
 			dialog2.show(getFragmentManager(), "SelectActivity");
