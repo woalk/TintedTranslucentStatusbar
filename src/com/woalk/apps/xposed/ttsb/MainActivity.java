@@ -100,6 +100,7 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void reload() {
+		List<String> addedKeys = new ArrayList<String>();
 		loadedActivities.clear();
 		arr_activities.clear();
 		Map<String, ?> sPrefAll = sPref.getAll();
@@ -113,6 +114,8 @@ public class MainActivity extends Activity {
 					else if (key.endsWith("+ne")) {
 						key = key.substring(0, key.length() - 3);
 					}
+					if (addedKeys.contains(key)) continue;
+					addedKeys.add(key);
 					String pkgName = sPref.getString(key + "+p", null);
 					if (pkgName != null) {
 						String activityClass = key;

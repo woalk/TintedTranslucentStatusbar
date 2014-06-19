@@ -37,7 +37,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="@string/doNotMoveLayout" />
+                    android:checked="true"
+                    android:text="@string/default_status" />
 
                 <RadioButton
                     android:id="@+id/radio1"
@@ -45,15 +46,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:layout_marginTop="4dp"
-                    android:text="@string/moveLayoutPrior1" />
+                    android:text="@string/moveBehind_status" />
 
                 <RadioButton
                     android:id="@+id/radio2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:layout_marginTop="4dp"
-                    android:checked="true"
-                    android:text="@string/moveLayoutPrior2" />
+                    android:text="@string/moveBelow_status" />
+
+                <RadioButton
+                    android:id="@+id/radio3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/moveHard_status" />
+
             </RadioGroup>
 
             <EditText
@@ -113,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="@string/doNotMoveLayout_nav" />
+                    android:text="@string/default_nav" />
 
                 <RadioButton
                     android:id="@+id/radio01"
@@ -122,7 +132,26 @@
                     android:layout_marginBottom="4dp"
                     android:layout_marginTop="4dp"
                     android:checked="true"
-                    android:text="@string/moveLayout_nav" />
+                    android:text="@string/moveBehind_nav" />
+
+                <RadioButton
+                    android:id="@+id/radio02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:checked="true"
+                    android:text="@string/moveAbove_nav" />
+
+                <RadioButton
+                    android:id="@+id/radio03"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:checked="true"
+                    android:text="@string/moveHard_nav" />
+
             </RadioGroup>
 
             <EditText

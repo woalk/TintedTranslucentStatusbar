@@ -42,9 +42,12 @@ public class DetailsActivity extends Activity {
 	private RadioButton radio0;
 	private RadioButton radio1;
 	private RadioButton radio2;
+	private RadioButton radio3;
 	private RadioGroup radioGroup01;
 	private RadioButton radio00;
 	private RadioButton radio01;
+	private RadioButton radio02;
+	private RadioButton radio03;
 	
 	@SuppressLint("WorldReadableFiles")
 	@SuppressWarnings("deprecation")
@@ -81,9 +84,12 @@ public class DetailsActivity extends Activity {
 		radio0 = (RadioButton) findViewById(R.id.radio0);
 		radio1 = (RadioButton) findViewById(R.id.radio1);
 		radio2 = (RadioButton) findViewById(R.id.radio2);
+		radio3 = (RadioButton) findViewById(R.id.radio3);
 		radioGroup01 = (RadioGroup) findViewById(R.id.radioGroup01);
 		radio00 = (RadioButton) findViewById(R.id.radio00);
 		radio01 = (RadioButton) findViewById(R.id.radio01);
+		radio02 = (RadioButton) findViewById(R.id.radio02);
+		radio03 = (RadioButton) findViewById(R.id.radio03);
 		checkBox1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -92,6 +98,7 @@ public class DetailsActivity extends Activity {
 				radio0.setEnabled(isChecked);
 				radio1.setEnabled(isChecked);
 				radio2.setEnabled(isChecked);
+				radio3.setEnabled(isChecked);
 				isTranslucentChecked = isChecked;
 			}
 		});
@@ -102,6 +109,8 @@ public class DetailsActivity extends Activity {
 				editText01.setEnabled(isChecked);
 				radio00.setEnabled(isChecked);
 				radio01.setEnabled(isChecked);
+				radio02.setEnabled(isChecked);
+				radio03.setEnabled(isChecked);
 				isNavBarChecked = isChecked;
 			}
 		});
@@ -125,36 +134,47 @@ public class DetailsActivity extends Activity {
 		if (sPref.contains(sActivity.name)) {
 			checkBox1.setChecked(true);
 			editText1.setText(sPref.getString(sActivity.name, getString(R.string.defaultColorCode)));
-			switch (sPref.getInt(sActivity.name + "+s", 2)) {
-			case 0:
-				radioGroup1.check(R.id.radio0);
-				break;
-			case 1:
-				radioGroup1.check(R.id.radio1);
-				break;
-			case 2:
-				radioGroup1.check(R.id.radio2);
-				break;
-			}
 		} else {
 			checkBox1.setChecked(true);
 			checkBox1.setChecked(false);
 		}
+		switch (sPref.getInt(sActivity.name + "+s", 0)) {
+		case 0:
+			radioGroup1.check(R.id.radio0);
+			break;
+		case 1:
+			radioGroup1.check(R.id.radio1);
+			break;
+		case 2:
+			radioGroup1.check(R.id.radio2);
+			break;
+		case 3:
+			radioGroup1.check(R.id.radio3);
+			break;
+		}
+		
 		if (sPref.contains(sActivity.name + "+n")) {
 			checkBox01.setChecked(true);
 			editText01.setText(sPref.getString(sActivity.name + "+n", getString(R.string.defaultColorCode)));
-			switch (sPref.getInt(sActivity.name + "+sn", 1)) {
-			case 0:
-				radioGroup1.check(R.id.radio00);
-				break;
-			case 1:
-				radioGroup1.check(R.id.radio01);
-				break;
-			}
 		} else {
 			checkBox01.setChecked(true);
 			checkBox01.setChecked(false);
 		}
+		switch (sPref.getInt(sActivity.name + "+sn", 0)) {
+		case 0:
+			radioGroup01.check(R.id.radio00);
+			break;
+		case 1:
+			radioGroup01.check(R.id.radio01);
+			break;
+		case 2:
+			radioGroup01.check(R.id.radio02);
+			break;
+		case 3:
+			radioGroup01.check(R.id.radio03);
+			break;
+		}
+		
 		if (sPref.contains(sActivity.name + "+e")) {
 			checkBox2.setChecked(true);
 		}
@@ -168,7 +188,16 @@ public class DetailsActivity extends Activity {
 	protected void onPause() {
 		SharedPreferences.Editor sPrefEdit = sPref.edit();
 		if (isTranslucentChecked) {
-			sPrefEdit.putString(sActivity.name, editText1.getText().toString().toUpperCase());
+			String color = editText1.getText().toString().toUpperCase();
+			if (color.length() == 6) {
+				color = "FF" + color;
+			} else if (color.length() < 6) {
+				color = "FF" + color;
+				for (int i = 0; i < 8 - color.length(); i++) {
+					color = color + "0";
+				}
+			}
+			sPrefEdit.putString(sActivity.name, color);
 			int radioVal1;
 			switch (radioGroup1.getCheckedRadioButtonId()) {
 			case R.id.radio0:
@@ -180,8 +209,11 @@ public class DetailsActivity extends Activity {
 			case R.id.radio2:
 				radioVal1 = 2;
 				break;
+			case R.id.radio3:
+				radioVal1 = 3;
+				break;
 			default:
-				radioVal1 = 2;
+				radioVal1 = 0;
 			}
 			sPrefEdit.putInt(sActivity.name + "+s", radioVal1);
 			
@@ -193,7 +225,16 @@ public class DetailsActivity extends Activity {
 		}
 		
 		if (isNavBarChecked) {
-			sPrefEdit.putString(sActivity.name + "+n", editText01.getText().toString().toUpperCase());
+			String color = editText01.getText().toString().toUpperCase();
+			if (color.length() == 6) {
+				color = "FF" + color;
+			} else if (color.length() < 6) {
+				color = "FF" + color;
+				for (int i = 0; i < 8 - color.length(); i++) {
+					color = color + "0";
+				}
+			}
+			sPrefEdit.putString(sActivity.name + "+n", color);
 			int radioVal2;
 			switch (radioGroup01.getCheckedRadioButtonId()) {
 			case R.id.radio00:
@@ -202,8 +243,14 @@ public class DetailsActivity extends Activity {
 			case R.id.radio01:
 				radioVal2 = 1;
 				break;
+			case R.id.radio02:
+				radioVal2 = 2;
+				break;
+			case R.id.radio03:
+				radioVal2 = 3;
+				break;
 			default:
-				radioVal2 = 1;
+				radioVal2 = 0;
 			}
 			sPrefEdit.putInt(sActivity.name + "+sn", radioVal2);
 			
@@ -224,6 +271,8 @@ public class DetailsActivity extends Activity {
 		}
 		else {
 			sPrefEdit.remove(sActivity.name + "+e");
+			
+			sPrefEdit.apply();
 		}
 
 		if (isNavBarExcluded) {
@@ -235,7 +284,8 @@ public class DetailsActivity extends Activity {
 		}
 		else {
 			sPrefEdit.remove(sActivity.name + "+en");
-			
+
+			sPrefEdit.apply();
 		}
 		
 		if (!sPref.contains(sActivity.name) && !sPref.contains(sActivity.name + "+n") && !sPref.contains(sActivity.name + "+e") && !sPref.contains(sActivity.name + "+en")) {

@@ -10,12 +10,15 @@
     <string name="enableTranslucentNav">Enable Translucent tinting of navigation bar</string>
     <string name="excludeTranslucentStat">Exclude this activity from an [ALL] status bar tinting</string>
     <string name="excludeTranslucentNav">Exclude this activity from an [ALL] navigation bar tinting</string>
-    <string name="color">Color (hexadecimal):</string>
-    <string name="doNotMoveLayout">Don\'t move the layout (content will move behind status bar)</string>
-    <string name="moveLayoutPrior1">Move full layout (for apps without ActionBar)</string>
-    <string name="moveLayoutPrior2">Move layout without actionbar (for apps with ActionBar)</string>
-    <string name="doNotMoveLayout_nav">Don\'t move the layout (content will move behind navigation bar)</string>
-    <string name="moveLayout_nav">Move layout</string>
+    <string name="color">Color (#AARRGGBB):</string>
+    <string name="default_status">Automatically move layout (will be OK for most apps)</string>
+    <string name="moveBehind_status">Move layout behind status bar</string>
+    <string name="moveBelow_status">Move layout down (for e.g. Twitter MainActivity)</string>
+    <string name="moveHard_status">Move layout without modifying (for apps with Navigation Menu, e.g. YouTube, Google+, &#8230;)</string>
+    <string name="default_nav">Automatically move layout (will be OK for most apps)</string>
+    <string name="moveBehind_nav">Move layout behind navigation bar</string>
+    <string name="moveAbove_nav">Move layout up (for e.g. Twitter MainActivity)</string>
+    <string name="moveHard_nav">Move layout without modifying (for apps with Navigation Menu, e.g. YouTube, Google+, &#8230;)</string>
     <string name="defaultColorCode" translatable="false">FF000000</string>
     <string name="saved_info">Settings for this Activity saved.\nYou need to restart the edited app to apply changes.</string>
     <string name="no_activities_info">This app doesn\'t provide any direct user interface (no Activity was found).</string>
