@@ -6,6 +6,5 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="lib/XposedBridgeApi-54.jar"/>
-	<classpathentry kind="lib" path="libs/systembartint-1.0.3.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

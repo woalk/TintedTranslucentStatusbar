@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="layoutopt">
+        <item >Set default automatic options</item>
+        <item >Set default options for ListView-app</item>
+        <item >Move layout with padding</item>
+        <item >Don\'t do anything with layout</item>
+        <item >Custom&#8230;</item>
+    </string-array>
+    
+</resources>

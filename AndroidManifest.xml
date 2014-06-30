@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.woalk.apps.xposed.ttsb"
-    android:versionCode="7"
-    android:versionName="Beta 1.4.2" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.woalk.apps.xposed.ttsb"
+    android:versionCode="9"
+    android:versionName="Beta 2.0" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -14,13 +15,30 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.woalk.apps.xposed.ttsb.MainActivity"
-            android:label="@string/app_name"
-            android:configChanges="screenSize|orientation" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.woalk.apps.xposed.ttsb.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="com.woalk.apps.xposed.ttsb.MainActivity"
+            android:launchMode="singleTask" >
+        </activity>
+        <activity
+            android:name="com.woalk.apps.xposed.ttsb.ActivitiesActivity"
+            android:label="@string/title_activity_activities"
+            android:parentActivityName="com.woalk.apps.xposed.ttsb.MainActivity"
+            android:launchMode="singleTask" >
+        </activity>
+        <activity
+            android:name="com.woalk.apps.xposed.ttsb.EasySettingsActivity"
+            android:label="@string/title_activity_easy_settings"
+            android:parentActivityName="com.woalk.apps.xposed.ttsb.ActivitiesActivity"
+            android:launchMode="singleTask" >
         </activity>
 
         <meta-data
@@ -32,17 +50,12 @@
         <meta-data
             android:name="xposedminversion"
             android:value="30" />
-        
-        <activity
-            android:name="com.woalk.apps.xposed.ttsb.DetailsActivity"
-            android:label="@string/title_activity_details"
-            android:parentActivityName="com.woalk.apps.xposed.ttsb.MainActivity" >
-        </activity>
-        <activity
-            android:name="com.woalk.apps.xposed.ttsb.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName="com.woalk.apps.xposed.ttsb.MainActivity" >
-        </activity>
+        <meta-data
+            android:name="tintengine_version"
+            android:value="2.0" />
+        <meta-data
+            android:name="ui_version"
+            android:value="2.0" />
     </application>
 
 </manifest>

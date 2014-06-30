@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/action_add" android:icon="@drawable/ic_action_add" android:enabled="true" android:showAsAction="always" android:visible="true" android:title="@string/str_action_add"></item>
-    <item android:id="@+id/action_settings" android:title="@string/str_action_settings" android:icon="@drawable/ic_action_settings" android:showAsAction="ifRoom" android:visible="true" android:enabled="true"></item>
+    <item android:id="@+id/waiting_apps" android:showAsAction="always" android:actionLayout="@layout/actionbar_wait" android:title="@string/str_waiting_apps"></item>
+    
+    <item android:id="@+id/action_update" android:title="@string/str_action_update" android:icon="@drawable/ic_action_refresh" android:showAsAction="ifRoom" android:visible="true" android:enabled="true"></item><item android:id="@+id/action_settings" android:title="@string/str_action_settings" android:icon="@drawable/ic_action_settings" android:showAsAction="ifRoom" android:visible="true" android:enabled="true"></item>
+    
     
 </menu>

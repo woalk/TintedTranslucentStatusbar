@@ -1,0 +1,93 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="16dp"
+    tools:context="${packageName}.${activityClass}" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <CheckBox
+            android:id="@+id/checkBox_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:checked="true"
+            android:text="@string/check_status" />
+
+        <EditText
+            android:id="@+id/editText_s_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="20dp"
+            android:digits="#0123456789abcdefABCDEF"
+            android:ems="10"
+            android:hint="@string/descr_color"
+            android:inputType="textVisiblePassword"
+            android:maxLength="9"
+            android:minWidth="175dp"
+            android:typeface="monospace"
+            android:width="220dp" />
+
+        <CheckBox
+            android:id="@+id/checkBox_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:checked="true"
+            android:text="@string/check_nav" />
+
+        <EditText
+            android:id="@+id/editText_n_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="20dp"
+            android:digits="#0123456789abcdefABCDEF"
+            android:ems="10"
+            android:hint="@string/descr_color"
+            android:inputType="textVisiblePassword"
+            android:maxLength="9"
+            android:minWidth="175dp"
+            android:typeface="monospace"
+            android:width="220dp" />
+
+        <TextView
+            android:id="@+id/textView_layoutopt_descr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:text="@string/descr_layoutopt"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/spinner_layoutopt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="10dp"
+            android:entries="@array/layoutopt" />
+
+        <Button
+            android:id="@+id/button_advanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="30dp"
+            android:text="@string/btn_advanced"
+            android:textSize="16sp" />
+
+        <CheckBox
+            android:id="@+id/checkBox_s_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/check_s_plus" />
+		
+	</LinearLayout>
+</ScrollView>
