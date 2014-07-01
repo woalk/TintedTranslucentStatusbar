@@ -33,7 +33,7 @@ public class SettingsActivity extends Activity {
 			e.printStackTrace();
 		}
 		if (pInfo != null) {
-			TextView textView2 = (TextView) findViewById(R.id.textView2);
+			TextView textView2 = (TextView) findViewById(R.id.textView_pright);
 			TextView textView4 = (TextView) findViewById(R.id.textView4);
 			
 			String te_ver, ui_ver;

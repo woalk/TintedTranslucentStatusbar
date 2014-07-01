@@ -31,7 +31,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView_ptop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -41,9 +41,9 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/textView2"
+        android:layout_alignTop="@id/textView_ptop"
         android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/textView2"
+        android:layout_toRightOf="@id/textView_ptop"
         android:textStyle="bold" />
 
     <TextView
@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/textView_ptop"
         android:layout_marginTop="16dp"
         android:text="@string/copyright_info"
         android:textSize="15sp" />

@@ -7,5 +7,10 @@
         <item >Don\'t do anything with layout</item>
         <item >Custom&#8230;</item>
     </string-array>
+    <string-array name="vsetpk_from">
+        <item >Decor View</item>
+        <item >cview</item>
+        <item >Content View</item>
+    </string-array>
     
 </resources>

@@ -125,14 +125,14 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 			tintMan.setStatusBarTintColor(settings.s_color);
 			tintMan.setNavigationBarTintColor(settings.n_color);
 			
-			if (settings.s_plus != 0) {
+			if (settings.rules.s_plus != 0) {
 				LayoutParams s_params = tintMan.mStatusBarTintView.getLayoutParams();
-				s_params.height += settings.s_plus;
+				s_params.height += settings.rules.s_plus;
 				tintMan.mStatusBarTintView.setLayoutParams(s_params);
 			}
-			if (settings.n_plus != 0) {
+			if (settings.rules.n_plus != 0) {
 				LayoutParams n_params = tintMan.mNavBarTintView.getLayoutParams();
-				n_params.height += settings.n_plus;
+				n_params.height += settings.rules.n_plus;
 				tintMan.mNavBarTintView.setLayoutParams(n_params);
 			}
 		}
@@ -143,20 +143,20 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 		ViewGroup cview = (ViewGroup) content.getChildAt(0);
 		ViewGroup decview = (ViewGroup) currentActivity.getWindow().getDecorView();
 		
-		if (settings.cview != null) {
-			setViewSettings(cview, settings.cview, landscape, tintMan);
+		if (settings.rules.cview != null) {
+			setViewSettings(cview, settings.rules.cview, landscape, tintMan);
 		}
-		if (settings.content != null) {
-			setViewSettings(content, settings.content, landscape, tintMan);
+		if (settings.rules.content != null) {
+			setViewSettings(content, settings.rules.content, landscape, tintMan);
 		}
-		if (settings.decview != null) {
-			setViewSettings(decview, settings.decview, landscape, tintMan);
+		if (settings.rules.decview != null) {
+			setViewSettings(decview, settings.rules.decview, landscape, tintMan);
 		}
 		
-		if (settings.view == null) return;
-		for (int i = 0; i < settings.view.size(); i++) {
-			if (settings.view.get(i).levels == 0) continue;
-			setViewSettingsPack(cview, content, decview, settings.view.get(i), landscape, tintMan);
+		if (settings.rules.view == null) return;
+		for (int i = 0; i < settings.rules.view.size(); i++) {
+			if (settings.rules.view.get(i).levels == 0) continue;
+			setViewSettingsPack(cview, content, decview, settings.rules.view.get(i), landscape, tintMan);
 		}
 	}
 	

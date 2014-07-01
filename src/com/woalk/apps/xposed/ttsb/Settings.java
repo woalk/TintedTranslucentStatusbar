@@ -53,7 +53,7 @@ public class Settings {
 			boolean result = true;
 			String[] str_set = text.split(";");
 			Setting setting = new Setting();
-			if (!text.contains(";view:") || text.startsWith("view:")) setting.view = null;
+			if (!text.contains(";view:") || text.startsWith("view:")) setting.rules.view = null;
 			for (int i = 0; i < str_set.length; i++) {
 				if (!str_set[i].contains(":")) {
 					result = false;
@@ -83,22 +83,22 @@ public class Settings {
 					setting.n_color = Helpers.getColor(str_set[i].substring(cmd.length() + 1));
 					break;
 				case "s_plus":
-					setting.s_plus = Integer.valueOf(str_set[i].substring(cmd.length() + 1));
+					setting.rules.s_plus = Integer.valueOf(str_set[i].substring(cmd.length() + 1));
 					break;
 				case "n_plus":
-					setting.n_plus = Integer.valueOf(str_set[i].substring(cmd.length() + 1));
+					setting.rules.n_plus = Integer.valueOf(str_set[i].substring(cmd.length() + 1));
 					break;
 				case "cview":
-					setting.cview = parseViewSettings(str_set[i].substring(cmd.length() + 1));
+					setting.rules.cview = parseViewSettings(str_set[i].substring(cmd.length() + 1));
 					break;
 				case "content":
-					setting.content = parseViewSettings(str_set[i].substring(cmd.length() + 1));
+					setting.rules.content = parseViewSettings(str_set[i].substring(cmd.length() + 1));
 					break;
 				case "decview":
-					setting.decview = parseViewSettings(str_set[i].substring(cmd.length() + 1));
+					setting.rules.decview = parseViewSettings(str_set[i].substring(cmd.length() + 1));
 					break;
 				case "view":
-					setting.view.add(parseViewSettingsPack(str_set[i].substring(cmd.length() + 1)));
+					setting.rules.view.add(parseViewSettingsPack(str_set[i].substring(cmd.length() + 1)));
 					break;
 				case "":
 					break;
@@ -112,14 +112,14 @@ public class Settings {
 			return result;
 		}
 		
-		private Setting.ViewSettings parseViewSettings(String str) {
+		public Setting.ViewSettings parseViewSettings(String str) {
 			String line = str;
 			Setting.ViewSettings vset = new Setting.ViewSettings();
 			if (str.startsWith("land(") && str.endsWith(")")) {
 				line = str.substring("land(".length(), str.length() - ")".length());
 				vset.if_land = true;
 			} else if (str.contains("land(")) {
-				int i = str.indexOf("length(");
+				int i = str.indexOf("land(");
 				vset.land = parseViewSettings(
 									str.substring(
 											0, str.length() - str.substring(str.indexOf(")", i)).length()));
@@ -226,33 +226,33 @@ public class Settings {
 			if (setting.status) {
 				line += "status:1;";
 				line += "s_color:" + Helpers.getColorHexString(setting.s_color) + ";";
-				line += "s_plus:" + String.valueOf(setting.s_plus) + ";";
+				line += "s_plus:" + String.valueOf(setting.rules.s_plus) + ";";
 			}
 			if (setting.nav) {
 				line += "nav:1;";
 				line += "n_color:" + Helpers.getColorHexString(setting.n_color) + ";";
-				line += "n_plus:" + String.valueOf(setting.n_plus) + ";";
+				line += "n_plus:" + String.valueOf(setting.rules.n_plus) + ";";
 			}
-			if (setting.cview != null) {
-				line += "cview:" + parseViewSettingsToString(setting.cview) + ";";
+			if (setting.rules.cview != null) {
+				line += "cview:" + parseViewSettingsToString(setting.rules.cview) + ";";
 			}
-			if (setting.content != null) {
-				line += "content:" + parseViewSettingsToString(setting.content) + ";";
+			if (setting.rules.content != null) {
+				line += "content:" + parseViewSettingsToString(setting.rules.content) + ";";
 			}
-			if (setting.decview != null) {
-				line += "decview:" + parseViewSettingsToString(setting.decview) + ";";
+			if (setting.rules.decview != null) {
+				line += "decview:" + parseViewSettingsToString(setting.rules.decview) + ";";
 			}
-			if (setting.view != null && setting.view.size() > 0) {
-				for (int i = 0; i < setting.view.size(); i++) {
+			if (setting.rules.view != null && setting.rules.view.size() > 0) {
+				for (int i = 0; i < setting.rules.view.size(); i++) {
 					line += "view:"
-							+ parseViewSettingsPackToString(setting.view.get(i))
+							+ parseViewSettingsPackToString(setting.rules.view.get(i))
 							+ ";";
 				}
 			}
 			setLine(line);
 		}
 		
-		private String parseViewSettingsToString(Setting.ViewSettings vset) {
+		private static String parseViewSettingsToString(Setting.ViewSettings vset) {
 			String line = "";
 			if (vset.if_land) line += "land(";
 			if (vset.setFSW) {
@@ -287,7 +287,7 @@ public class Settings {
 			return line;
 		}
 		
-		private String parseViewSettingsPackToString(Setting.ViewSettingsPack vsetpk) {
+		public static String parseViewSettingsPackToString(Setting.ViewSettingsPack vsetpk) {
 			String line = "";
 			if (0 <= vsetpk.from && vsetpk.from <= 2) {
 				line += "from>";
@@ -330,15 +330,11 @@ public class Settings {
 		public boolean nav = false;
 		public int s_color = Color.BLACK;
 		public int n_color = Color.BLACK;
-		public int s_plus = 0;
-		public int n_plus = 0;
-		public ViewSettings cview;
-		public ViewSettings content;
-		public ViewSettings decview;
-		public List<ViewSettingsPack> view;
+		public Rules rules;
 		
 		public Setting() {
-			view = new ArrayList<ViewSettingsPack>();
+			rules = new Rules();
+			rules.view = new ArrayList<ViewSettingsPack>();
 		}
 		
 		public static class ViewSettingsPack {
@@ -352,7 +348,30 @@ public class Settings {
 			public int levels;
 			public int[] childindexes;
 			
+			public String getChildIndexesString() {
+				if (childindexes == null || childindexes.length == 0) return "0";
+				String chi = "";
+				for (int i = 0; i < childindexes.length; i++) {
+					chi += childindexes[i];
+					if (i < childindexes.length - 1) chi += ",";
+				}
+				return chi;
+			}
+			
+			public void setChildIndexesFromString(String chi_string) {
+				String[] chi = chi_string.split(",");
+				int[] int_chi = new int[chi.length];
+				for (int i = 0; i < chi.length; i++) {
+					if (!chi[i].equals("")) int_chi[i] = Integer.parseInt(chi[i]);
+				}
+				this.childindexes = int_chi;
+			}
+			
 			public ViewSettings settings;
+			
+			public ViewSettingsPack() {
+				settings = new ViewSettings();
+			}
 		}
 		
 		public static class ViewSettings {
@@ -377,6 +396,16 @@ public class Settings {
 				public boolean plus_nav_h;
 				public boolean plus_nav_w;
 			}
+		}
+		
+		public static class Rules {
+			public int s_plus;
+			public int n_plus;
+			
+			public ViewSettings cview;
+			public ViewSettings content;
+			public ViewSettings decview;
+			public List<ViewSettingsPack> view;
 		}
 	}
 	

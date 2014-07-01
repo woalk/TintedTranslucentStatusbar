@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.woalk.apps.xposed.ttsb"
     android:versionCode="9"
-    android:versionName="Beta 2.0" >
+    android:versionName="Beta 2.0dev" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.woalk.apps.xposed.ttsb.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,22 +23,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.woalk.apps.xposed.ttsb.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.woalk.apps.xposed.ttsb.MainActivity"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
-            android:name="com.woalk.apps.xposed.ttsb.ActivitiesActivity"
+            android:name=".ActivitiesActivity"
             android:label="@string/title_activity_activities"
-            android:parentActivityName="com.woalk.apps.xposed.ttsb.MainActivity"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
-            android:name="com.woalk.apps.xposed.ttsb.EasySettingsActivity"
+            android:name=".EasySettingsActivity"
             android:label="@string/title_activity_easy_settings"
-            android:parentActivityName="com.woalk.apps.xposed.ttsb.ActivitiesActivity"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:parentActivityName=".ActivitiesActivity" >
+        </activity>
+        <activity
+            android:name=".RulesActivity"
+            android:label="@string/title_activity_rules"
+            android:launchMode="singleTask"
+            android:parentActivityName=".EasySettingsActivity" >
         </activity>
 
         <meta-data

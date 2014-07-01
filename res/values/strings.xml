@@ -15,7 +15,6 @@
     <string name="copyright_info">Developed by Woalk Software\nxda-developers user woalk</string>
     <string name="thanks_to_info">Using code from SystemBarTint by Jeff Gilfelt\n(readyState Software Ltd) / Github user jgilfelt</string>
     <string name="title_activity_activities">Activities from</string>
-    <string name="pkg_not_found">&lt;Not found&gt;</string>
     <string name="title_activity_easy_settings">Settings for</string>
     <string name="all_activities">All Activities</string>
     <string name="str_action_use_settingscode">Enter code directly</string>
@@ -28,11 +27,38 @@
     <string name="settingscode_msg">Please enter, copy or paste TTSB settings code:</string>
     <string name="delete_title">Delete setting</string>
     <string name="delete_msg">Do you want to delete this setting permanently?</string>
+    <string name="cview_edit_title">Settings for cview</string>
+    <string name="content_edit_title">Settings for content View</string>
+    <string name="decview_edit_title">Settings for DecorView</string>
     <string name="check_status">Enable TTSB for status bar</string>
     <string name="descr_color">Color (#aarrggbb)</string>
     <string name="check_nav">Enable TTSB for navigation bar</string>
     <string name="descr_layoutopt">Default layout options:</string>
     <string name="check_s_plus">Remove the annoying one pixel line on top of ActionBars</string>
     <string name="btn_advanced">Configure custom rules (advanced)</string>
+    <string name="title_activity_rules">Advanced rules</string>
+    <string name="descr_s_plus">Increase status bar height (px):</string>
+    <string name="descr_check_cview">View 1 past the Content View (“cview”)</string>
+    <string name="str_btn_edit">Edit&#8230;</string>
+    <string name="descr_check_content">Content View</string>
+    <string name="descr_check_decview">Decor View (outest View)</string>
+    <string name="str_btn_add_rule">Add View rule&#8230;</string>
+    <string name="str_check_setFSW">Set FitsSystemWindows attribute</string>
+    <string name="v_true" translatable="false">true</string>
+    <string name="v_false" translatable="false">false</string>
+    <string name="str_check_setCTP">Set clipToPadding attribute</string>
+    <string name="str_check_padding">Set additional padding</string>
+    <string name="p_left">Left:</string>
+    <string name="p_top">Top:</string>
+    <string name="p_right">Right:</string>
+    <string name="p_bottom">Bottom:</string>
+    <string name="str_check_plus_status_h">+ status ht.</string>
+    <string name="str_check_plus_actionbar_h">+ action ht.</string>
+    <string name="str_check_plus_nav_h">+ navigation ht.</string>
+    <string name="str_check_plus_nav_w">+ navigation width</string>
+    <string name="v_delete">Delete</string>
+    <string name="descr_from">From:</string>
+    <string name="descr_levels">Levels:</string>
+    <string name="descr_childindexes">Child indexes (seperate by comma):</string>
 
 </resources>

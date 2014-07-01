@@ -2,6 +2,7 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ public class ActivityListAdapter extends ArrayAdapter<ComparableActivityInfo> {
 		this.activities = activities;
 	}
 
+	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		LayoutInflater inflater = context.getLayoutInflater();

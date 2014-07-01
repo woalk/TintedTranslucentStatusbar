@@ -2,12 +2,14 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.ArrayList;
 
+import com.woalk.apps.xposed.ttsb.Settings.Setting.Rules;
 import com.woalk.apps.xposed.ttsb.Settings.Setting.ViewSettings.IntOptPadding;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -31,7 +33,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class EasySettingsActivity extends Activity {
 	
-	public static String ACTIVITY_INFO_SELECTED = "com.woalk.apps.xposed.ttsb.APP_INFO_SELECTED";
+	public static String ACTIVITY_INFO_SELECTED = "com.woalk.apps.xposed.ttsb.ACTIVITY_INFO_SELECTED";
 	
 	protected ActivityInfo act_inf;
 	protected Settings.Parser mSettings;
@@ -59,7 +61,7 @@ public class EasySettingsActivity extends Activity {
 		
 		if (act_inf.name.equals("All")) act_inf.name = "";
 		
-		mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
+		mSettings = Settings.Loader.load(getApplicationContext(), act_inf.packageName, act_inf.name);
 		setting = mSettings.getSetting();
 		
 		check_status = (CheckBox) findViewById(R.id.checkBox_status);
@@ -90,7 +92,7 @@ public class EasySettingsActivity extends Activity {
 		check_s_plus.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				setting.s_plus = (isChecked ? 1 : 0);
+				setting.rules.s_plus = (isChecked ? 1 : 0);
 			}
 		});
 		
@@ -99,20 +101,20 @@ public class EasySettingsActivity extends Activity {
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				switch (arg2) {
 				case 0:
-					setting.content = null;
-					setting.decview = null;
-					setting.cview = new Settings.Setting.ViewSettings();
-					setting.cview.setFSW = true;
-					setting.cview.setFSW_value = true;
-					setting.cview.setCTP = true;
-					setting.cview.setCTP_value = false;
-					setting.view = null;
+					setting.rules.content = null;
+					setting.rules.decview = null;
+					setting.rules.cview = new Settings.Setting.ViewSettings();
+					setting.rules.cview.setFSW = true;
+					setting.rules.cview.setFSW_value = true;
+					setting.rules.cview.setCTP = true;
+					setting.rules.cview.setCTP_value = false;
+					setting.rules.view = null;
 					break;
 				case 1:
-					setting.content = null;
-					setting.decview = null;
-					setting.cview = null;
-					setting.view = new ArrayList<Settings.Setting.ViewSettingsPack>();
+					setting.rules.content = null;
+					setting.rules.decview = null;
+					setting.rules.cview = null;
+					setting.rules.view = new ArrayList<Settings.Setting.ViewSettingsPack>();
 					Settings.Setting.ViewSettingsPack vsetpk = new Settings.Setting.ViewSettingsPack();
 					vsetpk.childindexes = new int[]{0};
 					vsetpk.from = Settings.Setting.ViewSettingsPack.FROM_CVIEW;
@@ -122,24 +124,24 @@ public class EasySettingsActivity extends Activity {
 					vsetpk.settings.setFSW_value = true;
 					vsetpk.settings.setCTP = true;
 					vsetpk.settings.setCTP_value = false;
-					setting.view.add(vsetpk);
+					setting.rules.view.add(vsetpk);
 					break;
 				case 2:
-					setting.content = null;
-					setting.decview = null;
-					setting.cview = new Settings.Setting.ViewSettings();
-					setting.cview.setFSW = false;
-					setting.cview.setCTP = false;
-					setting.cview.padding = new Settings.Setting.ViewSettings.IntOptPadding();
-					setting.cview.padding.plus_nav_h = true;
-					setting.cview.padding.plus_status_h = true;
-					setting.view = null;
+					setting.rules.content = null;
+					setting.rules.decview = null;
+					setting.rules.cview = new Settings.Setting.ViewSettings();
+					setting.rules.cview.setFSW = false;
+					setting.rules.cview.setCTP = false;
+					setting.rules.cview.padding = new Settings.Setting.ViewSettings.IntOptPadding();
+					setting.rules.cview.padding.plus_nav_h = true;
+					setting.rules.cview.padding.plus_status_h = true;
+					setting.rules.view = null;
 					break;
 				case 3:
-					setting.content = null;
-					setting.decview = null;
-					setting.cview = null;
-					setting.view = null;
+					setting.rules.content = null;
+					setting.rules.decview = null;
+					setting.rules.cview = null;
+					setting.rules.view = null;
 					break;
 				}
 				if (arg2 == 4) button_advanced.setEnabled(true);
@@ -154,11 +156,28 @@ public class EasySettingsActivity extends Activity {
 		button_advanced.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO: create advanced Activity
+				save();
+				Intent intent = new Intent(context, RulesActivity.class);
+				intent.putExtra(RulesActivity.RULES_ACTIVITY_INFO_SELECTED, (android.os.Parcelable) act_inf);
+				((Activity) context).startActivityForResult(intent, 55);
 			}
 		});
 	}
 	
+	@Override 
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+		super.onActivityResult(requestCode, resultCode, data); 
+		switch(requestCode) { 
+		case (55) : { 
+			if (resultCode == Activity.RESULT_OK)
+				mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
+				setting = mSettings.getSetting();
+				settingsUpdated();
+			break; 
+		} 
+		} 
+	}
+
 	protected void settingsUpdated() {
 		mSettings.parseToSettings();
 		setting = mSettings.getSetting();
@@ -167,46 +186,46 @@ public class EasySettingsActivity extends Activity {
 		check_s_plus.setEnabled(setting.status);
 		check_nav.setChecked(setting.nav);
 		edit_n_color.setEnabled(setting.nav);
-		check_s_plus.setChecked(setting.s_plus > 0);
+		check_s_plus.setChecked(setting.rules.s_plus > 0);
 		edit_s_color.setText(Helpers.getColorHexString(setting.s_color));
 		edit_n_color.setText(Helpers.getColorHexString(setting.n_color));
-		if (setting.content == null &&
-				setting.decview == null &&
-				setting.cview != null &&
-				setting.cview.setFSW == true &&
-				setting.cview.setFSW_value == true &&
-				setting.cview.setCTP == true &&
-				setting.cview.setCTP_value == false &&
-				setting.view == null)
+		if (setting.rules.content == null &&
+				setting.rules.decview == null &&
+				setting.rules.cview != null &&
+				setting.rules.cview.setFSW == true &&
+				setting.rules.cview.setFSW_value == true &&
+				setting.rules.cview.setCTP == true &&
+				setting.rules.cview.setCTP_value == false &&
+				setting.rules.view == null)
 			spinner_layoutopt.setSelection(0);
-		else if (setting.content == null &&
-				setting.decview == null &&
-				setting.cview == null &&
-				setting.view != null &&
-				setting.view.size() > 0 &&
-				setting.view.get(0).childindexes == new int[]{0} &&
-				setting.view.get(0).from == Settings.Setting.ViewSettingsPack.FROM_CVIEW &&
-				setting.view.get(0).levels == 1 &&
-				setting.view.get(0).settings == new Settings.Setting.ViewSettings() &&
-				setting.view.get(0).settings.setFSW == true &&
-				setting.view.get(0).settings.setFSW_value == true &&
-				setting.view.get(0).settings.setCTP == true &&
-				setting.view.get(0).settings.setCTP_value == false)
+		else if (setting.rules.content == null &&
+				setting.rules.decview == null &&
+				setting.rules.cview == null &&
+				setting.rules.view != null &&
+				setting.rules.view.size() > 0 &&
+				setting.rules.view.get(0).childindexes == new int[]{0} &&
+				setting.rules.view.get(0).from == Settings.Setting.ViewSettingsPack.FROM_CVIEW &&
+				setting.rules.view.get(0).levels == 1 &&
+				setting.rules.view.get(0).settings == new Settings.Setting.ViewSettings() &&
+				setting.rules.view.get(0).settings.setFSW == true &&
+				setting.rules.view.get(0).settings.setFSW_value == true &&
+				setting.rules.view.get(0).settings.setCTP == true &&
+				setting.rules.view.get(0).settings.setCTP_value == false)
 			spinner_layoutopt.setSelection(1);
-		else if (setting.content == null &&
-				setting.decview == null &&
-				setting.cview != null &&
-				setting.cview.setFSW == false &&
-				setting.cview.setCTP == false &&
-				setting.cview.padding != null &&
-				setting.cview.padding.plus_nav_h &&
-				setting.cview.padding.plus_status_h &&
-				setting.view == null)
+		else if (setting.rules.content == null &&
+				setting.rules.decview == null &&
+				setting.rules.cview != null &&
+				setting.rules.cview.setFSW == false &&
+				setting.rules.cview.setCTP == false &&
+				setting.rules.cview.padding != null &&
+				setting.rules.cview.padding.plus_nav_h &&
+				setting.rules.cview.padding.plus_status_h &&
+				setting.rules.view == null)
 			spinner_layoutopt.setSelection(2);
-		else if (setting.content == null &&
-				setting.decview == null &&
-				setting.cview == null &&
-				setting.view == null)
+		else if (setting.rules.content == null &&
+				setting.rules.decview == null &&
+				setting.rules.cview == null &&
+				setting.rules.view == null)
 			spinner_layoutopt.setSelection(3);
 		else {
 			spinner_layoutopt.setSelection(4);

@@ -1,0 +1,122 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <EditText
+        android:id="@+id/editText_s_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/textView_s_plus_descr"
+        android:ems="10"
+        android:inputType="number"
+        android:text="0" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView_s_plus_descr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editText_s_plus"
+        android:layout_alignBottom="@+id/editText_s_plus"
+        android:layout_alignParentLeft="true"
+        android:text="@string/descr_s_plus" />
+
+    <EditText
+        android:id="@+id/editText_n_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView_n_plus_descr"
+        android:layout_alignBottom="@+id/textView_n_plus_descr"
+        android:layout_alignLeft="@+id/editText_s_plus"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:inputType="number"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/textView_n_plus_descr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText_s_plus"
+        android:layout_marginTop="14dp"
+        android:layout_toLeftOf="@+id/editText_n_plus"
+        android:text="@string/descr_s_plus" />
+
+    <Button
+        android:id="@+id/button_edit_cview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/checkBox_cview"
+        android:enabled="false"
+        android:text="@string/str_btn_edit" />
+
+    <CheckBox
+        android:id="@+id/checkBox_cview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editText_n_plus"
+        android:layout_marginTop="16dp"
+        android:layout_toLeftOf="@+id/button_edit_cview"
+        android:text="@string/descr_check_cview" />
+
+    <CheckBox
+        android:id="@+id/checkBox_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/checkBox_cview"
+        android:layout_below="@+id/button_edit_cview"
+        android:text="@string/descr_check_content" />
+
+    <Button
+        android:id="@+id/button_edit_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/checkBox_content"
+        android:enabled="false"
+        android:text="@string/str_btn_edit" />
+
+    <CheckBox
+        android:id="@+id/checkBox_decview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/checkBox_content"
+        android:layout_below="@+id/button_edit_content"
+        android:text="@string/descr_check_decview" />
+
+    <Button
+        android:id="@+id/button_edit_decview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/button_edit_content"
+        android:enabled="false"
+        android:text="@string/str_btn_edit" />
+
+    <Button
+        android:id="@+id/button_addRule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/button_edit_decview"
+        android:text="@string/str_btn_add_rule" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/button_addRule" >
+    </ListView>
+
+</RelativeLayout>
