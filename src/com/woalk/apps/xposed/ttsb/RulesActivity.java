@@ -64,9 +64,7 @@ public class RulesActivity extends Activity {
 		btn_decview = (Button) findViewById(R.id.button_edit_decview);
 		btn_add = (Button) findViewById(R.id.button_addRule);
 		
-		if (setting.rules.view != null)
-			lA = new ViewSettingsPackListAdapter(this, setting.rules.view);
-		else lA = new ViewSettingsPackListAdapter(this, new ArrayList<Settings.Setting.ViewSettingsPack>());
+		lA = new ViewSettingsPackListAdapter(this, new ArrayList<Settings.Setting.ViewSettingsPack>());
 		lv = (ListView) findViewById(R.id.listView1);
 		lv.setAdapter(lA);
 		
@@ -105,6 +103,7 @@ public class RulesActivity extends Activity {
 					@Override
 					public void onDialogDeleteClick(Settings.Setting.ViewSettings vset) {
 						setting.rules.cview = null;
+						check_cview.setChecked(false);
 					}
 				});
 				fragment.show(getFragmentManager(), "vset_cview");
@@ -126,9 +125,10 @@ public class RulesActivity extends Activity {
 					@Override
 					public void onDialogDeleteClick(Settings.Setting.ViewSettings vset) {
 						setting.rules.content = null;
+						check_content.setChecked(false);
 					}
 				});
-				fragment.show(getFragmentManager(), "vset_cview");
+				fragment.show(getFragmentManager(), "vset_content");
 			}
 		});
 		btn_decview.setOnClickListener(new OnClickListener() {
@@ -147,9 +147,10 @@ public class RulesActivity extends Activity {
 					@Override
 					public void onDialogDeleteClick(Settings.Setting.ViewSettings vset) {
 						setting.rules.decview = null;
+						check_decview.setChecked(false);
 					}
 				});
-				fragment.show(getFragmentManager(), "vset_cview");
+				fragment.show(getFragmentManager(), "vset_decview");
 			}
 		});
 		
@@ -217,7 +218,7 @@ public class RulesActivity extends Activity {
 	}
 	
 	protected void addViewRule(Settings.Setting.ViewSettingsPack vsetpk) {
-		if (setting.rules.view == null) setting.rules.view = new ArrayList<Setting.ViewSettingsPack>();
+		if (setting.rules.view == null || setting.rules.view.size() == 0) setting.rules.view = new ArrayList<Setting.ViewSettingsPack>();
 		setting.rules.view.add(vsetpk);
 		lA.vsetpks.clear();
 		lA.vsetpks.addAll(setting.rules.view);
@@ -257,8 +258,8 @@ public class RulesActivity extends Activity {
 		if (!check_cview.isChecked()) setting.rules.cview = null;
 		if (!check_content.isChecked()) setting.rules.content = null;
 		if (!check_decview.isChecked()) setting.rules.decview = null;
-		mSettings.setSetting(setting);
-		Settings.Saver.save(this, act_inf.packageName, act_inf.name, mSettings);
+		/*mSettings.setSetting(setting);
+		Settings.Saver.save(this, act_inf.packageName, act_inf.name, mSettings);*/
 		Intent resultIntent = new Intent();
 		setResult(Activity.RESULT_OK, resultIntent);
 		super.onStop();

@@ -127,16 +127,18 @@ public class ViewSettingsPackDialog extends DialogFragment {
 	    spinnerFrom.setSelection(vsetpk.from);
 	    edit_levels.setText(String.valueOf(vsetpk.levels));
 	    edit_childindexes.setText(vsetpk.getChildIndexesString());
-	    if (vsetpk.settings.setFSW_value)
+	    if (vsetpk.settings.setFSW_value) {
 	    	radioFSW1.setChecked(true);
-	    else
+	    } else {
 	    	radioFSW1.setChecked(false);
 	    	radioFSW0.setChecked(true);
-	    if (vsetpk.settings.setCTP_value)
+	    }
+	    if (vsetpk.settings.setCTP_value) {
 	    	radioCTP1.setChecked(true);
-	    else
+	    } else {
 	    	radioCTP1.setChecked(false);
 	    	radioCTP0.setChecked(true);
+	    }
 	    checkPadding.setChecked(vsetpk.settings.padding != null);
 	    checkPadding.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -181,7 +183,7 @@ public class ViewSettingsPackDialog extends DialogFragment {
 	            	   }
 	            	   if (checkCTP.isChecked()) {
 	            		   vsetpk.settings.setCTP = true;
-	            		   vsetpk.settings.setCTP_value = radioFSW1.isChecked();
+	            		   vsetpk.settings.setCTP_value = radioCTP1.isChecked();
 	            	   } else {
 	            		   vsetpk.settings.setCTP = false;
 	            	   }

@@ -117,16 +117,18 @@ public class ViewSettingsDialog extends DialogFragment {
 			}
 	    });
 	    checkCTP.setChecked(vset.setCTP);
-	    if (vset.setFSW_value)
+	    if (vset.setFSW_value) {
 	    	radioFSW1.setChecked(true);
-	    else
+	    } else {
 	    	radioFSW1.setChecked(false);
 	    	radioFSW0.setChecked(true);
-	    if (vset.setCTP_value)
+	    }
+	    if (vset.setCTP_value) {
 	    	radioCTP1.setChecked(true);
-	    else
+	    } else {
 	    	radioCTP1.setChecked(false);
 	    	radioCTP0.setChecked(true);
+	    }
 	    checkPadding.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -168,7 +170,7 @@ public class ViewSettingsDialog extends DialogFragment {
 	            	   }
 	            	   if (checkCTP.isChecked()) {
 	            		   vset.setCTP = true;
-	            		   vset.setCTP_value = radioFSW1.isChecked();
+	            		   vset.setCTP_value = radioCTP1.isChecked();
 	            	   } else {
 	            		   vset.setCTP = false;
 	            	   }

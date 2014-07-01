@@ -61,7 +61,7 @@ public class EasySettingsActivity extends Activity {
 		
 		if (act_inf.name.equals("All")) act_inf.name = "";
 		
-		mSettings = Settings.Loader.load(getApplicationContext(), act_inf.packageName, act_inf.name);
+		mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
 		setting = mSettings.getSetting();
 		
 		check_status = (CheckBox) findViewById(R.id.checkBox_status);
@@ -99,51 +99,6 @@ public class EasySettingsActivity extends Activity {
 		spinner_layoutopt.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				switch (arg2) {
-				case 0:
-					setting.rules.content = null;
-					setting.rules.decview = null;
-					setting.rules.cview = new Settings.Setting.ViewSettings();
-					setting.rules.cview.setFSW = true;
-					setting.rules.cview.setFSW_value = true;
-					setting.rules.cview.setCTP = true;
-					setting.rules.cview.setCTP_value = false;
-					setting.rules.view = null;
-					break;
-				case 1:
-					setting.rules.content = null;
-					setting.rules.decview = null;
-					setting.rules.cview = null;
-					setting.rules.view = new ArrayList<Settings.Setting.ViewSettingsPack>();
-					Settings.Setting.ViewSettingsPack vsetpk = new Settings.Setting.ViewSettingsPack();
-					vsetpk.childindexes = new int[]{0};
-					vsetpk.from = Settings.Setting.ViewSettingsPack.FROM_CVIEW;
-					vsetpk.levels = 1;
-					vsetpk.settings = new Settings.Setting.ViewSettings();
-					vsetpk.settings.setFSW = true;
-					vsetpk.settings.setFSW_value = true;
-					vsetpk.settings.setCTP = true;
-					vsetpk.settings.setCTP_value = false;
-					setting.rules.view.add(vsetpk);
-					break;
-				case 2:
-					setting.rules.content = null;
-					setting.rules.decview = null;
-					setting.rules.cview = new Settings.Setting.ViewSettings();
-					setting.rules.cview.setFSW = false;
-					setting.rules.cview.setCTP = false;
-					setting.rules.cview.padding = new Settings.Setting.ViewSettings.IntOptPadding();
-					setting.rules.cview.padding.plus_nav_h = true;
-					setting.rules.cview.padding.plus_status_h = true;
-					setting.rules.view = null;
-					break;
-				case 3:
-					setting.rules.content = null;
-					setting.rules.decview = null;
-					setting.rules.cview = null;
-					setting.rules.view = null;
-					break;
-				}
 				if (arg2 == 4) button_advanced.setEnabled(true);
 				else button_advanced.setEnabled(false);
 			}
@@ -159,6 +114,7 @@ public class EasySettingsActivity extends Activity {
 				save();
 				Intent intent = new Intent(context, RulesActivity.class);
 				intent.putExtra(RulesActivity.RULES_ACTIVITY_INFO_SELECTED, (android.os.Parcelable) act_inf);
+				do_not_save = true;
 				((Activity) context).startActivityForResult(intent, 55);
 			}
 		});
@@ -169,10 +125,12 @@ public class EasySettingsActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data); 
 		switch(requestCode) { 
 		case (55) : { 
-			if (resultCode == Activity.RESULT_OK)
+			if (resultCode == Activity.RESULT_OK) {
 				mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
 				setting = mSettings.getSetting();
 				settingsUpdated();
+				do_not_save = false;
+			}
 			break; 
 		} 
 		} 
@@ -236,6 +194,51 @@ public class EasySettingsActivity extends Activity {
 	protected void updateSettings() {
 		setting.s_color = Helpers.getColor(edit_s_color.getText().toString());
 		setting.n_color = Helpers.getColor(edit_n_color.getText().toString());
+		switch (spinner_layoutopt.getSelectedItemPosition()) {
+		case 0:
+			setting.rules.content = null;
+			setting.rules.decview = null;
+			setting.rules.cview = new Settings.Setting.ViewSettings();
+			setting.rules.cview.setFSW = true;
+			setting.rules.cview.setFSW_value = true;
+			setting.rules.cview.setCTP = true;
+			setting.rules.cview.setCTP_value = false;
+			setting.rules.view = null;
+			break;
+		case 1:
+			setting.rules.content = null;
+			setting.rules.decview = null;
+			setting.rules.cview = null;
+			setting.rules.view = new ArrayList<Settings.Setting.ViewSettingsPack>();
+			Settings.Setting.ViewSettingsPack vsetpk = new Settings.Setting.ViewSettingsPack();
+			vsetpk.childindexes = new int[]{0};
+			vsetpk.from = Settings.Setting.ViewSettingsPack.FROM_CVIEW;
+			vsetpk.levels = 1;
+			vsetpk.settings = new Settings.Setting.ViewSettings();
+			vsetpk.settings.setFSW = true;
+			vsetpk.settings.setFSW_value = true;
+			vsetpk.settings.setCTP = true;
+			vsetpk.settings.setCTP_value = false;
+			setting.rules.view.add(vsetpk);
+			break;
+		case 2:
+			setting.rules.content = null;
+			setting.rules.decview = null;
+			setting.rules.cview = new Settings.Setting.ViewSettings();
+			setting.rules.cview.setFSW = false;
+			setting.rules.cview.setCTP = false;
+			setting.rules.cview.padding = new Settings.Setting.ViewSettings.IntOptPadding();
+			setting.rules.cview.padding.plus_nav_h = true;
+			setting.rules.cview.padding.plus_status_h = true;
+			setting.rules.view = null;
+			break;
+		case 3:
+			setting.rules.content = null;
+			setting.rules.decview = null;
+			setting.rules.cview = null;
+			setting.rules.view = null;
+			break;
+		}
 		mSettings.setSetting(setting);
 		if (setting != null) mSettings.parseToString();
 	}
@@ -313,8 +316,8 @@ public class EasySettingsActivity extends Activity {
 	
 	protected boolean do_not_save = false;
 	@Override
-	protected void onPause() {
+	protected void onStop() {
 		if (!do_not_save) save();
-		super.onPause();
+		super.onStop();
 	}
 }
