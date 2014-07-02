@@ -18,6 +18,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -231,7 +232,7 @@ public class RulesActivity extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		this.menu = menu;
 	    inflater.inflate(R.menu.rules, menu);
-	    menu.getItem(1).setEnabled((Helpers.clipboard_sav instanceof Settings.Setting.Rules));
+	    menu.getItem(2).setEnabled((Helpers.clipboard_sav instanceof Settings.Setting.Rules));
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -239,9 +240,20 @@ public class RulesActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
+	    case R.id.action_save_rules:
+			setting.rules.s_plus = Integer.valueOf(edit_s_plus.getText().toString());
+			setting.rules.n_plus = Integer.valueOf(edit_n_plus.getText().toString());
+			if (!check_cview.isChecked()) setting.rules.cview = null;
+			if (!check_content.isChecked()) setting.rules.content = null;
+			if (!check_decview.isChecked()) setting.rules.decview = null;
+			mSettings.setSetting(setting);
+			Settings.Saver.save(this, act_inf.packageName, act_inf.name, mSettings);
+			Toast.makeText(getApplicationContext(), R.string.str_saved, Toast.LENGTH_SHORT).show();
+			finish();
+	    	return true;
 	    case R.id.action_copy_rules:
 	    	Helpers.clipboard_sav = setting.rules;
-	    	menu.getItem(1).setEnabled(true);
+	    	menu.getItem(2).setEnabled(true);
 	    	return true;
 	    case R.id.action_paste_rules:
 	    	if (Helpers.clipboard_sav != null && Helpers.clipboard_sav instanceof Settings.Setting.Rules)
@@ -254,13 +266,6 @@ public class RulesActivity extends Activity {
 	
 	@Override
 	public void onStop() {
-		setting.rules.s_plus = Integer.valueOf(edit_s_plus.getText().toString());
-		setting.rules.n_plus = Integer.valueOf(edit_n_plus.getText().toString());
-		if (!check_cview.isChecked()) setting.rules.cview = null;
-		if (!check_content.isChecked()) setting.rules.content = null;
-		if (!check_decview.isChecked()) setting.rules.decview = null;
-		/*mSettings.setSetting(setting);
-		Settings.Saver.save(this, act_inf.packageName, act_inf.name, mSettings);*/
 		Intent resultIntent = new Intent();
 		setResult(Activity.RESULT_OK, resultIntent);
 		super.onStop();

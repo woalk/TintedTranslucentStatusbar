@@ -46,7 +46,7 @@
         android:layout_below="@+id/editText_s_plus"
         android:layout_marginTop="14dp"
         android:layout_toLeftOf="@+id/editText_n_plus"
-        android:text="@string/descr_s_plus" />
+        android:text="@string/descr_n_plus" />
 
     <Button
         android:id="@+id/button_edit_cview"

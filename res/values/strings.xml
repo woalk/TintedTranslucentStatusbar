@@ -38,6 +38,7 @@
     <string name="btn_advanced">Configure custom rules (advanced)</string>
     <string name="title_activity_rules">Advanced rules</string>
     <string name="descr_s_plus">Increase status bar height (px):</string>
+    <string name="descr_n_plus">Increase navigation bar height (px):</string>
     <string name="descr_check_cview">View 1 past the Content View (“cview”)</string>
     <string name="str_btn_edit">Edit&#8230;</string>
     <string name="descr_check_content">Content View</string>
@@ -59,6 +60,8 @@
     <string name="v_delete">Delete</string>
     <string name="descr_from">From:</string>
     <string name="descr_levels">Levels:</string>
-    <string name="descr_childindexes">Child indexes (seperate by comma):</string>
+    <string name="descr_childindexes">Child indexes (separate by comma):</string>
+    <string name="str_action_save">Save</string>
+    <string name="str_saved">Settings saved.</string>
 
 </resources>

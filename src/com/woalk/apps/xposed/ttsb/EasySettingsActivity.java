@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 public class EasySettingsActivity extends Activity {
 	
@@ -255,43 +256,48 @@ public class EasySettingsActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		updateSettings();
-	    switch (item.getItemId()) {
-	        case R.id.action_delete:
-	        	delete();
-	        	return true;
-	        case R.id.action_use_settingscode:
-	        	AlertDialog.Builder alert = new AlertDialog.Builder(this);
-	        	alert.setTitle(R.string.settingscode_title);
-	        	alert.setMessage(R.string.settingscode_msg);
-	        	// Set an EditText view to get user input 
-	        	final EditText input = new EditText(this);
-	        	alert.setView(input);
-	        	input.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-	        	input.setText(mSettings.getLine());
-	        	input.setTypeface(Typeface.MONOSPACE);
-	        	alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-	        		public void onClick(DialogInterface dialog, int whichButton) {
-	        			String value = input.getText().toString();
-	        			mSettings.setLine(value);
-	        			mSettings.parseToSettings();
-	        			settingsUpdated();
-	        		}
-	        	});
-	        	alert.setNegativeButton(android.R.string.cancel, null);
-	        	alert.show();
-	        	return true;
-	        case R.id.action_copy_easy_settings:
-	        	Helpers.clipboard_sav = mSettings;
-	        	menu.getItem(3).setEnabled(true);
-	        	return true;
-	        case R.id.action_paste_easy_settings:
-	        	if (!(Helpers.clipboard_sav instanceof Settings.Parser)) return false;
-	        	mSettings = (Settings.Parser) Helpers.clipboard_sav;
-	        	settingsUpdated();
-	        	return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		switch (item.getItemId()) {
+		case R.id.action_save_easy_settings:
+			Toast.makeText(getApplicationContext(), R.string.str_saved, Toast.LENGTH_SHORT).show();
+			save();
+			finish();
+			return true;
+		case R.id.action_delete:
+			delete();
+			return true;
+		case R.id.action_use_settingscode:
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			alert.setTitle(R.string.settingscode_title);
+			alert.setMessage(R.string.settingscode_msg);
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(this);
+			alert.setView(input);
+			input.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+			input.setText(mSettings.getLine());
+			input.setTypeface(Typeface.MONOSPACE);
+			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					String value = input.getText().toString();
+					mSettings.setLine(value);
+					mSettings.parseToSettings();
+					settingsUpdated();
+				}
+			});
+			alert.setNegativeButton(android.R.string.cancel, null);
+			alert.show();
+			return true;
+		case R.id.action_copy_easy_settings:
+			Helpers.clipboard_sav = mSettings;
+			menu.getItem(3).setEnabled(true);
+			return true;
+		case R.id.action_paste_easy_settings:
+			if (!(Helpers.clipboard_sav instanceof Settings.Parser)) return false;
+			mSettings = (Settings.Parser) Helpers.clipboard_sav;
+			settingsUpdated();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	public void save() {
@@ -317,7 +323,7 @@ public class EasySettingsActivity extends Activity {
 	protected boolean do_not_save = false;
 	@Override
 	protected void onStop() {
-		if (!do_not_save) save();
+		//if (!do_not_save) save();
 		super.onStop();
 	}
 }
