@@ -176,10 +176,15 @@ public class ViewSettingsDialog extends DialogFragment {
 	            	   }
 	            	   if (checkPadding.isChecked()) {
 	            		   vset.padding = new Settings.Setting.ViewSettings.IntOptPadding();
-	            		   vset.padding.left = Integer.valueOf(editLeft.getText().toString());
-	            		   vset.padding.top = Integer.valueOf(editTop.getText().toString());
-	            		   vset.padding.right = Integer.valueOf(editRight.getText().toString());
-	            		   vset.padding.bottom = Integer.valueOf(editBottom.getText().toString());
+	            		   if (!editLeft.getText().equals("") &&
+	            				   editTop.getText().equals("") &&
+	            				   editRight.getText().equals("") &&
+	            				   editBottom.getText().equals("")) {
+	            			   vset.padding.left = Integer.valueOf(editLeft.getText().toString());
+	            			   vset.padding.top = Integer.valueOf(editTop.getText().toString());
+	            			   vset.padding.right = Integer.valueOf(editRight.getText().toString());
+	            			   vset.padding.bottom = Integer.valueOf(editBottom.getText().toString());
+	            		   }
 	            		   vset.padding.plus_status_h = check_status_h.isChecked();
 	            		   vset.padding.plus_actionbar_h = check_actionbar_h.isChecked();
 	            		   vset.padding.plus_nav_h = check_nav_h.isChecked();

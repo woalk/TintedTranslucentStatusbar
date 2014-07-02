@@ -173,8 +173,12 @@ public class ViewSettingsPackDialog extends DialogFragment {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
 	            	   vsetpk.from = spinnerFrom.getSelectedItemPosition();
-	            	   vsetpk.levels = Integer.parseInt(edit_levels.getText().toString());
-	            	   vsetpk.setChildIndexesFromString(edit_childindexes.getText().toString());
+	            	   if (!edit_levels.getText().equals(""))
+	            		   vsetpk.levels = Integer.parseInt(edit_levels.getText().toString());
+	            	   if (!edit_childindexes.getText().equals(""))
+	            		   vsetpk.setChildIndexesFromString(edit_childindexes.getText().toString());
+	            	   else vsetpk.childindexes = new int[]{0};
+	            	   
 	            	   if (checkFSW.isChecked()) {
 	            		   vsetpk.settings.setFSW = true;
 	            		   vsetpk.settings.setFSW_value = radioFSW1.isChecked();
@@ -189,10 +193,15 @@ public class ViewSettingsPackDialog extends DialogFragment {
 	            	   }
 	            	   if (checkPadding.isChecked()) {
 	            		   vsetpk.settings.padding = new Settings.Setting.ViewSettings.IntOptPadding();
-	            		   vsetpk.settings.padding.left = Integer.valueOf(editLeft.getText().toString());
-	            		   vsetpk.settings.padding.top = Integer.valueOf(editTop.getText().toString());
-	            		   vsetpk.settings.padding.right = Integer.valueOf(editRight.getText().toString());
-	            		   vsetpk.settings.padding.bottom = Integer.valueOf(editBottom.getText().toString());
+	            		   if (!editLeft.getText().equals("") &&
+	            				   editTop.getText().equals("") &&
+	            				   editRight.getText().equals("") &&
+	            				   editBottom.getText().equals("")) {
+	            			   vsetpk.settings.padding.left = Integer.valueOf(editLeft.getText().toString());
+	            			   vsetpk.settings.padding.top = Integer.valueOf(editTop.getText().toString());
+	            			   vsetpk.settings.padding.right = Integer.valueOf(editRight.getText().toString());
+	            			   vsetpk.settings.padding.bottom = Integer.valueOf(editBottom.getText().toString());
+	            		   }
 	            		   vsetpk.settings.padding.plus_status_h = check_status_h.isChecked();
 	            		   vsetpk.settings.padding.plus_actionbar_h = check_actionbar_h.isChecked();
 	            		   vsetpk.settings.padding.plus_nav_h = check_nav_h.isChecked();
