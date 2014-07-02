@@ -218,7 +218,8 @@ public class RulesActivity extends Activity {
 	}
 	
 	protected void addViewRule(Settings.Setting.ViewSettingsPack vsetpk) {
-		if (setting.rules.view == null || setting.rules.view.size() == 0) setting.rules.view = new ArrayList<Setting.ViewSettingsPack>();
+		if (setting.rules.view == null || setting.rules.view.size() == 0)
+			setting.rules.view = new ArrayList<Setting.ViewSettingsPack>();
 		setting.rules.view.add(vsetpk);
 		lA.vsetpks.clear();
 		lA.vsetpks.addAll(setting.rules.view);

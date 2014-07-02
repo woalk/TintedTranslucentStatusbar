@@ -33,15 +33,17 @@ public class SettingsActivity extends Activity {
 			e.printStackTrace();
 		}
 		if (pInfo != null) {
-			TextView textView2 = (TextView) findViewById(R.id.textView_pright);
+			TextView textView2 = (TextView) findViewById(R.id.textView2);
 			TextView textView4 = (TextView) findViewById(R.id.textView4);
-			
-			String te_ver, ui_ver;
-			float te_ver_f = pInfo.applicationInfo.metaData.getFloat("tintengine_version");
-			if (te_ver_f != 0) te_ver = String.valueOf(te_ver_f); else te_ver = pInfo.applicationInfo.metaData.getString("tintengine_version");
-			float ui_ver_f = pInfo.applicationInfo.metaData.getFloat("ui_version");
-			if (ui_ver_f != 0) ui_ver = String.valueOf(ui_ver_f); else ui_ver = pInfo.applicationInfo.metaData.getString("ui_version");
-			
+
+			String te_ver = "";
+			String ui_ver = "";
+			try {
+				te_ver = pInfo.applicationInfo.metaData.getString("tintengine_version");
+				ui_ver = pInfo.applicationInfo.metaData.getString("ui_version");
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 			textView2.setText(getString(R.string.version_prefix) + ":\n\n"
 					+ getString(R.string.tintengine_ver_prefix) + ":\n" 
 					+ getString(R.string.ui_ver_prefix) + ":\n"
