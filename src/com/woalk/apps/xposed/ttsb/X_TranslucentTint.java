@@ -236,13 +236,13 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 			
 			if (tintMan != null) {
 				SystemBarTintManager.SystemBarConfig config = tintMan.getConfig();
-				if (vset.padding.plus_status_h)
+				if (vset.padding.plus_status_h && tintMan.isStatusBarTintEnabled())
 					top += config.getStatusBarHeight();
-				if (vset.padding.plus_actionbar_h)
+				if (vset.padding.plus_actionbar_h && tintMan.isStatusBarTintEnabled())
 					top += config.getActionBarHeight();
-				if (vset.padding.plus_nav_w)
+				if (vset.padding.plus_nav_w && !config.isNavigationAtBottom() && tintMan.isNavBarTintEnabled())
 					right += config.getNavigationBarWidth();
-				if (vset.padding.plus_nav_h)
+				if (vset.padding.plus_nav_h && tintMan.isNavBarTintEnabled())
 					bottom += config.getNavigationBarHeight();
 			}
 			
