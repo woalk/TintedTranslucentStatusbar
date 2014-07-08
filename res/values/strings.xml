@@ -63,5 +63,19 @@
     <string name="descr_childindexes">Child indexes (separate by comma):</string>
     <string name="str_action_save">Save</string>
     <string name="str_saved">Settings saved.</string>
+    <string name="str_action_sync_with_database">Sync settings from database</string>
+    <string name="str_action_send_to_database">Suggest this for database</string>
+    <string name="title_activity_sync">Sync settings</string>
+    <string name="str_select_sync_apps">Select the apps for which you want to load the database-provided settings:</string>
+    <string name="str_addsync">OK, get settings</string>
+    <string name="loadingsync_msg">Please wait while TTSB loads and checks the database&#8230;</string>
+    <string name="settings_synced_success">The selected settings have been imported from database successfully.</string>
+    <string name="str_action_delete_package_settings">Delete all settings for this app</string>
+    <string name="delete_pkg_title">Delete app settings</string>
+    <string name="delete_pkg_msg">Do you want to delete all the settings for this app permanently?</string>
+    <string name="settings_suggest_success">The selected settings have been suggested to be added to the database.</string>
+    <string name="suggestsync_msg">Please wait while TTSB sends your suggestion&#8230;</string>
+    <string name="suggest_qu_title">Suggest this app settings</string>
+    <string name="suggest_qu_msg">Do you want to send your settings for this app to TTSB\'s suggestions, so Woalk can check and include them in the database?\n\n<i>No other data will be submitted, just your IP will be saved to make submitted settings groupable by submitter.</i></string>
 
 </resources>

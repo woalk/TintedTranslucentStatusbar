@@ -90,12 +90,6 @@ public class EasySettingsActivity extends Activity {
 				edit_n_color.setEnabled(isChecked);
 			}
 		});
-		check_s_plus.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				setting.rules.s_plus = (isChecked ? 1 : 0);
-			}
-		});
 		
 		spinner_layoutopt.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
@@ -115,7 +109,6 @@ public class EasySettingsActivity extends Activity {
 				save();
 				Intent intent = new Intent(context, RulesActivity.class);
 				intent.putExtra(RulesActivity.RULES_ACTIVITY_INFO_SELECTED, (android.os.Parcelable) act_inf);
-				do_not_save = true;
 				((Activity) context).startActivityForResult(intent, 55);
 			}
 		});
@@ -130,7 +123,6 @@ public class EasySettingsActivity extends Activity {
 				mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
 				setting = mSettings.getSetting();
 				settingsUpdated();
-				do_not_save = false;
 			}
 			break; 
 		} 
@@ -162,10 +154,11 @@ public class EasySettingsActivity extends Activity {
 				setting.rules.cview == null &&
 				setting.rules.view != null &&
 				setting.rules.view.size() > 0 &&
-				setting.rules.view.get(0).childindexes == new int[]{0} &&
+				setting.rules.view.get(0).childindexes.length == 1 &&
+				setting.rules.view.get(0).childindexes[0] == 0 &&
 				setting.rules.view.get(0).from == Settings.Setting.ViewSettingsPack.FROM_CVIEW &&
 				setting.rules.view.get(0).levels == 1 &&
-				setting.rules.view.get(0).settings == new Settings.Setting.ViewSettings() &&
+				setting.rules.view.get(0).settings != null &&
 				setting.rules.view.get(0).settings.setFSW == true &&
 				setting.rules.view.get(0).settings.setFSW_value == true &&
 				setting.rules.view.get(0).settings.setCTP == true &&
@@ -195,6 +188,11 @@ public class EasySettingsActivity extends Activity {
 	protected void updateSettings() {
 		setting.s_color = Helpers.getColor(edit_s_color.getText().toString());
 		setting.n_color = Helpers.getColor(edit_n_color.getText().toString());
+	    if (check_s_plus.isChecked()) {
+	    	if (setting.rules.s_plus < 1)
+	    		setting.rules.s_plus = 1;
+	    } else
+	    	setting.rules.s_plus = 0;
 		switch (spinner_layoutopt.getSelectedItemPosition()) {
 		case 0:
 			setting.rules.content = null;
@@ -313,14 +311,12 @@ public class EasySettingsActivity extends Activity {
 		alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
     		public void onClick(DialogInterface dialog, int whichButton) {
     			Settings.Saver.delete(context, act_inf.packageName, act_inf.name);
-    			do_not_save = true;
     			((Activity) context).finish();
     		}
     	});
 		alert.show();
 	}
 	
-	protected boolean do_not_save = false;
 	@Override
 	protected void onStop() {
 		//if (!do_not_save) save();

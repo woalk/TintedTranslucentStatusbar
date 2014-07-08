@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_gravity="center_vertical|left"
+    android:columnCount="4"
+    android:gravity="center_vertical|left"
+    android:orientation="horizontal"
+    android:rowCount="1"
+    android:shrinkColumns="2"
+    android:stretchColumns="2" >
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left" >
+
+        <CheckBox
+            android:id="@+id/checkSync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false" />
+
+        <ImageView
+            android:id="@+id/imageIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="6dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginLeft="4dp"
+            android:gravity="center_vertical|left"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textPkg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_ok"
+            android:visibility="gone" />
+
+    </TableRow>
+
+</TableLayout>

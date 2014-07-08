@@ -166,7 +166,7 @@ public class ActivitiesActivity extends Activity {
 	}
 	
 	protected void submitToDB() {
-		new SuggestTask().execute("http://ext.woalk.de/****DATABASE-URL-REMOVED****");
+		new SuggestTask().execute("http://ext.woalk.de/ttsb_database/insertsuggestion.php");
 	}
 	
 	private class SuggestTask extends AsyncTask<String, Void, HttpResponse> {

@@ -114,20 +114,28 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle presses on the action bar items
-	    switch (item.getItemId()) {
-	        case R.id.action_settings:
-	        	launchSettings();
-	        	return true;
-	        case R.id.action_update:
-	        	update();
-	        	return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		switch (item.getItemId()) {
+		case R.id.action_sync_with_database:
+			launchSync();
+			return true;
+		case R.id.action_settings:
+			launchSettings();
+			return true;
+		case R.id.action_update:
+			update();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	private void launchSettings() {
 		Intent sett_Intent = new Intent(this, SettingsActivity.class);
 		startActivity(sett_Intent);
+	}
+	
+	private void launchSync() {
+		Intent sync_Intent = new Intent(this, SyncActivity.class);
+		startActivity(sync_Intent);
 	}
 }

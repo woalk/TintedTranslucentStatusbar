@@ -2,6 +2,8 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -428,7 +430,16 @@ public class Settings {
 			return parser;
 		}
 		public static Parser load(SharedPreferences sPref, String packageName, String className) {
-			Parser parser = new Parser(sPref.getString(packageName + "/" + className, ""));
+			String line = sPref.getString(packageName + "/" + className, "");
+			if (line.equals("")) return new Parser("");
+			Parser parser = new Parser(line);
+			parser.parseToSettings();
+			return parser;
+		}
+		public static Parser loadWithNull(SharedPreferences sPref, String packageName, String className) {
+			String line = sPref.getString(packageName + "/" + className, "{}");
+			if (line.equals("{}")) return null;
+			Parser parser = new Parser(line);
 			parser.parseToSettings();
 			return parser;
 		}
@@ -475,8 +486,8 @@ public class Settings {
 			return containsPackage(map, packageName);
 		}
 		public static boolean containsPackage(SortedMap<String, ?> map, String packageName) {
-			SortedMap<String, ?> smap = map.tailMap(packageName);
-			return (!smap.isEmpty() && smap.firstKey().startsWith(packageName));
+			SortedMap<String, ?> smap = map.tailMap(packageName + "/");
+			return (!smap.isEmpty() && smap.firstKey().startsWith(packageName + "/"));
 		}
 	}
 	
@@ -513,6 +524,35 @@ public class Settings {
 		public static void delete(SharedPreferences sPref, String key) {
 			SharedPreferences.Editor edit = sPref.edit();
 			edit.remove(key);
+			edit.apply();
+		}
+		
+		public static void deleteEverythingFromPackages(Context context, List<String> packageNames) {
+			SharedPreferences sPref = context.getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+			deleteEverythingFromPackages(sPref, packageNames);
+		}
+		public static void deleteEverythingFromPackages(SharedPreferences sPref, List<String> packageNames) {
+			SharedPreferences.Editor edit = sPref.edit();
+			Map<String, ?> sPrefAll = sPref.getAll();
+			for (Entry<String, ?> entry : sPrefAll.entrySet()) {
+				if (!entry.getKey().contains("/")) return;
+				String entryPackage = entry.getKey().substring(0, entry.getKey().indexOf("/"));
+				if (packageNames.contains(entryPackage)) edit.remove(entry.getKey());
+			}
+			edit.apply();
+		}
+		public static void deleteEverythingFromPackage(Context context, String packageName) {
+			SharedPreferences sPref = context.getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+			deleteEverythingFromPackage(sPref, packageName);
+		}
+		public static void deleteEverythingFromPackage(SharedPreferences sPref, String packageName) {
+			SharedPreferences.Editor edit = sPref.edit();
+			Map<String, ?> sPrefAll = sPref.getAll();
+			for (Entry<String, ?> entry : sPrefAll.entrySet()) {
+				if (!entry.getKey().contains("/")) continue;
+				String entryPackage = entry.getKey().substring(0, entry.getKey().indexOf("/"));
+				if (packageName.equals(entryPackage)) edit.remove(entry.getKey());
+			}
 			edit.apply();
 		}
 	}
