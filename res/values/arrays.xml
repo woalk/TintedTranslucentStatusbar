@@ -12,5 +12,9 @@
         <item >cview</item>
         <item >Content View</item>
     </string-array>
+    <string-array name="syncopt">
+        <item >Sync everything</item>
+        <item >Sync layout only</item>
+    </string-array>
     
 </resources>

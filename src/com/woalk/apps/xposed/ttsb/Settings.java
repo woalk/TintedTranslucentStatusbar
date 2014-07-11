@@ -330,8 +330,8 @@ public class Settings {
 	public static class Setting {
 		public boolean status = false;
 		public boolean nav = false;
-		public int s_color = Color.BLACK;
-		public int n_color = Color.BLACK;
+		public int s_color = Color.TRANSPARENT;
+		public int n_color = Color.TRANSPARENT;
 		public Rules rules;
 		
 		public Setting() {

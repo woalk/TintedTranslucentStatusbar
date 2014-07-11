@@ -206,6 +206,11 @@ public class RulesActivity extends Activity {
 	}
 	
 	protected void rulesUpdated() {
+		if (setting == null || setting.rules == null) {
+			Toast.makeText(this, R.string.no_settings_e, Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
 		edit_s_plus.setText(String.valueOf(setting.rules.s_plus));
 		edit_n_plus.setText(String.valueOf(setting.rules.n_plus));
 		if (setting.rules.cview != null) check_cview.setChecked(true);
@@ -262,12 +267,5 @@ public class RulesActivity extends Activity {
 	    default:
 	    	return super.onOptionsItemSelected(item);
 	    }
-	}
-	
-	@Override
-	public void onStop() {
-		Intent resultIntent = new Intent();
-		setResult(Activity.RESULT_OK, resultIntent);
-		super.onStop();
 	}
 }

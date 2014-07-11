@@ -2,9 +2,6 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.ArrayList;
 
-import com.woalk.apps.xposed.ttsb.Settings.Setting.Rules;
-import com.woalk.apps.xposed.ttsb.Settings.Setting.ViewSettings.IntOptPadding;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,7 +11,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,8 +24,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class EasySettingsActivity extends Activity {
@@ -50,6 +44,8 @@ public class EasySettingsActivity extends Activity {
 	
 	private final Context context = this;
 	private Menu menu;
+	
+	private boolean resume1 = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +60,8 @@ public class EasySettingsActivity extends Activity {
 		
 		mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
 		setting = mSettings.getSetting();
+		
+		resume1 = true;
 		
 		check_status = (CheckBox) findViewById(R.id.checkBox_status);
 		check_nav = (CheckBox) findViewById(R.id.checkBox_nav);
@@ -106,27 +104,12 @@ public class EasySettingsActivity extends Activity {
 		button_advanced.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				save();
+				if (setting.status || setting.nav) save();
 				Intent intent = new Intent(context, RulesActivity.class);
 				intent.putExtra(RulesActivity.RULES_ACTIVITY_INFO_SELECTED, (android.os.Parcelable) act_inf);
-				((Activity) context).startActivityForResult(intent, 55);
+				((Activity) context).startActivity(intent);
 			}
 		});
-	}
-	
-	@Override 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
-		super.onActivityResult(requestCode, resultCode, data); 
-		switch(requestCode) { 
-		case (55) : { 
-			if (resultCode == Activity.RESULT_OK) {
-				mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
-				setting = mSettings.getSetting();
-				settingsUpdated();
-			}
-			break; 
-		} 
-		} 
 	}
 
 	protected void settingsUpdated() {
@@ -246,7 +229,7 @@ public class EasySettingsActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.easy_settings, menu);
-	    if (Helpers.clipboard_sav instanceof Settings.Parser) menu.getItem(3).setEnabled(true);
+	    if (Helpers.clipboard_sav instanceof Settings.Parser) menu.getItem(4).setEnabled(true);
 	    this.menu = menu;
 	    return super.onCreateOptionsMenu(menu);
 	}
@@ -286,7 +269,7 @@ public class EasySettingsActivity extends Activity {
 			return true;
 		case R.id.action_copy_easy_settings:
 			Helpers.clipboard_sav = mSettings;
-			menu.getItem(3).setEnabled(true);
+			menu.getItem(4).setEnabled(true);
 			return true;
 		case R.id.action_paste_easy_settings:
 			if (!(Helpers.clipboard_sav instanceof Settings.Parser)) return false;
@@ -318,8 +301,15 @@ public class EasySettingsActivity extends Activity {
 	}
 	
 	@Override
-	protected void onStop() {
-		//if (!do_not_save) save();
-		super.onStop();
+	protected void onResume() {
+		if (resume1) {
+			resume1 = false;
+			super.onResume();
+			return;
+		}
+		mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
+		setting = mSettings.getSetting();
+		settingsUpdated();
+		super.onResume();
 	}
 }

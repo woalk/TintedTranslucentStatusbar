@@ -156,6 +156,11 @@ public class ViewSettingsDialog extends DialogFragment {
 	    	check_actionbar_h.setChecked(vset.padding.plus_actionbar_h);
 	    	check_nav_h.setChecked(vset.padding.plus_nav_h);
 	    	check_nav_w.setChecked(vset.padding.plus_nav_w);
+	    } else {
+	    	editLeft.setText("0");
+	    	editTop.setText("0");
+	    	editRight.setText("0");
+	    	editBottom.setText("0");
 	    }
 
 	    builder.setView(v)
@@ -177,13 +182,17 @@ public class ViewSettingsDialog extends DialogFragment {
 	            	   if (checkPadding.isChecked()) {
 	            		   vset.padding = new Settings.Setting.ViewSettings.IntOptPadding();
 	            		   if (!editLeft.getText().equals("") &&
-	            				   editTop.getText().equals("") &&
-	            				   editRight.getText().equals("") &&
-	            				   editBottom.getText().equals("")) {
-	            			   vset.padding.left = Integer.valueOf(editLeft.getText().toString());
-	            			   vset.padding.top = Integer.valueOf(editTop.getText().toString());
-	            			   vset.padding.right = Integer.valueOf(editRight.getText().toString());
-	            			   vset.padding.bottom = Integer.valueOf(editBottom.getText().toString());
+	            				   !editTop.getText().equals("") &&
+	            				   !editRight.getText().equals("") &&
+	            				   !editBottom.getText().equals("")) {
+	            			   try {
+	            				   vset.padding.left = Integer.valueOf(editLeft.getText().toString());
+	            				   vset.padding.top = Integer.valueOf(editTop.getText().toString());
+	            				   vset.padding.right = Integer.valueOf(editRight.getText().toString());
+	            				   vset.padding.bottom = Integer.valueOf(editBottom.getText().toString());
+	            			   } catch (NumberFormatException e) {
+	            				   // Log.e("TTSB UI", "Padding was not a valid value.");
+	            			   }
 	            		   }
 	            		   vset.padding.plus_status_h = check_status_h.isChecked();
 	            		   vset.padding.plus_actionbar_h = check_actionbar_h.isChecked();

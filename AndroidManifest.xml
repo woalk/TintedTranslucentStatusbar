@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.woalk.apps.xposed.ttsb"
-    android:versionCode="12"
-    android:versionName="Beta 2.1" >
+    android:versionCode="16"
+    android:versionName="Beta 2.2.2" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -65,10 +65,10 @@
             android:value="30" />
         <meta-data
             android:name="tintengine_version"
-            android:value="\ 2.0.1" />
+            android:value="\ 2.0.2" />
         <meta-data
             android:name="ui_version"
-            android:value="\ 2.1" />
+            android:value="\ 2.2.1" />
     </application>
 
 </manifest>

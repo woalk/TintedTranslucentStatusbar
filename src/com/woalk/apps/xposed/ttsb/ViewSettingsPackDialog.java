@@ -166,6 +166,11 @@ public class ViewSettingsPackDialog extends DialogFragment {
 	    	check_actionbar_h.setChecked(vsetpk.settings.padding.plus_actionbar_h);
 	    	check_nav_h.setChecked(vsetpk.settings.padding.plus_nav_h);
 	    	check_nav_w.setChecked(vsetpk.settings.padding.plus_nav_w);
+	    } else {
+	    	editLeft.setText("0");
+	    	editTop.setText("0");
+	    	editRight.setText("0");
+	    	editBottom.setText("0");
 	    }
 	    
 	    builder.setView(v)
@@ -194,13 +199,17 @@ public class ViewSettingsPackDialog extends DialogFragment {
 	            	   if (checkPadding.isChecked()) {
 	            		   vsetpk.settings.padding = new Settings.Setting.ViewSettings.IntOptPadding();
 	            		   if (!editLeft.getText().equals("") &&
-	            				   editTop.getText().equals("") &&
-	            				   editRight.getText().equals("") &&
-	            				   editBottom.getText().equals("")) {
-	            			   vsetpk.settings.padding.left = Integer.valueOf(editLeft.getText().toString());
-	            			   vsetpk.settings.padding.top = Integer.valueOf(editTop.getText().toString());
-	            			   vsetpk.settings.padding.right = Integer.valueOf(editRight.getText().toString());
-	            			   vsetpk.settings.padding.bottom = Integer.valueOf(editBottom.getText().toString());
+	            				   !editTop.getText().equals("") &&
+	            				   !editRight.getText().equals("") &&
+	            				   !editBottom.getText().equals("")) {
+	            			   try {
+	            				   vsetpk.settings.padding.left = Integer.valueOf(editLeft.getText().toString());
+	            				   vsetpk.settings.padding.top = Integer.valueOf(editTop.getText().toString());
+	            				   vsetpk.settings.padding.right = Integer.valueOf(editRight.getText().toString());
+	            				   vsetpk.settings.padding.bottom = Integer.valueOf(editBottom.getText().toString());
+	            			   } catch (NumberFormatException e) {
+	            				   // Log.e("TTSB UI", "Padding was not a valid value.");
+	            			   }
 	            		   }
 	            		   vsetpk.settings.padding.plus_status_h = check_status_h.isChecked();
 	            		   vsetpk.settings.padding.plus_actionbar_h = check_actionbar_h.isChecked();

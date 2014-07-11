@@ -18,7 +18,7 @@
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_addsync"
+        android:layout_above="@+id/spinner1"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
         android:layout_marginBottom="6dp" >
@@ -27,10 +27,19 @@
 
     <Button
         android:id="@+id/button_addsync"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/str_addsync" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="@string/str_addsync" />
+        android:layout_toLeftOf="@id/button_addsync"
+        android:entries="@array/syncopt" />
 
 </RelativeLayout>

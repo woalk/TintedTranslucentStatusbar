@@ -2,8 +2,6 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import android.annotation.SuppressLint;
@@ -12,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,8 +49,6 @@ public class MainActivity extends Activity {
 			}
 			
 		});
-		
-		update();
 	}
 	
 	/**
@@ -66,7 +61,6 @@ public class MainActivity extends Activity {
 	private class LoadAppsTask extends AsyncTask<Boolean, Integer, AppListAdapter> {
 		 protected void onPreExecute() {
 			 if (prog != null) prog.setVisible(true);
-			 lA.clear();
 		 }
 		 
 		 @SuppressLint("WorldReadableFiles")
@@ -74,10 +68,12 @@ public class MainActivity extends Activity {
 		 protected AppListAdapter doInBackground(Boolean... bools) {
 			 AppListAdapter lA1 = new AppListAdapter(context, new ArrayList<ApplicationInfo>(), new ArrayList<Boolean>());
 			 PackageManager pkgMan = context.getPackageManager();
-			 List<PackageInfo> pkgs = pkgMan.getInstalledPackages(PackageManager.GET_ACTIVITIES);
-			 for (int i = 0; i < pkgs.size(); i++) {
-				 if (pkgs.get(i).activities == null || pkgs.get(i).activities.length == 0) continue;
-				 lA1.apps.add(pkgs.get(i).applicationInfo);
+			 if (Helpers.pkgs == null) {
+				 Helpers.pkgs = pkgMan.getInstalledPackages(PackageManager.GET_ACTIVITIES);
+			 }
+			 for (int i = 0; i < Helpers.pkgs.size(); i++) {
+				 if (Helpers.pkgs.get(i).activities == null || Helpers.pkgs.get(i).activities.length == 0) continue;
+				 lA1.apps.add(Helpers.pkgs.get(i).applicationInfo);
 			 }
 			 Collections.sort(lA1.apps, new ApplicationInfo.DisplayNameComparator(pkgMan));
 			 SharedPreferences sPref = context.getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
@@ -100,6 +96,7 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onResume() {
+		update();
 		super.onResume();
 	}
 	

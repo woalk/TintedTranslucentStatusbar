@@ -37,8 +37,8 @@
     <string name="check_s_plus">Remove the annoying one pixel line on top of ActionBars</string>
     <string name="btn_advanced">Configure custom rules (advanced)</string>
     <string name="title_activity_rules">Advanced rules</string>
-    <string name="descr_s_plus">Increase status bar height (px):</string>
-    <string name="descr_n_plus">Increase navigation bar height (px):</string>
+    <string name="descr_s_plus">Increase status bar height (dp):</string>
+    <string name="descr_n_plus">Increase navigation bar height (dp):</string>
     <string name="descr_check_cview">View 1 past the Content View (“cview”)</string>
     <string name="str_btn_edit">Edit&#8230;</string>
     <string name="descr_check_content">Content View</string>
@@ -67,7 +67,7 @@
     <string name="str_action_send_to_database">Suggest this for database</string>
     <string name="title_activity_sync">Sync settings</string>
     <string name="str_select_sync_apps">Select the apps for which you want to load the database-provided settings:</string>
-    <string name="str_addsync">OK, get settings</string>
+    <string name="str_addsync">Sync</string>
     <string name="loadingsync_msg">Please wait while TTSB loads and checks the database&#8230;</string>
     <string name="settings_synced_success">The selected settings have been imported from database successfully.</string>
     <string name="str_action_delete_package_settings">Delete all settings for this app</string>
@@ -76,6 +76,12 @@
     <string name="settings_suggest_success">The selected settings have been suggested to be added to the database.</string>
     <string name="suggestsync_msg">Please wait while TTSB sends your suggestion&#8230;</string>
     <string name="suggest_qu_title">Suggest this app settings</string>
-    <string name="suggest_qu_msg">Do you want to send your settings for this app to TTSB\'s suggestions, so Woalk can check and include them in the database?\n\n<i>No other data will be submitted, just your IP will be saved to make submitted settings groupable by submitter.</i></string>
-
+    <string name="suggest_qu_msg">Do you want to send your settings for this app to TTSB\'s suggestions, so Woalk can check and include them in the database?\n\n<i>No other data will be submitted or saved.</i></string>
+	<string name="no_connection_e">Seems like you don\'t have an internet connection.\nCheck your Wifi or mobile data settings.</string>
+	<string name="str_check_log">Enable debug logging</string>
+	<string name="no_settings_e">You must have settings set before you can edit advanced rules.</string>
+	<string name="prefix_timestamp">Entry timestamp:</string>
+	<string name="advertise_translucentstyle_text">Do you want some more uniqueness in look of TTSB?\nTry “Translucent Style” Xposed module to make your translucent modes appear way different than usually!</string>
+	<string name="advertise_translucentstyle_btn">Get it from Xposed Repository!</string>
+    
 </resources>

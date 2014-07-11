@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ public class ActivityListAdapter extends ArrayAdapter<ComparableActivityInfo> {
 		this.activities = activities;
 	}
 
-	@SuppressLint("ViewHolder")
+	@SuppressLint({ "ViewHolder", "InflateParams" })
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		LayoutInflater inflater = context.getLayoutInflater();

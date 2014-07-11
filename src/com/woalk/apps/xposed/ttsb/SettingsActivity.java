@@ -1,13 +1,22 @@
 package com.woalk.apps.xposed.ttsb;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -17,7 +26,7 @@ public class SettingsActivity extends Activity {
 
 	SharedPreferences sPref;
 	
-	@SuppressLint("WorldReadableFiles")
+	@SuppressLint({ "WorldReadableFiles", "SimpleDateFormat" })
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,15 @@ public class SettingsActivity extends Activity {
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
+			String lastupdate = sPref.getString(Helpers.TTSB_PREF_LASTUPDATE, getString(R.string.never));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+			Date date;
+			try {
+				date = sdf.parse(lastupdate);
+				lastupdate = DateFormat.getInstance().format(date);
+			} catch (ParseException e) {
+			}
+			
 			textView2.setText(getString(R.string.version_prefix) + ":\n\n"
 					+ getString(R.string.tintengine_ver_prefix) + ":\n" 
 					+ getString(R.string.ui_ver_prefix) + ":\n"
@@ -51,7 +69,7 @@ public class SettingsActivity extends Activity {
 			textView4.setText(pInfo.versionName + "\n\n"
 					+ te_ver + "\n"
 					+ ui_ver + "\n"
-					+ sPref.getString(Helpers.TTSB_PREF_LASTUPDATE, getString(R.string.never)));
+					+ lastupdate);
 		}
 		
 		CheckBox checkBox1 = (CheckBox) findViewById(R.id.checkBox_status);
@@ -62,6 +80,24 @@ public class SettingsActivity extends Activity {
 				SharedPreferences.Editor edit = sPref.edit();
 				edit.putBoolean(Helpers.TTSB_PREF_SHOW_ACTIVITY_TOAST, isChecked);
 				edit.commit();
+			}
+		});
+		CheckBox checkBox2 = (CheckBox) findViewById(R.id.checkBox_log);
+		checkBox2.setChecked(sPref.getBoolean(Helpers.TTSB_PREF_DEBUGLOG, false));
+		checkBox2.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				SharedPreferences.Editor edit = sPref.edit();
+				edit.putBoolean(Helpers.TTSB_PREF_DEBUGLOG, isChecked);
+				edit.commit();
+			}
+		});
+		
+		findViewById(R.id.button1).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://repo.xposed.info/module/com.woalk.apps.xposed.translucentstyle"));
+				startActivity(browserIntent);
 			}
 		});
 	}

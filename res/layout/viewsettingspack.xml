@@ -59,7 +59,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/textView_childindexes"
             android:ems="10"
-            android:inputType="number"
+            android:inputType="numberSigned"
             android:text="0"
             android:digits="0123456789,+-" />
 

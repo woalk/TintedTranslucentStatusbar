@@ -28,42 +28,40 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 		findAndHookMethod(ActivityClass, "onPostCreate", android.os.Bundle.class, new XC_MethodHook() {
 			@Override
 			protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-				de.robv.android.xposed.XposedBridge.log(">TTSB: Hooked in onPostCreate().");
+				XSharedPreferences XsPref = new XSharedPreferences(Helpers.TTSB_PACKAGE_NAME, Helpers.TTSB_PREFERENCES);
+				
+				boolean log = XsPref.getBoolean(Helpers.TTSB_PREF_DEBUGLOG, false);
+				
+				if (log) de.robv.android.xposed.XposedBridge.log(">TTSB: Hooked in onPostCreate().");
 				
 				Object currentObj = param.thisObject;
 				Activity currentActivity;
 				if (currentObj instanceof Activity) {
-					de.robv.android.xposed.XposedBridge.log(">TTSB: [SUCCESS] The created object is an activity. Got the instance. Proceed.");
+					if (log) de.robv.android.xposed.XposedBridge.log(">TTSB: [SUCCESS] The created object is an activity. Got the instance. Proceed.");
 					currentActivity = (Activity) currentObj;
 				}
 				else {
-					de.robv.android.xposed.XposedBridge.log(">TTSB: [ ERROR ] The created object is not an activity. Return.");
+					if (log) de.robv.android.xposed.XposedBridge.log(">TTSB: [ ERROR ] The created object is not an activity. Return.");
 					return;
 				}
 				
 				String activityFullName = currentActivity.getComponentName().getClassName();
 				String packageName = currentActivity.getPackageName();
-				de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] Activity is " + activityFullName);
-
-				Helpers.logContentView(currentActivity.getWindow().getDecorView(), "┕");
-
-				XSharedPreferences XsPref = new XSharedPreferences(Helpers.TTSB_PACKAGE_NAME, Helpers.TTSB_PREFERENCES);
+				if (log) de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] Activity is " + activityFullName);
+				
+				if (log) Helpers.logContentView(currentActivity.getWindow().getDecorView(), "┕");
 
 				if (Settings.Loader.contains(XsPref, packageName, activityFullName)) {
 					Settings.Parser settings = Settings.Loader.load((SharedPreferences) XsPref, packageName, activityFullName);
-					de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] Code is: " + settings.getLine());
+					if (log) de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] Code is: " + settings.getLine());
 					setEverything(currentActivity, settings.getSetting());
 				} else if (Settings.Loader.containsAll(XsPref, packageName)) {
 					Settings.Parser settings = Settings.Loader.loadAll((SharedPreferences) XsPref, packageName);
-					de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] Code is: " + settings.getLine());
+					if (log) de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] Code is: " + settings.getLine());
 					setEverything(currentActivity, settings.getSetting());
 				}
 				
-				de.robv.android.xposed.XposedBridge.log(">TTSB: [SUCCESS] Set tint and translucency, everything should be working here.");
-				
-				
-
-				//de.robv.android.xposed.XposedBridge.log(">TTSB: [SUCCESS] Layout should now be adjusted.");
+				if (log) de.robv.android.xposed.XposedBridge.log(">TTSB: [SUCCESS] Set tint and translucency, everything should be working here.");
 			}
 		});
 
@@ -113,6 +111,7 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 	 */
 	public void setEverything(Activity currentActivity, Settings.Setting settings) {
 		SystemBarTintManager tintMan = null;
+		if ((currentActivity.getWindow().getAttributes().flags & Helpers.FLAG_FLOATING_WINDOW) != 0) return;
 		if (settings.status) Helpers.setTranslucentStatus(currentActivity, true);
 		if (settings.nav) Helpers.setTranslucentNavigation(currentActivity, true);
 		if (settings.status || settings.nav) {
@@ -127,12 +126,16 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 			
 			if (settings.rules.s_plus != 0) {
 				LayoutParams s_params = tintMan.mStatusBarTintView.getLayoutParams();
-				s_params.height += settings.rules.s_plus;
+				final float scale = currentActivity.getResources().getDisplayMetrics().density;
+				int s_plus = (int) (settings.rules.s_plus * scale + 0.5f);
+				s_params.height += s_plus;
 				tintMan.mStatusBarTintView.setLayoutParams(s_params);
 			}
 			if (settings.rules.n_plus != 0) {
 				LayoutParams n_params = tintMan.mNavBarTintView.getLayoutParams();
-				n_params.height += settings.rules.n_plus;
+				final float scale = currentActivity.getResources().getDisplayMetrics().density;
+				int n_plus = (int) (settings.rules.n_plus * scale + 0.5f);
+				n_params.height += n_plus;
 				tintMan.mNavBarTintView.setLayoutParams(n_params);
 			}
 		}
@@ -240,16 +243,13 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 					top += config.getStatusBarHeight();
 				if (vset.padding.plus_actionbar_h && tintMan.isStatusBarTintEnabled())
 					top += config.getActionBarHeight();
-				if (vset.padding.plus_nav_w && !config.isNavigationAtBottom() && tintMan.isNavBarTintEnabled())
+				if (vset.padding.plus_nav_w && config.hasNavigtionBar() && !config.isNavigationAtBottom() && tintMan.isNavBarTintEnabled())
 					right += config.getNavigationBarWidth();
-				if (vset.padding.plus_nav_h && tintMan.isNavBarTintEnabled())
+				if (vset.padding.plus_nav_h && config.hasNavigtionBar() && config.isNavigationAtBottom() && tintMan.isNavBarTintEnabled())
 					bottom += config.getNavigationBarHeight();
 			}
 			
 			view.setPadding(view.getPaddingLeft() + left, view.getPaddingTop() + top, view.getPaddingRight() + right, view.getPaddingBottom() + bottom);
-			
-			de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] Padding: " + String.valueOf(left) + "," + String.valueOf(top) + "," + String.valueOf(right) + "," + String.valueOf(bottom) + ".");
-			
 		}
 	}
 
