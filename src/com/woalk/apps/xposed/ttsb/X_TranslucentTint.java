@@ -111,7 +111,7 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 	 */
 	public void setEverything(Activity currentActivity, Settings.Setting settings) {
 		SystemBarTintManager tintMan = null;
-		if ((currentActivity.getWindow().getAttributes().flags & Helpers.FLAG_FLOATING_WINDOW) != 0) return;
+		if ((currentActivity.getIntent().getFlags() & Helpers.FLAG_FLOATING_WINDOW) != 0) return;
 		if (settings.status) Helpers.setTranslucentStatus(currentActivity, true);
 		if (settings.nav) Helpers.setTranslucentNavigation(currentActivity, true);
 		if (settings.status || settings.nav) {
