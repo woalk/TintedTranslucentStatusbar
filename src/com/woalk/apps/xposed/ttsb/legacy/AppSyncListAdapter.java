@@ -1,12 +1,12 @@
-package com.woalk.apps.xposed.ttsb;
+package com.woalk.apps.xposed.ttsb.legacy;
 
 import java.util.List;
 
-import android.R.color;
+import com.woalk.apps.xposed.ttsb.R;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;

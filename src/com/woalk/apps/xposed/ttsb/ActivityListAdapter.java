@@ -32,8 +32,9 @@ public class ActivityListAdapter extends ArrayAdapter<ComparableActivityInfo> {
 		ImageView imgCheck = (ImageView) rowView.findViewById(R.id.imageCheck);
 		if (activities != null && activities.size() > position) {
 			txt.setText(activities.get(position).name);
-			if (activities.get(position).is_set) imgCheck.setVisibility(View.VISIBLE);
-		}
+			imgCheck.setVisibility(activities.get(position).is_set ? View.VISIBLE : View.GONE);
+		} else
+			imgCheck.setVisibility(View.GONE);
 		return rowView;
 	}
 

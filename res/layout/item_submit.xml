@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/textVotes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="±0"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_toLeftOf="@+id/textView1"
+        android:layout_toRightOf="@+id/textVotes"
+        android:autoLink="none"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:minLines="2"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textDescription"
+        android:layout_marginBottom="6dp"
+        android:layout_toRightOf="@+id/textVotes"
+        android:drawablePadding="3dp"
+        android:fontFamily="sans-serif-light"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
+        android:drawablePadding="4dp"
+        android:drawableRight="@drawable/ic_community_check"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:minLines="1"
+        android:text="@string/community_chosen"
+        android:textAllCaps="true"
+        android:textColor="#662010"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textUser"
+        android:layout_below="@+id/textView1"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_toRightOf="@+id/textUser"
+        android:fontFamily="sans-serif-light"
+        android:text="TextView" />
+
+</RelativeLayout>

@@ -7,9 +7,14 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.woalk.apps.xposed.ttsb.community.Database;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -110,7 +115,7 @@ public class Settings {
 				}
 			}
 			this.setting = setting;
-			Log.i("TTSB", getErrorMessage());
+			//Log.i("TTSB", getErrorMessage());
 			return result;
 		}
 		
@@ -122,9 +127,7 @@ public class Settings {
 				vset.if_land = true;
 			} else if (str.contains("land(")) {
 				int i = str.indexOf("land(");
-				vset.land = parseViewSettings(
-									str.substring(
-											0, str.length() - str.substring(str.indexOf(")", i)).length()));
+				vset.land = parseViewSettings(str.substring(i, str.indexOf(")", i) + 1));
 			} else {
 				vset.if_land = false;
 			}
@@ -286,6 +289,7 @@ public class Settings {
 					line += "+nav_h";
 			}
 			if (vset.if_land) line += ")";
+			if (vset.land != null) line += "&" + parseViewSettingsToString(vset.land);
 			return line;
 		}
 		
@@ -489,6 +493,34 @@ public class Settings {
 			SortedMap<String, ?> smap = map.tailMap(packageName + "/");
 			return (!smap.isEmpty() && smap.firstKey().startsWith(packageName + "/"));
 		}
+		
+		public static SortedMap<String, String> importStringToSettingsString(String fullsettings) {
+			SortedMap<String, String> result = new TreeMap<String, String>();
+			if (fullsettings.equals("")) return result;
+			String[] sets = fullsettings.split("||");
+			for (String set : sets) {
+				String[] set_spl = set.split("|");
+				String act_name = set_spl[0];
+				String setting_str = set_spl[1];
+				result.put(act_name, setting_str);
+			}
+			return result;
+		}
+		
+		public static void importApp(String packageName, String fullsettings, SharedPreferences sPref_TTSB, SharedPreferences sPref_community) {
+			String[] sets = fullsettings.split("||");
+			for (String set : sets) {
+				String[] set_spl = set.split("|");
+				String act_name = set_spl[0];
+				String setting_str = set_spl[1];
+				Saver.save(sPref_TTSB, packageName, act_name, new Parser(setting_str));
+			}
+		}
+		public static void importApp(String packageName, String fullsettings, Context context) {
+			SharedPreferences sPref_TTSB = context.getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+			SharedPreferences sPref_community = context.getSharedPreferences(Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+			importApp(packageName, fullsettings, sPref_TTSB, sPref_community);
+		}
 	}
 	
 	@SuppressLint("WorldReadableFiles")
@@ -554,6 +586,24 @@ public class Settings {
 				if (packageName.equals(entryPackage)) edit.remove(entry.getKey());
 			}
 			edit.apply();
+		}
+		
+		public static String getExportAppString(Context context, String packageName) throws NameNotFoundException, StringIndexOutOfBoundsException {
+			SharedPreferences sPref = context.getApplicationContext().getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+			ActivityInfo[] act_inf = context.getPackageManager().getPackageInfo(packageName, PackageManager.GET_ACTIVITIES).activities;
+			StringBuilder sb = new StringBuilder();
+			for (ActivityInfo act : act_inf) {
+				String str = sPref.getString(packageName + "/" + act.name, "%%%%");
+				if (str != "%%%%") {
+					sb.append(act.name);
+					sb.append("|");
+					sb.append(str);
+					sb.append("||");
+				}
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			sb.deleteCharAt(sb.length() - 1);
+			return sb.toString();
 		}
 	}
 }

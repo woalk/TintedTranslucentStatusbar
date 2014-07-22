@@ -2,9 +2,9 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,19 +26,26 @@ public class AppListAdapter extends ArrayAdapter<ApplicationInfo> {
 		this.is_set = is_set;
 	}
 
-	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		LayoutInflater inflater = context.getLayoutInflater();
-		View rowView = inflater.inflate(R.layout.item_applist, null, true);
+		View rowView;
+		if (view == null) {
+			LayoutInflater inflater = context.getLayoutInflater();
+			rowView = inflater.inflate(R.layout.item_applist, parent, false);
+		} else
+			rowView = view;
 		TextView txtName = (TextView) rowView.findViewById(R.id.textName);
 		TextView txtPkg = (TextView) rowView.findViewById(R.id.textPkg);
 		ImageView imgIcon = (ImageView) rowView.findViewById(R.id.imageIcon);
 		ImageView imgCheck = (ImageView) rowView.findViewById(R.id.imageCheck);
-		txtName.setText(context.getPackageManager().getApplicationLabel(apps.get(position)));
+		PackageManager pkgMan = context.getPackageManager();
+		txtName.setText(pkgMan.getApplicationLabel(apps.get(position)));
 		txtPkg.setText(apps.get(position).packageName);
-		imgIcon.setImageDrawable(context.getPackageManager().getApplicationIcon(apps.get(position)));
-		if (is_set != null && is_set.size() > position) if (is_set.get(position)) imgCheck.setVisibility(View.VISIBLE);
+		imgIcon.setImageDrawable(pkgMan.getApplicationIcon(apps.get(position)));
+		if (is_set != null && is_set.size() > position)
+			imgCheck.setVisibility(is_set.get(position) ? View.VISIBLE : View.GONE);
+		else
+			imgCheck.setVisibility(View.GONE);
 		return rowView;
 	}
 

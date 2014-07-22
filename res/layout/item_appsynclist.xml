@@ -53,7 +53,7 @@
             android:id="@+id/imageCheck"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_ok"
+            android:src="@drawable/ic_community_check"
             android:visibility="gone" />
 
     </TableRow>

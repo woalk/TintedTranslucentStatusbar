@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.woalk.apps.xposed.ttsb"
-    android:versionCode="16"
-    android:versionName="Beta 2.2.2" >
+    android:versionCode="18"
+    android:versionName="Beta 3.0dev" >
 
     <uses-sdk
         android:minSdkVersion="19"
         android:targetSdkVersion="19" />
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,9 +50,20 @@
             android:parentActivityName=".EasySettingsActivity" >
         </activity>
         <activity
-            android:name=".SyncActivity"
+            android:name=".legacy.SyncActivity"
             android:label="@string/title_activity_sync"
             android:parentActivityName=".MainActivity" >
+        </activity>
+        <activity
+            android:name=".community.MyAppsActivity"
+            android:label="@string/title_activity_my_apps"
+            android:launchMode="singleTask"
+            android:parentActivityName=".MainActivity" >
+        </activity>
+        <activity
+            android:name=".community.AppDetailsActivity"
+            android:label="@string/title_activity_app_details"
+            android:parentActivityName=".community.MyAppsActivity" >
         </activity>
 
         <meta-data
@@ -65,10 +77,15 @@
             android:value="30" />
         <meta-data
             android:name="tintengine_version"
-            android:value="\ 2.0.2" />
+            android:value="\ 2.1.1" />
         <meta-data
             android:name="ui_version"
-            android:value="\ 2.2.1" />
+            android:value="\ 2.2.2" />
+
+        <activity
+            android:name="com.woalk.apps.xposed.ttsb.community.OneSubmitActivity"
+            android:label="@string/title_activity_one_submit" >
+        </activity>
     </application>
 
 </manifest>

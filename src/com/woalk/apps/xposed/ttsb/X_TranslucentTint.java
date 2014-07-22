@@ -220,6 +220,10 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 	 */
 	public void setViewSettings(ViewGroup view, Settings.Setting.ViewSettings vset, boolean landscape, SystemBarTintManager tintMan) {
 		if (vset.if_land && !landscape || view == null) return;
+		if (vset.land != null && landscape) {
+			setViewSettings(view, vset.land, landscape, tintMan);
+			return;
+		}
 		
 		if (vset.setFSW) view.setFitsSystemWindows(vset.setFSW_value);
 		if (vset.setCTP) view.setClipToPadding(vset.setCTP_value);

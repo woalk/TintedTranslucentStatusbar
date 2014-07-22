@@ -1,4 +1,4 @@
-package com.woalk.apps.xposed.ttsb;
+package com.woalk.apps.xposed.ttsb.legacy;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -26,6 +25,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.woalk.apps.xposed.ttsb.Helpers;
+import com.woalk.apps.xposed.ttsb.R;
+import com.woalk.apps.xposed.ttsb.Settings;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,7 +37,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;

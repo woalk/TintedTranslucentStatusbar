@@ -1,8 +1,11 @@
 package com.woalk.apps.xposed.ttsb;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
+
+import com.woalk.apps.xposed.ttsb.community.MyAppsActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -40,14 +43,12 @@ public class MainActivity extends Activity {
 		lA = new AppListAdapter(context, new ArrayList<ApplicationInfo>(), new ArrayList<Boolean>());
 		lv.setAdapter(lA);
 		lv.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				Intent intent = new Intent(context, ActivitiesActivity.class);
 				intent.putExtra(ActivitiesActivity.APP_INFO_SELECTED, lA.getItem(arg2));
 				context.startActivity(intent);
 			}
-			
 		});
 	}
 	
@@ -90,6 +91,7 @@ public class MainActivity extends Activity {
 	    	 lA.apps.addAll(result.apps);
 	    	 lA.is_set.addAll(result.is_set);
 	         lA.notifyDataSetChanged();
+	         lv.setFastScrollEnabled(true);
 	         if (prog != null) prog.setVisible(false);
 	     }
 	 }
@@ -132,7 +134,8 @@ public class MainActivity extends Activity {
 	}
 	
 	private void launchSync() {
-		Intent sync_Intent = new Intent(this, SyncActivity.class);
+		Intent sync_Intent = new Intent(this, MyAppsActivity.class);
+		sync_Intent.putExtra(MyAppsActivity.PASS_ALL_APPS, (Serializable) lA.apps);
 		startActivity(sync_Intent);
 	}
 }
