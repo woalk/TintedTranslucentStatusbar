@@ -60,8 +60,11 @@ public class OneSubmitActivity extends Activity {
 		lA.app = app;
 		lA.author = user;
 		lA.author_trust = user_trust;
+		lA.description = description;
 		lA.installed = installed;
 		lA.settings = settings;
+		lA.timestamp = timestamp;
+		lA.addBegin();
 		
 		lv = (ListView) findViewById(R.id.listView1);
 		lv.setAdapter(lA);

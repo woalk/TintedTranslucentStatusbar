@@ -98,5 +98,8 @@
     <string name="title_activity_one_submit">Submit details</string>
     <string name="str_action_show_only_current_ver">Show current version only</string>
     <string name="str_action_show_all">Show all</string>
+    <string name="button_choose">Choose</string>
+    <string name="button_choose_layout">Choose layout only</string>
+    <string name="button_view_settings">View settings</string>
 
 </resources>

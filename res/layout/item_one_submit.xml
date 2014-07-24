@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ACFFFFFF"
+        android:paddingBottom="6dp" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="6dp"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/button_up"
+                android:layout_width="60dp"
+                android:layout_height="48dp"
+                android:background="@drawable/button_up" />
+
+            <TextView
+                android:id="@+id/textView_votes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="±0"
+                android:textSize="36sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_down"
+                android:layout_width="60dp"
+                android:layout_height="48dp"
+                android:background="@drawable/button_down" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/linearLayout1"
+            android:layout_toRightOf="@+id/linearLayout1"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Application Title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView_package"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_app"
+            android:layout_below="@+id/textView_app"
+            android:fontFamily="sans-serif-light"
+            android:text="package.name" />
+
+        <TextView
+            android:id="@+id/textView_descr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_package"
+            android:layout_below="@+id/textView_package"
+            android:layout_marginTop="16dp"
+            android:text="Description"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_descr"
+            android:layout_below="@+id/textView_descr"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="4dp"
+            android:text="by &lt;user>" />
+
+        <TextView
+            android:id="@+id/textView_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView_user"
+            android:layout_below="@+id/textView_user"
+            android:fontFamily="sans-serif-light"
+            android:text="at 00/00/00 00:00" />
+
+	    <TextView
+	        android:id="@+id/textView_chosen"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBottom="@+id/textView_timestamp"
+	        android:layout_alignParentRight="true"
+	        android:layout_margin="6dp"
+	        android:drawablePadding="4dp"
+	        android:drawableRight="@drawable/ic_community_check"
+	        android:ellipsize="end"
+	        android:gravity="center_vertical"
+	        android:minLines="1"
+	        android:text="@string/community_chosen"
+	        android:textAllCaps="true"
+	        android:textColor="#662010"
+	        android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="6dp" >
+
+            <Button
+                android:id="@+id/button_choose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_choose" />
+
+            <Button
+                android:id="@+id/button_choose_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_choose_layout" />
+
+            <Button
+                android:id="@+id/button_view_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_view_settings" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+</LinearLayout>

@@ -103,7 +103,7 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 			TextView tvDescr = (TextView) rowView.findViewById(R.id.textDescription);
 			TextView tvUser = (TextView) rowView.findViewById(R.id.textUser);
 			TextView tvTime = (TextView) rowView.findViewById(R.id.textTime);
-			TextView tvChosen = (TextView) rowView.findViewById(R.id.textView1);
+			TextView tvChosen = (TextView) rowView.findViewById(R.id.textView_chosen);
 
 			DateFormat d_f = DateFormat.getInstance();
 			String date = d_f.format(timestamps.get(pos)); 

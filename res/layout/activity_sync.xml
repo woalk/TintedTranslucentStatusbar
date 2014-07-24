@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/spinner1"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/textView_votes"
         android:layout_marginBottom="6dp" >
 
     </ListView>
