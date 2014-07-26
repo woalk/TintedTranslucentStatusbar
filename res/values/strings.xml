@@ -102,5 +102,6 @@
     <string name="button_choose_layout">Choose layout only</string>
     <string name="button_view_settings">View settings</string>
     <string name="str_comments">Comments</string>
+    <string name="title_view_settings">Settings of this submit</string>
 
 </resources>

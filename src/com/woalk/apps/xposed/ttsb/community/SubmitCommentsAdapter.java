@@ -2,6 +2,7 @@ package com.woalk.apps.xposed.ttsb.community;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
@@ -9,8 +10,11 @@ import java.util.SortedMap;
 import com.woalk.apps.xposed.ttsb.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
@@ -18,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -91,6 +96,42 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 				tv_votes.setTextColor(Color.BLACK);
 			}
 			tv_votes.setText(str_votes);
+			
+			Button btn_choose = (Button) rowView.findViewById(R.id.button_choose);
+			Button btn_choose_layout = (Button) rowView.findViewById(R.id.button_choose_layout);
+			Button btn_view = (Button) rowView.findViewById(R.id.button_view_settings);
+			
+			btn_view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					List<String> act = new ArrayList<String>();
+					List<String> set = new ArrayList<String>();
+					ActivityInfo[] act_inf = null;
+					try {
+						act_inf = pkgMan.getPackageInfo(app.packageName, PackageManager.GET_ACTIVITIES).activities;
+					} catch (NameNotFoundException e) {
+						e.printStackTrace();
+					}
+					if (act_inf != null) {
+						if (settings.containsKey("")) {
+							act.add("All");
+							set.add(settings.get(""));
+						}
+						for (ActivityInfo inf : act_inf) {
+							if (settings.containsKey(inf.name)) {
+								act.add(inf.name);
+								set.add(settings.get(inf.name));
+							}
+						}
+					}
+					AlertDialog.Builder builder = new AlertDialog.Builder(context);
+					builder.setAdapter(new SettingsPreviewAdapter(context, act, set), null);
+					builder.setTitle(R.string.title_view_settings);
+					builder.setCancelable(true);
+					builder.setNegativeButton(android.R.string.ok, null);
+					builder.show();
+				}
+			});
 
 			return rowView;
 		} else {
