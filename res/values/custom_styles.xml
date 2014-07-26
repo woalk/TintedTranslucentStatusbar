@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="SubmitButtonStyle">
+        <item name="android:background">@drawable/submit_buttons</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:minWidth">100dp</item>
+    </style>
+</resources>

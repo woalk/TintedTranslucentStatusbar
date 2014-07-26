@@ -119,9 +119,9 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 			String str_votes = String.valueOf(this_votes);
 			if (this_votes > 0) {
 				str_votes = "+" + str_votes;
-				tvVote.setTextColor(0xFF00DB12);
+				tvVote.setTextColor(context.getResources().getColor(R.color.votes_positive));
 			} else if (this_votes < 0) {
-				tvVote.setTextColor(0xFFDB0500);
+				tvVote.setTextColor(context.getResources().getColor(R.color.votes_negative));
 			} else {
 				str_votes = "±" + str_votes;
 				tvVote.setTextColor(Color.BLACK);

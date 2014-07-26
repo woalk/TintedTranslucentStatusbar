@@ -11,6 +11,7 @@ import com.woalk.apps.xposed.ttsb.R;
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	protected boolean installed;
 	protected String description;
 	protected Date timestamp;
+	protected int votes;
 	protected SortedMap<String, String> settings;
 	protected List<String> comments;
 	protected List<String> users;
@@ -47,17 +49,14 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 
 
 	public void addBegin() {
-		//for (int i = 0; i <= 2; i++) {
-			this.comments.add(null);
-			this.users_trust.add(null);
-			this.users.add(null);
-		//}
+		this.comments.add(null);
+		this.users_trust.add(null);
+		this.users.add(null);
 	}
 
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
-		switch (position) {
-		case 0:
+		if (position == 0) {
 			LayoutInflater inflater = context.getLayoutInflater();
 			View rowView = inflater.inflate(R.layout.item_one_submit, parent, false);
 
@@ -67,6 +66,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 			TextView tv_author = (TextView) rowView.findViewById(R.id.textView_user);
 			TextView tv_timestamp = (TextView) rowView.findViewById(R.id.textView_timestamp);
 			TextView tv_chosen = (TextView) rowView.findViewById(R.id.textView_chosen);
+			TextView tv_votes = (TextView) rowView.findViewById(R.id.textView_votes);
 
 			tv_app.setText(pkgMan.getApplicationLabel(app));
 			tv_pkg.setText(app.packageName);
@@ -78,32 +78,41 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 			String date = d_f.format(timestamp); 
 			tv_timestamp.setText(context.getString(R.string.community_prefix_at) + " " + date);
 			tv_chosen.setVisibility(installed ? View.VISIBLE : View.GONE);
+			
+			int this_votes = votes;
+			String str_votes = String.valueOf(this_votes);
+			if (this_votes > 0) {
+				str_votes = "+" + str_votes;
+				tv_votes.setTextColor(context.getResources().getColor(R.color.votes_positive));
+			} else if (this_votes < 0) {
+				tv_votes.setTextColor(context.getResources().getColor(R.color.votes_negative));
+			} else {
+				str_votes = "±" + str_votes;
+				tv_votes.setTextColor(Color.BLACK);
+			}
+			tv_votes.setText(str_votes);
 
 			return rowView;
-		case 1:
-			return null;
-		case 2:
-			return null;
-		default:
+		} else {
 			/*
-			if (view != null) {
+			View rowView;
+			if (view == null) {
 				LayoutInflater inflater = context.getLayoutInflater();
-				View rowView = inflater.inflate(R.layout.item_comment, parent, false);
-	
-				TextView tv1 = (TextView) rowView.findViewById(R.id.textName);
-				TextView tv2 = (TextView) rowView.findViewById(R.id.textPkg);
-				ImageView img1 = (ImageView) rowView.findViewById(R.id.imageIcon);
-				ImageView img2 = (ImageView) rowView.findViewById(R.id.imageCheck);
-	
-				tv1.setText(pkgMan.getApplicationLabel(app));
-				tv2.setText(app.packageName);
-				img1.setImageDrawable(pkgMan.getApplicationIcon(app));
-				img2.setVisibility(View.GONE);
-	
-				return rowView;
+				rowView = inflater.inflate(R.layout.item_comment, parent, false);
+				
+			} else {
+				rowView = view;
+				
 			}
+			return rowView;
 			*/
 			return null;
 		}
 	}
+	
+	@Override
+	public boolean isEnabled(int position) {
+		return position != 0;
+	}
+	
 }

@@ -8,12 +8,18 @@ import com.woalk.apps.xposed.ttsb.Helpers;
 import com.woalk.apps.xposed.ttsb.R;
 import com.woalk.apps.xposed.ttsb.Settings;
 
+import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class OneSubmitActivity extends Activity {
 	public static final String PASS_APP = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_APP"; // Parcelable
@@ -25,7 +31,7 @@ public class OneSubmitActivity extends Activity {
 	public static final String PASS_USER_TRUST = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_USER_TRUST";
 	public static final String PASS_TIMESTAMP = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_TIMESTAMP"; // Serializable
 	public static final String PASS_SETTINGS = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_SETTINGS";
-
+	
 	protected ApplicationInfo app;
 	protected String description;
 	protected int votes;
@@ -38,6 +44,10 @@ public class OneSubmitActivity extends Activity {
 	
 	protected ListView lv;
 	protected SubmitCommentsAdapter lA;
+	
+	protected EditText edit_comment;
+	protected TextView tv_comment_charremain;
+	protected ImageButton btn_send;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +74,32 @@ public class OneSubmitActivity extends Activity {
 		lA.installed = installed;
 		lA.settings = settings;
 		lA.timestamp = timestamp;
+		lA.votes = votes;
 		lA.addBegin();
 		
 		lv = (ListView) findViewById(R.id.listView1);
 		lv.setAdapter(lA);
+		
+		edit_comment = (EditText) findViewById(R.id.editText1);
+		tv_comment_charremain = (TextView) findViewById(R.id.textView1);
+		btn_send = (ImageButton) findViewById(R.id.button_send);
+		
+		edit_comment.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				int length = s.length();
+				tv_comment_charremain.setText(String.valueOf(Database.Constants.COMMENT_MAX_LENGTH - length));
+				boolean isLengthOk = Database.Constants.COMMENT_MAX_LENGTH >= length;
+				tv_comment_charremain.setTextColor(isLengthOk ? getResources().getColor(color.darker_gray) : getResources().getColor(color.holo_red_light));
+				btn_send.setEnabled(isLengthOk);
+				btn_send.setImageAlpha(isLengthOk ? 0xFF : 0x60);
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+			@Override
+			public void afterTextChanged(Editable s) { }
+		});
+		edit_comment.setText("");
 	}
 	
 	@Override

@@ -65,6 +65,12 @@
             android:label="@string/title_activity_app_details"
             android:parentActivityName=".community.MyAppsActivity" >
         </activity>
+        <activity
+            android:name="com.woalk.apps.xposed.ttsb.community.OneSubmitActivity"
+            android:label="@string/title_activity_one_submit"
+            android:parentActivityName=".community.AppDetailsActivity"
+            android:windowSoftInputMode="adjustResize|stateUnchanged" >
+        </activity>
 
         <meta-data
             android:name="xposedmodule"
@@ -82,10 +88,6 @@
             android:name="ui_version"
             android:value="\ 2.2.2" />
 
-        <activity
-            android:name="com.woalk.apps.xposed.ttsb.community.OneSubmitActivity"
-            android:label="@string/title_activity_one_submit" >
-        </activity>
     </application>
 
 </manifest>
