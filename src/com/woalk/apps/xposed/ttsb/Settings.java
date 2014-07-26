@@ -497,9 +497,13 @@ public class Settings {
 		public static SortedMap<String, String> importStringToSettingsString(String fullsettings) {
 			SortedMap<String, String> result = new TreeMap<String, String>();
 			if (fullsettings.equals("")) return result;
-			String[] sets = fullsettings.split("||");
+			String[] sets;
+			if (!fullsettings.contains("||")) {
+				sets = new String[]{fullsettings};
+			} else
+				sets = fullsettings.split("\\|\\|");
 			for (String set : sets) {
-				String[] set_spl = set.split("|");
+				String[] set_spl = set.split("\\|");
 				String act_name = set_spl[0];
 				String setting_str = set_spl[1];
 				result.put(act_name, setting_str);
@@ -508,9 +512,9 @@ public class Settings {
 		}
 		
 		public static void importApp(String packageName, String fullsettings, SharedPreferences sPref_TTSB, SharedPreferences sPref_community) {
-			String[] sets = fullsettings.split("||");
+			String[] sets = fullsettings.split("\\|\\|");
 			for (String set : sets) {
-				String[] set_spl = set.split("|");
+				String[] set_spl = set.split("\\|");
 				String act_name = set_spl[0];
 				String setting_str = set_spl[1];
 				Saver.save(sPref_TTSB, packageName, act_name, new Parser(setting_str));
