@@ -69,6 +69,7 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 		users.add(null);
 		users_trust.add(null);
 		timestamps.add(null);
+		settings.add(null);
 	}
 
 	@Override
