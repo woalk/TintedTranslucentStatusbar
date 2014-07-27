@@ -32,6 +32,8 @@ import android.R.color;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -124,6 +126,7 @@ public class OneSubmitActivity extends Activity {
 		lv.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				final int pos = position;
 				AlertDialog.Builder builder = new AlertDialog.Builder(OneSubmitActivity.this);
 				builder.setTitle(R.string.title_comment_options);
 				builder.setItems(R.array.comment_options, new AlertDialog.OnClickListener() {
@@ -131,7 +134,9 @@ public class OneSubmitActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 						case 0:
-							
+							ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
+							ClipData clip = ClipData.newPlainText("comment", lA.comments.get(pos));
+							clipboard.setPrimaryClip(clip);
 							break;
 						case 1:
 							
@@ -139,6 +144,7 @@ public class OneSubmitActivity extends Activity {
 						}
 					}
 				});
+				builder.show();
 			}
 		});
 		
