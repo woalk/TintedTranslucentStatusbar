@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="layoutopt">
-        <item >Set default automatic options</item>
-        <item >Set default options for ListView-app</item>
-        <item >Move layout with padding</item>
-        <item >Don\'t do anything with layout</item>
-        <item >Custom&#8230;</item>
+        <item >@string/layoutopt_0</item>
+        <item >@string/layoutopt_1</item>
+        <item >@string/layoutopt_2</item>
+        <item >@string/layoutopt_3</item>
+        <item >@string/layoutopt_4</item>
     </string-array>
     <string-array name="vsetpk_from">
-        <item >Decor View</item>
-        <item >cview</item>
-        <item >Content View</item>
+        <item >@string/vsetpk_from_0</item>
+        <item >@string/vsetpk_from_1</item>
+        <item >@string/vsetpk_from_2</item>
     </string-array>
     <string-array name="syncopt">
         <item >Sync everything</item>
