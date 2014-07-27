@@ -109,5 +109,6 @@
     <string name="title_already_set_layout">Layout overwriting</string>
     <string name="msg_already_set_layout">Do you want to overwrite existing layout settings of this app?\nColor settings will remain unchanged.</string>
     <string name="title_comment_options">Comment</string>
+    <string name="no_comments">No comments yet.</string>
 
 </resources>

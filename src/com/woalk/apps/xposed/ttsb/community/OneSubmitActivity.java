@@ -1,21 +1,46 @@
 package com.woalk.apps.xposed.ttsb.community;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.SortedMap;
+import java.util.TimeZone;
+import java.util.TreeMap;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.woalk.apps.xposed.ttsb.Helpers;
 import com.woalk.apps.xposed.ttsb.R;
 import com.woalk.apps.xposed.ttsb.Settings;
 
 import android.R.color;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +48,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class OneSubmitActivity extends Activity {
 	public static final String PASS_APP = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_APP"; // Parcelable
@@ -92,6 +119,31 @@ public class OneSubmitActivity extends Activity {
 		lv = (ListView) findViewById(R.id.listView1);
 		lv.setAdapter(lA);
 		
+		lA.notifyDataSetChanged();
+		
+		lv.setOnItemClickListener(new ListView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(OneSubmitActivity.this);
+				builder.setTitle(R.string.title_comment_options);
+				builder.setItems(R.array.comment_options, new AlertDialog.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case 0:
+							
+							break;
+						case 1:
+							
+							break;
+						}
+					}
+				});
+			}
+		});
+		
+		new getCommentsTask().execute(Database.DATABASE_URL);
+		
 		edit_comment = (EditText) findViewById(R.id.editText1);
 		tv_comment_charremain = (TextView) findViewById(R.id.textView1);
 		btn_send = (ImageButton) findViewById(R.id.button_send);
@@ -123,5 +175,92 @@ public class OneSubmitActivity extends Activity {
 	        return true;
 	    }
 	    return super.onOptionsItemSelected(item);
+	}
+	
+	
+	private class getCommentsTask extends AsyncTask<String, Comment, Void> {
+		@Override
+		protected void onPreExecute() {
+			lA.isLoading = true;
+			lA.notifyDataSetChanged();
+		}
+
+		@SuppressLint("SimpleDateFormat")
+		@Override
+		protected Void doInBackground(String... params) {
+			String result = "";
+			try {
+				// get database connection & package entries
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httppost = new HttpPost(params[0]);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN));
+				nameValuePairs.add(new BasicNameValuePair(Database.POST_FUNCTION, Database.FUNCTION_GET_COMMENTS_FOR_SUBMIT));
+				nameValuePairs.add(new BasicNameValuePair(Database.POST_COMMENTS_SUBMIT, String.valueOf(id)));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				HttpResponse response = httpclient.execute(httppost);
+				HttpEntity entity = response.getEntity();
+				
+				InputStream is = entity.getContent();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+				StringBuilder sb = new StringBuilder();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				} 
+				is.close();
+				result = sb.toString();
+				JSONArray jArray = new JSONArray(result);
+				for (int i = 0; i < jArray.length(); i++) {
+					JSONObject json_data = jArray.getJSONObject(i);
+					DateFormat d_f = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+					d_f.setTimeZone(TimeZone.getTimeZone("GMT"));
+					Date timestamp = d_f.parse(json_data.getString("timestamp"));
+					publishProgress(new Comment(
+							Integer.valueOf(json_data.getString("id")),
+							json_data.getString("comment"),
+							json_data.getString("username"),
+							timestamp,
+							json_data.getString("user_trust").equals("1"),
+							Integer.valueOf(json_data.getString("spamvotes"))));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Comment... progress) {
+			for (Comment c : progress) {
+				lA.add(c);
+				lA.notifyDataSetChanged();
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			lA.isLoading = false;
+			lA.notifyDataSetChanged();
+		}
+	}
+	
+	protected static class Comment {
+		public int id;
+		public String comment;
+		public String user;
+		public Date timestamp;
+		public boolean user_trust;
+		public int spamvotes;
+		
+		public Comment(int id, String comment, String username, Date timestamp, boolean user_trust, int spamvotes) {
+			this.id = id;
+			this.comment = comment;
+			this.user = username;
+			this.timestamp = timestamp;
+			this.user_trust = user_trust;
+			this.spamvotes = spamvotes;
+		}
 	}
 }

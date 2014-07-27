@@ -80,7 +80,7 @@ public class MyAppsActivity extends Activity {
 	}
 
 	protected void getSyncables() {
-		new readDatabaseTask().execute("http://ext.woalk.de/ttsb_community/dboperations0200.php");
+		new readDatabaseTask().execute(Database.DATABASE_URL);
 	}
 	
 	private class readDatabaseTask extends AsyncTask<String, String, MyAppsAdapter> {

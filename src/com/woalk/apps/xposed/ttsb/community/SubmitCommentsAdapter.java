@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,9 +49,14 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	protected List<String> comments;
 	protected List<String> users;
 	protected List<Boolean> users_trust;
+	protected List<Date> timestamps;
+	protected List<Integer> spamvotes;
 	
 	private PackageManager pkgMan;
 	private SharedPreferences sPref;
+	private DateFormat d_f;
+	
+	protected boolean isLoading;
 
 	@SuppressLint("WorldReadableFiles")
 	@SuppressWarnings("deprecation")
@@ -60,8 +66,12 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 		this.comments = comments;
 		this.users = new ArrayList<String>();
 		this.users_trust = new ArrayList<Boolean>();
+		this.timestamps = new ArrayList<Date>();
+		this.spamvotes = new ArrayList<Integer>();
 		pkgMan = context.getPackageManager();
 		sPref = context.getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+		d_f = DateFormat.getInstance();
+		isLoading = false;
 	}
 
 
@@ -69,6 +79,21 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 		this.comments.add(null);
 		this.users_trust.add(null);
 		this.users.add(null);
+		this.timestamps.add(null);
+		this.spamvotes.add(null);
+		this.comments.add(null);
+		this.users_trust.add(null);
+		this.users.add(null);
+		this.timestamps.add(null);
+		this.spamvotes.add(null);
+	}
+	
+	public void add(OneSubmitActivity.Comment comment) {
+		comments.add(comments.size() - 1, comment.comment);
+		users.add(users.size() - 1, comment.user);
+		users_trust.add(users_trust.size() - 1, comment.user_trust);
+		timestamps.add(timestamps.size() - 1, comment.timestamp);
+		spamvotes.add(spamvotes.size() - 1, comment.spamvotes);
 	}
 
 	@Override
@@ -91,7 +116,6 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 			tv_author.setText(Html.fromHtml(context.getString(R.string.community_prefix_by) + " <b>" + author + "</b>"));
 			tv_author.setCompoundDrawablesWithIntrinsicBounds(null, null, author_trust ?
 					context.getResources().getDrawable(R.drawable.ic_community_trust_small) : null, null);
-			DateFormat d_f = DateFormat.getInstance();
 			String date = d_f.format(timestamp); 
 			tv_timestamp.setText(context.getString(R.string.community_prefix_at) + " " + date);
 			tv_chosen.setVisibility(installed ? View.VISIBLE : View.GONE);
@@ -192,20 +216,35 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 			});
 
 			return rowView;
+		} else if (position == getCount() - 1) {
+			ProgressBar pbar = new ProgressBar(parent.getContext());
+			pbar.setVisibility(isLoading ? View.VISIBLE : View.INVISIBLE);
+			final float scale = getContext().getResources().getDisplayMetrics().density;
+			int pixels = (int) (36 * scale + 0.5f);
+			pbar.setMinimumHeight(pixels);
+			return pbar;
 		} else {
-			/*
 			View rowView;
-			if (view == null) {
+			if (view == null || view.getId() != R.layout.item_comment) {
 				LayoutInflater inflater = context.getLayoutInflater();
 				rowView = inflater.inflate(R.layout.item_comment, parent, false);
-				
 			} else {
 				rowView = view;
-				
 			}
+			TextView tv_comment = (TextView) rowView.findViewById(R.id.textDescription);
+			TextView tv_user = (TextView) rowView.findViewById(R.id.textUser);
+			TextView tv_timestamp = (TextView) rowView.findViewById(R.id.textTime);
+			
+			tv_comment.setText(comments.get(position));
+			tv_user.setText(Html.fromHtml(context.getString(R.string.community_prefix_by) + " <b>" + users.get(position) + "</b>"));
+			tv_user.setCompoundDrawablesWithIntrinsicBounds(null, null, users_trust.get(position) ?
+					context.getResources().getDrawable(R.drawable.ic_community_trust_small) : null, null);
+			String date = d_f.format(timestamps.get(position)); 
+			tv_timestamp.setText(context.getString(R.string.community_prefix_at) + " " + date);
+			
+			rowView.setAlpha(0xFF - (spamvotes.get(position) * 0x01));
+			
 			return rowView;
-			*/
-			return null;
 		}
 	}
 	
@@ -302,7 +341,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	
 	@Override
 	public boolean isEnabled(int position) {
-		return position != 0;
+		return position != 0 && position != getCount() - 1;
 	}
 	
 }
