@@ -9,5 +9,8 @@
     <string name="vsetpk_from_0">Decor View</string>
     <string name="vsetpk_from_1">cview</string>
     <string name="vsetpk_from_2">Content View</string>
-        
+    
+    <string name="comment_options_0">Copy comment</string>
+    <string name="comment_options_1">Mark as spam</string>
+    
 </resources>

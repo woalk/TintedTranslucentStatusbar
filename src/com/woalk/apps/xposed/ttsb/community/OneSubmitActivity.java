@@ -10,12 +10,16 @@ import com.woalk.apps.xposed.ttsb.Settings;
 
 import android.R.color;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -24,6 +28,8 @@ import android.widget.TextView;
 public class OneSubmitActivity extends Activity {
 	public static final String PASS_APP = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_APP"; // Parcelable
 	public static final String PASS_DESCR = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_DESCR";
+	public static final String PASS_ID = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_ID";
+	public static final String PASS_IS_TOPVOTE = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_IS_TOPVOTE";
 	public static final String PASS_VOTES = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_VOTES";
 	public static final String PASS_VERSION = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_VERSION";
 	public static final String PASS_INSTALLED = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_INSTALLED";
@@ -34,6 +40,8 @@ public class OneSubmitActivity extends Activity {
 	
 	protected ApplicationInfo app;
 	protected String description;
+	protected int id;
+	protected boolean is_topvote;
 	protected int votes;
 	protected int version;
 	protected boolean installed;
@@ -58,6 +66,8 @@ public class OneSubmitActivity extends Activity {
 		Intent it = getIntent();
 		app = (ApplicationInfo) it.getParcelableExtra(PASS_APP);
 		description = it.getStringExtra(PASS_DESCR);
+		id = it.getIntExtra(PASS_ID, -1);
+		is_topvote = it.getBooleanExtra(PASS_IS_TOPVOTE, false);
 		votes = it.getIntExtra(PASS_VOTES, 0);
 		version = it.getIntExtra(PASS_VERSION, 0);
 		installed = it.getBooleanExtra(PASS_INSTALLED, false);
@@ -70,6 +80,8 @@ public class OneSubmitActivity extends Activity {
 		lA.app = app;
 		lA.author = user;
 		lA.author_trust = user_trust;
+		lA.id = id;
+		lA.is_topvote = is_topvote;
 		lA.description = description;
 		lA.installed = installed;
 		lA.settings = settings;

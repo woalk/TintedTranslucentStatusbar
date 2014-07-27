@@ -3,8 +3,11 @@ package com.woalk.apps.xposed.ttsb;
 import java.util.ArrayList;
 
 import com.woalk.apps.xposed.ttsb.Settings.Setting;
+import com.woalk.apps.xposed.ttsb.community.Database;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
@@ -252,6 +255,11 @@ public class RulesActivity extends Activity {
 			if (!check_decview.isChecked()) setting.rules.decview = null;
 			mSettings.setSetting(setting);
 			Settings.Saver.save(this, act_inf.packageName, act_inf.name, mSettings);
+			SharedPreferences sPref_c = getSharedPreferences(Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+			SharedPreferences.Editor edit = sPref_c.edit();
+			edit.remove(Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED + act_inf.packageName);
+			edit.remove(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID + act_inf.packageName);
+			edit.apply();
 			Toast.makeText(getApplicationContext(), R.string.str_saved, Toast.LENGTH_SHORT).show();
 			finish();
 	    	return true;

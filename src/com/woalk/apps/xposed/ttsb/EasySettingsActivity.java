@@ -2,11 +2,14 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.ArrayList;
 
+import com.woalk.apps.xposed.ttsb.community.Database;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -284,6 +287,11 @@ public class EasySettingsActivity extends Activity {
 	public void save() {
 		updateSettings();
 		Settings.Saver.save(this, act_inf.packageName, act_inf.name, mSettings);
+		SharedPreferences sPref_c = context.getSharedPreferences(Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor edit = sPref_c.edit();
+		edit.remove(Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED + act_inf.packageName);
+		edit.remove(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID + act_inf.packageName);
+		edit.apply();
 	}
 	
 	public void delete() {
@@ -294,6 +302,13 @@ public class EasySettingsActivity extends Activity {
 		alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
     		public void onClick(DialogInterface dialog, int whichButton) {
     			Settings.Saver.delete(context, act_inf.packageName, act_inf.name);
+    			if (!Settings.Loader.containsPackage(context, act_inf.packageName)) {
+	    			SharedPreferences sPref_c = context.getSharedPreferences(Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+	    			SharedPreferences.Editor edit = sPref_c.edit();
+	    			edit.remove(Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED + act_inf.packageName);
+	    			edit.remove(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID + act_inf.packageName);
+	    			edit.apply();
+    			}
     			((Activity) context).finish();
     		}
     	});

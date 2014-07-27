@@ -102,5 +102,12 @@
     <string name="button_choose_layout">Choose layout only</string>
     <string name="button_view_settings">View settings</string>
     <string name="str_comments">Comments</string>
+    <string name="title_view_settings">Settings of this submit</string>
+    <string name="title_already_set">Wait a sec!</string>
+    <string name="msg_already_set">Do you want to overwrite existing settings of this app?\n\nNote: Merging the settings just keeps the Activities from your local settings that are not included in this submit.</string>
+    <string name="merge_already_set">Merge</string>
+    <string name="title_already_set_layout">Layout overwriting</string>
+    <string name="msg_already_set_layout">Do you want to overwrite existing layout settings of this app?\nColor settings will remain unchanged.</string>
+    <string name="title_comment_options">Comment</string>
 
 </resources>

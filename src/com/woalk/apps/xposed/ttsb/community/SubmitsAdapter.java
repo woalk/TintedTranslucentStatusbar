@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 public class SubmitsAdapter extends ArrayAdapter<String> {
 	public List<Integer> votes;
+	public List<Integer> ids;
 	public List<String> descriptions;
 	public List<Integer> versions;
 	public List<String> users;
@@ -40,6 +41,7 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 		this.pkgMan = context.getPackageManager();
 
 		this.votes = new ArrayList<Integer>();
+		this.ids = new ArrayList<Integer>();
 		this.descriptions = descr;
 		this.versions = new ArrayList<Integer>();
 		this.users = new ArrayList<String>();
@@ -63,12 +65,14 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 	}
 
 	public void addBegin() {
+		ids.add(null);
 		votes.add(null);
 		descriptions.add(null);
 		versions.add(null);
 		users.add(null);
 		users_trust.add(null);
 		timestamps.add(null);
+		settings.add(null);
 	}
 
 	@Override

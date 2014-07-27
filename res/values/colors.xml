@@ -2,8 +2,8 @@
 <resources>
     <color name="submit_button_normal">#FF662010</color>
     <color name="submit_button_focused">#FF763020</color>
-    <color name="submit_button_disabled">#FF454240</color>
-    <color name="submit_button_disabled_focused">#FF555250</color>
+    <color name="submit_button_disabled">#AA403630</color>
+    <color name="submit_button_disabled_focused">#CC555250</color>
     <color name="submit_button_pressed">#FF501008</color>
     
     <color name="votes_positive">#FF00DB12</color>

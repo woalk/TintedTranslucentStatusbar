@@ -74,7 +74,9 @@ public class AppDetailsActivity extends Activity {
 				intent.putExtra(OneSubmitActivity.PASS_APP, (Parcelable) app);
 				intent.putExtra(OneSubmitActivity.PASS_DESCR, lA.descriptions.get(position));
 				intent.putExtra(OneSubmitActivity.PASS_TIMESTAMP, lA.timestamps.get(position));
-				intent.putExtra(OneSubmitActivity.PASS_INSTALLED, lA.selected_pos == position);
+				intent.putExtra(OneSubmitActivity.PASS_ID, lA.ids.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_IS_TOPVOTE, position == 1);
+				intent.putExtra(OneSubmitActivity.PASS_INSTALLED, lA.selected_pos + 1 == position);
 				intent.putExtra(OneSubmitActivity.PASS_SETTINGS, lA.settings.get(position));
 				intent.putExtra(OneSubmitActivity.PASS_USER, lA.users.get(position));
 				intent.putExtra(OneSubmitActivity.PASS_USER_TRUST, lA.users_trust.get(position));
@@ -83,7 +85,11 @@ public class AppDetailsActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 		getSyncables();
 	}
 
@@ -106,6 +112,7 @@ public class AppDetailsActivity extends Activity {
 		@SuppressLint("SimpleDateFormat")
 		@Override
 		protected SubmitsAdapter doInBackground(String... params) {
+			List<Integer> ids = new ArrayList<Integer>();
 			List<Integer> votes = new ArrayList<Integer>();
 			List<String> descriptions = new ArrayList<String>();
 			List<Integer> versions = new ArrayList<Integer>();
@@ -144,8 +151,9 @@ public class AppDetailsActivity extends Activity {
 				}
 				for (int i = 0; i < jArray.length(); i++) {
 					JSONObject json_data = jArray.getJSONObject(i);
-					int id = json_data.getInt("id");
-					if (id == topvote_id) selected_pos = i;
+					Integer id = Integer.valueOf(json_data.getString("id"));
+					ids.add(id);
+					if (id.equals(topvote_id)) selected_pos = i;
 					votes.add(Integer.valueOf(json_data.getString("votes")));
 					descriptions.add(json_data.getString("description"));
 					versions.add(Integer.valueOf(json_data.getString("version")));
@@ -167,6 +175,7 @@ public class AppDetailsActivity extends Activity {
 			}
 			
 			SubmitsAdapter sA = new SubmitsAdapter(AppDetailsActivity.this, descriptions);
+			sA.ids = ids;
 			sA.versions = versions;
 			sA.timestamps = timestamps;
 			sA.users = users;
@@ -192,6 +201,7 @@ public class AppDetailsActivity extends Activity {
 		protected void onPostExecute(SubmitsAdapter result) {
 			if (result != null) {
 				lA.descriptions.clear();
+				lA.ids.clear();
 				lA.timestamps.clear();
 				lA.users.clear();
 				lA.users_trust.clear();
@@ -202,6 +212,7 @@ public class AppDetailsActivity extends Activity {
 				lA.addBegin();
 				
 				lA.descriptions.addAll(result.descriptions);
+				lA.ids.addAll(result.ids);
 				lA.timestamps.addAll(result.timestamps);
 				lA.users.addAll(result.users);
 				lA.users_trust.addAll(result.users_trust);

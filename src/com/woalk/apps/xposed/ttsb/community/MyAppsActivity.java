@@ -71,7 +71,11 @@ public class MyAppsActivity extends Activity {
 				openAppDetails(lA.apps.get(position));
 			}
 		});
-		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 		getSyncables();
 	}
 
@@ -101,6 +105,7 @@ public class MyAppsActivity extends Activity {
 			}
 			
 			List<ApplicationInfo> apps = new ArrayList<ApplicationInfo>();
+			List<String> packageNames = new ArrayList<String>();
 			List<Boolean> is_set = new ArrayList<Boolean>();
 			List<Boolean> has_update = new ArrayList<Boolean>();
 
@@ -129,6 +134,8 @@ public class MyAppsActivity extends Activity {
 				for (int i = 0; i < jArray.length(); i++) {
 					JSONObject json_data = jArray.getJSONObject(i);
 					String packageName = json_data.getString("package");
+					if (packageNames.contains(packageName)) continue;
+					packageNames.add(packageName);
 					apps.add(all_apps_p.get(packageName));
 					boolean is_current_set = Settings.Loader.containsPackage(getApplicationContext(), packageName);
 					boolean has_current_update = false;

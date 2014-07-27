@@ -12,6 +12,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.woalk.apps.xposed.ttsb.community.Database;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -154,6 +156,11 @@ public class ActivitiesActivity extends Activity {
 	    		public void onClick(DialogInterface dialog, int whichButton) {
 	    			Settings.Saver.deleteEverythingFromPackage((Context) context, app.packageName);
 	    			((Activity) context).finish();
+	    			SharedPreferences sPref_c = context.getSharedPreferences(Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+	    			SharedPreferences.Editor edit = sPref_c.edit();
+	    			edit.remove(Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED + app.packageName);
+	    			edit.remove(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID + app.packageName);
+	    			edit.apply();
 	    		}
 	    	});
 			alert1.show();
