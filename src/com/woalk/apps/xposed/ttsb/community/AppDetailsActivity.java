@@ -47,11 +47,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class AppDetailsActivity extends Activity {  
-	public static final String PASS_APPINFO = Helpers.TTSB_PACKAGE_NAME + ".community.AppDetailsActivity.PASS_APPINFO";
-	
+public class AppDetailsActivity extends Activity {
+	public static final String PASS_APPINFO = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.AppDetailsActivity.PASS_APPINFO";
+
 	protected ApplicationInfo app;
-	
+
 	protected ListView lv;
 	protected SubmitsAdapter lA;
 
@@ -59,34 +60,45 @@ public class AppDetailsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_details);
-		
+
 		app = (ApplicationInfo) getIntent().getParcelableExtra(PASS_APPINFO);
-		
+
 		lv = (ListView) findViewById(R.id.listView1);
 		lA = new SubmitsAdapter(this, new ArrayList<String>());
 		lA.app = app;
 		lv.setAdapter(lA);
-		
+
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(AppDetailsActivity.this, OneSubmitActivity.class);
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(AppDetailsActivity.this,
+						OneSubmitActivity.class);
 				intent.putExtra(OneSubmitActivity.PASS_APP, (Parcelable) app);
-				intent.putExtra(OneSubmitActivity.PASS_DESCR, lA.descriptions.get(position));
-				intent.putExtra(OneSubmitActivity.PASS_TIMESTAMP, lA.timestamps.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_DESCR,
+						lA.descriptions.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_TIMESTAMP,
+						lA.timestamps.get(position));
 				intent.putExtra(OneSubmitActivity.PASS_ID, lA.ids.get(position));
-				intent.putExtra(OneSubmitActivity.PASS_IS_TOPVOTE, position == 1);
-				intent.putExtra(OneSubmitActivity.PASS_INSTALLED, lA.selected_pos + 1 == position);
-				intent.putExtra(OneSubmitActivity.PASS_SETTINGS, lA.settings.get(position));
-				intent.putExtra(OneSubmitActivity.PASS_USER, lA.users.get(position));
-				intent.putExtra(OneSubmitActivity.PASS_USER_TRUST, lA.users_trust.get(position));
-				intent.putExtra(OneSubmitActivity.PASS_VERSION, lA.versions.get(position));
-				intent.putExtra(OneSubmitActivity.PASS_VOTES, lA.votes.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_IS_TOPVOTE,
+						position == 1);
+				intent.putExtra(OneSubmitActivity.PASS_INSTALLED,
+						lA.selected_pos + 1 == position);
+				intent.putExtra(OneSubmitActivity.PASS_SETTINGS,
+						lA.settings.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_USER,
+						lA.users.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_USER_TRUST,
+						lA.users_trust.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_VERSION,
+						lA.versions.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_VOTES,
+						lA.votes.get(position));
 				startActivity(intent);
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -96,13 +108,15 @@ public class AppDetailsActivity extends Activity {
 	protected void getSyncables() {
 		new readDatabaseTask().execute(Database.DATABASE_URL);
 	}
-	
-	private class readDatabaseTask extends AsyncTask<String, String, SubmitsAdapter> {
+
+	private class readDatabaseTask extends
+			AsyncTask<String, String, SubmitsAdapter> {
 		private AlertDialog progress;
 
 		@Override
 		protected void onPreExecute() {
-			AlertDialog.Builder builder = new AlertDialog.Builder(AppDetailsActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					AppDetailsActivity.this);
 			builder.setMessage(R.string.loadingsync_msg);
 			builder.setView(new ProgressBar(AppDetailsActivity.this));
 			progress = builder.create();
@@ -127,41 +141,56 @@ public class AppDetailsActivity extends Activity {
 				HttpClient httpclient = new DefaultHttpClient();
 				HttpPost httppost = new HttpPost(params[0]);
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN));
-				nameValuePairs.add(new BasicNameValuePair(Database.POST_FUNCTION, Database.FUNCTION_GET_SUBMITS_FOR_PACKAGE));
-				nameValuePairs.add(new BasicNameValuePair(Database.POST_SUBMITS_PACKAGE, app.packageName));
+				nameValuePairs.add(new BasicNameValuePair(Database.POST_PIN,
+						Database.COMMUNITY_PIN));
+				nameValuePairs.add(new BasicNameValuePair(
+						Database.POST_FUNCTION,
+						Database.FUNCTION_GET_SUBMITS_FOR_PACKAGE));
+				nameValuePairs.add(new BasicNameValuePair(
+						Database.POST_SUBMITS_PACKAGE, app.packageName));
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				HttpResponse response = httpclient.execute(httppost);
 				HttpEntity entity = response.getEntity();
-				
+
 				InputStream is = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(is, "utf-8"), 8);
 				StringBuilder sb = new StringBuilder();
 				String line = null;
 				while ((line = reader.readLine()) != null) {
 					sb.append(line + "\n");
-				} 
+				}
 				is.close();
 				result = sb.toString();
 				JSONArray jArray = new JSONArray(result);
 				int topvote_id = -1;
-				SharedPreferences sPref = getApplicationContext().getSharedPreferences(Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
-				if (sPref.getBoolean(Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED + app.packageName, false)) {
-					topvote_id = sPref.getInt(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID + app.packageName, -1);
+				SharedPreferences sPref = getApplicationContext()
+						.getSharedPreferences(
+								Database.Preferences.COMMUNITY_PREF_NAME,
+								Context.MODE_PRIVATE);
+				if (sPref.getBoolean(
+						Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED
+								+ app.packageName, false)) {
+					topvote_id = sPref.getInt(
+							Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID
+									+ app.packageName, -1);
 				}
 				for (int i = 0; i < jArray.length(); i++) {
 					JSONObject json_data = jArray.getJSONObject(i);
 					Integer id = Integer.valueOf(json_data.getString("id"));
 					ids.add(id);
-					if (id.equals(topvote_id)) selected_pos = i;
+					if (id.equals(topvote_id))
+						selected_pos = i;
 					votes.add(Integer.valueOf(json_data.getString("votes")));
 					descriptions.add(json_data.getString("description"));
 					versions.add(Integer.valueOf(json_data.getString("version")));
 					users.add(json_data.getString("username"));
-					users_trust.add(json_data.getString("user_trust").equals("1"));
+					users_trust.add(json_data.getString("user_trust").equals(
+							"1"));
 					DateFormat d_f = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 					d_f.setTimeZone(TimeZone.getTimeZone("GMT"));
-					Date timestamp = d_f.parse(json_data.getString("timestamp"));
+					Date timestamp = d_f
+							.parse(json_data.getString("timestamp"));
 					timestamps.add(timestamp);
 					settings.add(json_data.getString("settings"));
 				}
@@ -173,8 +202,9 @@ public class AppDetailsActivity extends Activity {
 				publishProgress(result);
 				return null;
 			}
-			
-			SubmitsAdapter sA = new SubmitsAdapter(AppDetailsActivity.this, descriptions);
+
+			SubmitsAdapter sA = new SubmitsAdapter(AppDetailsActivity.this,
+					descriptions);
 			sA.ids = ids;
 			sA.versions = versions;
 			sA.timestamps = timestamps;
@@ -185,18 +215,20 @@ public class AppDetailsActivity extends Activity {
 			sA.selected_pos = selected_pos;
 			return sA;
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(String... progress) {
 			if (progress[0] == "404")
-				Toast.makeText(AppDetailsActivity.this, R.string.no_connection_e, Toast.LENGTH_LONG).show();
+				Toast.makeText(AppDetailsActivity.this,
+						R.string.no_connection_e, Toast.LENGTH_LONG).show();
 			else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(AppDetailsActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						AppDetailsActivity.this);
 				builder.setMessage(Html.fromHtml(progress[0]));
 				builder.show();
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(SubmitsAdapter result) {
 			if (result != null) {
@@ -208,9 +240,9 @@ public class AppDetailsActivity extends Activity {
 				lA.settings.clear();
 				lA.versions.clear();
 				lA.votes.clear();
-				
+
 				lA.addBegin();
-				
+
 				lA.descriptions.addAll(result.descriptions);
 				lA.ids.addAll(result.ids);
 				lA.timestamps.addAll(result.timestamps);
@@ -219,41 +251,44 @@ public class AppDetailsActivity extends Activity {
 				lA.settings.addAll(result.settings);
 				lA.versions.addAll(result.versions);
 				lA.votes.addAll(result.votes);
-				
+
 				lA.selected_pos = result.selected_pos;
-				
+
 				lA.notifyDataSetChanged();
-				
+
 				lv.setFastScrollEnabled(true);
 			}
 			progress.dismiss();
 		}
 	}
-	
+
 	boolean isFiltered = false;
 	SubmitsAdapter backup;
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.appdetails, menu);
-	    menu.findItem(R.id.action_show_only_current_ver).setVisible(!isFiltered);
-	    menu.findItem(R.id.action_show_all).setVisible(isFiltered);
-	    return super.onCreateOptionsMenu(menu);
+		inflater.inflate(R.menu.appdetails, menu);
+		menu.findItem(R.id.action_show_only_current_ver)
+				.setVisible(!isFiltered);
+		menu.findItem(R.id.action_show_all).setVisible(isFiltered);
+		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_show_only_current_ver:
 			isFiltered = true;
 			invalidateOptionsMenu();
-			
+
 			backup = new SubmitsAdapter(lA);
 			int ver = -1;
 			try {
-				ver = getPackageManager().getPackageInfo(Helpers.TTSB_PACKAGE_NAME, 0).versionCode;
-			} catch (NameNotFoundException e) { }
+				ver = getPackageManager().getPackageInfo(
+						Helpers.TTSB_PACKAGE_NAME, 0).versionCode;
+			} catch (NameNotFoundException e) {
+			}
 			for (int i = 1; i < lA.descriptions.size(); i++) {
 				if (lA.versions.get(i) != ver) {
 					lA.descriptions.remove(i);
@@ -262,36 +297,38 @@ public class AppDetailsActivity extends Activity {
 					lA.users_trust.remove(i);
 					lA.versions.remove(i);
 					lA.votes.remove(i);
-					if (lA.selected_pos > i) lA.selected_pos--;
-					else if (lA.selected_pos == i) lA.selected_pos = -1;
+					if (lA.selected_pos > i)
+						lA.selected_pos--;
+					else if (lA.selected_pos == i)
+						lA.selected_pos = -1;
 				}
 			}
-			
+
 			lA.notifyDataSetChanged();
-			
+
 			return true;
 		case R.id.action_show_all:
 			isFiltered = false;
 			invalidateOptionsMenu();
-			
+
 			lA.descriptions.clear();
 			lA.timestamps.clear();
 			lA.users.clear();
 			lA.users_trust.clear();
 			lA.versions.clear();
 			lA.votes.clear();
-			
+
 			lA.descriptions.addAll(backup.descriptions);
 			lA.timestamps.addAll(backup.timestamps);
 			lA.users.addAll(backup.users);
 			lA.users_trust.addAll(backup.users_trust);
 			lA.versions.addAll(backup.versions);
 			lA.votes.addAll(backup.votes);
-			
+
 			lA.selected_pos = backup.selected_pos;
-			
+
 			lA.notifyDataSetChanged();
-			
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

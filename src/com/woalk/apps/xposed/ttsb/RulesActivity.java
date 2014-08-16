@@ -27,14 +27,14 @@ import android.widget.ListView;
 
 public class RulesActivity extends Activity {
 	public static String RULES_ACTIVITY_INFO_SELECTED = "com.woalk.apps.xposed.ttsb.RULES_ACTIVIITY_INFO_SELECTED";
-	
+
 	protected ActivityInfo act_inf;
 	protected Settings.Parser mSettings;
 	protected Settings.Setting setting;
-	
+
 	protected ViewSettingsPackListAdapter lA;
 	protected ListView lv;
-	
+
 	protected EditText edit_s_plus;
 	protected EditText edit_n_plus;
 	protected CheckBox check_cview;
@@ -44,19 +44,20 @@ public class RulesActivity extends Activity {
 	protected Button btn_content;
 	protected Button btn_decview;
 	protected Button btn_add;
-	
+
 	private Menu menu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rules);
-		
+
 		act_inf = getIntent().getParcelableExtra(RULES_ACTIVITY_INFO_SELECTED);
-		
-		mSettings = Settings.Loader.load(this, act_inf.packageName, act_inf.name);
+
+		mSettings = Settings.Loader.load(this, act_inf.packageName,
+				act_inf.name);
 		setting = mSettings.getSetting();
-		
+
 		edit_s_plus = (EditText) findViewById(R.id.editText_s_plus);
 		edit_n_plus = (EditText) findViewById(R.id.editText_n_plus);
 		check_cview = (CheckBox) findViewById(R.id.checkBox_cview);
@@ -66,45 +67,55 @@ public class RulesActivity extends Activity {
 		btn_content = (Button) findViewById(R.id.button_edit_content);
 		btn_decview = (Button) findViewById(R.id.button_edit_decview);
 		btn_add = (Button) findViewById(R.id.button_addRule);
-		
-		lA = new ViewSettingsPackListAdapter(this, new ArrayList<Settings.Setting.ViewSettingsPack>());
+
+		lA = new ViewSettingsPackListAdapter(this,
+				new ArrayList<Settings.Setting.ViewSettingsPack>());
 		lv = (ListView) findViewById(R.id.listView1);
 		lv.setAdapter(lA);
-		
+
 		check_cview.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				btn_cview.setEnabled(isChecked);
 			}
 		});
 		check_content.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				btn_content.setEnabled(isChecked);
 			}
 		});
 		check_decview.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				btn_decview.setEnabled(isChecked);
 			}
 		});
-		
+
 		btn_cview.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ViewSettingsDialog fragment = new ViewSettingsDialog(setting.rules.cview);
+				ViewSettingsDialog fragment = new ViewSettingsDialog(
+						setting.rules.cview);
 				fragment.setTitle(R.string.cview_edit_title);
 				fragment.setViewSettingsDialogListener(new ViewSettingsDialog.ViewSettingsDialogListener() {
 					@Override
-					public void onDialogPositiveClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogPositiveClick(
+							Settings.Setting.ViewSettings vset) {
 						setting.rules.cview = vset;
 					}
+
 					@Override
-					public void onDialogNegativeClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogNegativeClick(
+							Settings.Setting.ViewSettings vset) {
 					}
+
 					@Override
-					public void onDialogDeleteClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogDeleteClick(
+							Settings.Setting.ViewSettings vset) {
 						setting.rules.cview = null;
 						check_cview.setChecked(false);
 					}
@@ -115,18 +126,24 @@ public class RulesActivity extends Activity {
 		btn_content.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ViewSettingsDialog fragment = new ViewSettingsDialog(setting.rules.content);
+				ViewSettingsDialog fragment = new ViewSettingsDialog(
+						setting.rules.content);
 				fragment.setTitle(R.string.content_edit_title);
 				fragment.setViewSettingsDialogListener(new ViewSettingsDialog.ViewSettingsDialogListener() {
 					@Override
-					public void onDialogPositiveClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogPositiveClick(
+							Settings.Setting.ViewSettings vset) {
 						setting.rules.content = vset;
 					}
+
 					@Override
-					public void onDialogNegativeClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogNegativeClick(
+							Settings.Setting.ViewSettings vset) {
 					}
+
 					@Override
-					public void onDialogDeleteClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogDeleteClick(
+							Settings.Setting.ViewSettings vset) {
 						setting.rules.content = null;
 						check_content.setChecked(false);
 					}
@@ -137,18 +154,24 @@ public class RulesActivity extends Activity {
 		btn_decview.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ViewSettingsDialog fragment = new ViewSettingsDialog(setting.rules.decview);
+				ViewSettingsDialog fragment = new ViewSettingsDialog(
+						setting.rules.decview);
 				fragment.setTitle(R.string.decview_edit_title);
 				fragment.setViewSettingsDialogListener(new ViewSettingsDialog.ViewSettingsDialogListener() {
 					@Override
-					public void onDialogPositiveClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogPositiveClick(
+							Settings.Setting.ViewSettings vset) {
 						setting.rules.decview = vset;
 					}
+
 					@Override
-					public void onDialogNegativeClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogNegativeClick(
+							Settings.Setting.ViewSettings vset) {
 					}
+
 					@Override
-					public void onDialogDeleteClick(Settings.Setting.ViewSettings vset) {
+					public void onDialogDeleteClick(
+							Settings.Setting.ViewSettings vset) {
 						setting.rules.decview = null;
 						check_decview.setChecked(false);
 					}
@@ -156,21 +179,27 @@ public class RulesActivity extends Activity {
 				fragment.show(getFragmentManager(), "vset_decview");
 			}
 		});
-		
+
 		btn_add.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ViewSettingsPackDialog fragment = new ViewSettingsPackDialog(new Settings.Setting.ViewSettingsPack());
+				ViewSettingsPackDialog fragment = new ViewSettingsPackDialog(
+						new Settings.Setting.ViewSettingsPack());
 				fragment.setViewSettingsDialogListener(new ViewSettingsPackDialog.ViewSettingsPackDialogListener() {
 					@Override
-					public void onDialogPositiveClick(Settings.Setting.ViewSettingsPack vsetpk) {
+					public void onDialogPositiveClick(
+							Settings.Setting.ViewSettingsPack vsetpk) {
 						addViewRule(vsetpk);
 					}
+
 					@Override
-					public void onDialogNegativeClick(Settings.Setting.ViewSettingsPack vsetpk) {
+					public void onDialogNegativeClick(
+							Settings.Setting.ViewSettingsPack vsetpk) {
 					}
+
 					@Override
-					public void onDialogDeleteClick(Settings.Setting.ViewSettingsPack vsetpk) {
+					public void onDialogDeleteClick(
+							Settings.Setting.ViewSettingsPack vsetpk) {
 					}
 				});
 				fragment.show(getFragmentManager(), "vsetpk_add");
@@ -178,12 +207,15 @@ public class RulesActivity extends Activity {
 		});
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				ViewSettingsPackDialog fragment = new ViewSettingsPackDialog(lA.getItem(position));
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				ViewSettingsPackDialog fragment = new ViewSettingsPackDialog(lA
+						.getItem(position));
 				final int pos = position;
 				fragment.setViewSettingsDialogListener(new ViewSettingsPackDialog.ViewSettingsPackDialogListener() {
 					@Override
-					public void onDialogPositiveClick(Settings.Setting.ViewSettingsPack vsetpk) {
+					public void onDialogPositiveClick(
+							Settings.Setting.ViewSettingsPack vsetpk) {
 						setting.rules.view.remove(pos);
 						setting.rules.view.add(pos, vsetpk);
 						lA.vsetpks.clear();
@@ -191,11 +223,15 @@ public class RulesActivity extends Activity {
 						lA.notifyDataSetChanged();
 						rulesUpdated();
 					}
+
 					@Override
-					public void onDialogNegativeClick(Settings.Setting.ViewSettingsPack vsetpk) {
+					public void onDialogNegativeClick(
+							Settings.Setting.ViewSettingsPack vsetpk) {
 					}
+
 					@Override
-					public void onDialogDeleteClick(Settings.Setting.ViewSettingsPack vsetpk) {
+					public void onDialogDeleteClick(
+							Settings.Setting.ViewSettingsPack vsetpk) {
 						lA.vsetpks.remove(pos);
 						lA.notifyDataSetChanged();
 					}
@@ -203,28 +239,32 @@ public class RulesActivity extends Activity {
 				fragment.show(getFragmentManager(), "vsetpk_edit");
 			}
 		});
-		
+
 		rulesUpdated();
 	}
-	
+
 	protected void rulesUpdated() {
 		if (setting == null || setting.rules == null) {
-			Toast.makeText(this, R.string.no_settings_e, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.no_settings_e, Toast.LENGTH_LONG)
+					.show();
 			finish();
 			return;
 		}
 		edit_s_plus.setText(String.valueOf(setting.rules.s_plus));
 		edit_n_plus.setText(String.valueOf(setting.rules.n_plus));
-		if (setting.rules.cview != null) check_cview.setChecked(true);
-		if (setting.rules.content != null) check_content.setChecked(true);
-		if (setting.rules.decview != null) check_decview.setChecked(true);
+		if (setting.rules.cview != null)
+			check_cview.setChecked(true);
+		if (setting.rules.content != null)
+			check_content.setChecked(true);
+		if (setting.rules.decview != null)
+			check_decview.setChecked(true);
 		if (setting.rules.view != null) {
 			lA.vsetpks.clear();
 			lA.vsetpks.addAll(setting.rules.view);
 			lA.notifyDataSetChanged();
 		}
 	}
-	
+
 	protected void addViewRule(Settings.Setting.ViewSettingsPack vsetpk) {
 		if (setting.rules.view == null || setting.rules.view.size() == 0)
 			setting.rules.view = new ArrayList<Setting.ViewSettingsPack>();
@@ -233,46 +273,59 @@ public class RulesActivity extends Activity {
 		lA.vsetpks.addAll(setting.rules.view);
 		lA.notifyDataSetChanged();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		this.menu = menu;
-	    inflater.inflate(R.menu.rules, menu);
-	    menu.getItem(2).setEnabled((Helpers.clipboard_sav instanceof Settings.Setting.Rules));
-	    return super.onCreateOptionsMenu(menu);
+		inflater.inflate(R.menu.rules, menu);
+		menu.getItem(2).setEnabled(
+				(Helpers.clipboard_sav instanceof Settings.Setting.Rules));
+		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle presses on the action bar items
-	    switch (item.getItemId()) {
-	    case R.id.action_save_rules:
-			setting.rules.s_plus = Integer.valueOf(edit_s_plus.getText().toString());
-			setting.rules.n_plus = Integer.valueOf(edit_n_plus.getText().toString());
-			if (!check_cview.isChecked()) setting.rules.cview = null;
-			if (!check_content.isChecked()) setting.rules.content = null;
-			if (!check_decview.isChecked()) setting.rules.decview = null;
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_save_rules:
+			setting.rules.s_plus = Integer.valueOf(edit_s_plus.getText()
+					.toString());
+			setting.rules.n_plus = Integer.valueOf(edit_n_plus.getText()
+					.toString());
+			if (!check_cview.isChecked())
+				setting.rules.cview = null;
+			if (!check_content.isChecked())
+				setting.rules.content = null;
+			if (!check_decview.isChecked())
+				setting.rules.decview = null;
 			mSettings.setSetting(setting);
-			Settings.Saver.save(this, act_inf.packageName, act_inf.name, mSettings);
-			SharedPreferences sPref_c = getSharedPreferences(Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+			Settings.Saver.save(this, act_inf.packageName, act_inf.name,
+					mSettings);
+			SharedPreferences sPref_c = getSharedPreferences(
+					Database.Preferences.COMMUNITY_PREF_NAME,
+					Context.MODE_PRIVATE);
 			SharedPreferences.Editor edit = sPref_c.edit();
-			edit.remove(Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED + act_inf.packageName);
-			edit.remove(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID + act_inf.packageName);
+			edit.remove(Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED
+					+ act_inf.packageName);
+			edit.remove(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID
+					+ act_inf.packageName);
 			edit.apply();
-			Toast.makeText(getApplicationContext(), R.string.str_saved, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.str_saved,
+					Toast.LENGTH_SHORT).show();
 			finish();
-	    	return true;
-	    case R.id.action_copy_rules:
-	    	Helpers.clipboard_sav = setting.rules;
-	    	menu.getItem(2).setEnabled(true);
-	    	return true;
-	    case R.id.action_paste_rules:
-	    	if (Helpers.clipboard_sav != null && Helpers.clipboard_sav instanceof Settings.Setting.Rules)
-	    		setting.rules = (Settings.Setting.Rules) Helpers.clipboard_sav;
-	    	return true;
-	    default:
-	    	return super.onOptionsItemSelected(item);
-	    }
+			return true;
+		case R.id.action_copy_rules:
+			Helpers.clipboard_sav = setting.rules;
+			menu.getItem(2).setEnabled(true);
+			return true;
+		case R.id.action_paste_rules:
+			if (Helpers.clipboard_sav != null
+					&& Helpers.clipboard_sav instanceof Settings.Setting.Rules)
+				setting.rules = (Settings.Setting.Rules) Helpers.clipboard_sav;
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

@@ -59,41 +59,48 @@ public class SyncActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sync);
-		
-		lA = new AppSyncListAdapter(context, new ArrayList<ApplicationInfo>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<Boolean>(), new ArrayList<String>(), new ArrayList<Boolean>());
+
+		lA = new AppSyncListAdapter(context, new ArrayList<ApplicationInfo>(),
+				new ArrayList<Boolean>(), new ArrayList<Boolean>(),
+				new ArrayList<Boolean>(), new ArrayList<String>(),
+				new ArrayList<Boolean>());
 		lv = (ListView) findViewById(R.id.listView1);
 		lv.setAdapter(lA);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				CheckBox chkSync = (CheckBox) view.findViewById(R.id.checkSync);
 				chkSync.setChecked(!chkSync.isChecked());
 			}
 		});
-		
+
 		final Spinner spinner_opt = (Spinner) findViewById(R.id.spinner1);
-		
-		findViewById(R.id.button_addsync).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (spinner_opt.getSelectedItemPosition() == 0)
-					saveSelected();
-				else
-					saveSelectedLayout();
-				context.finish();
-			}
-		});
-		
+
+		findViewById(R.id.button_addsync).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (spinner_opt.getSelectedItemPosition() == 0)
+							saveSelected();
+						else
+							saveSelectedLayout();
+						context.finish();
+					}
+				});
+
 		getSyncables();
 	}
-	
+
 	protected void getSyncables() {
-		new readDatabaseTask().execute("http://ext.woalk.de/ttsb_database/getdbjson.php");
+		new readDatabaseTask()
+				.execute("http://ext.woalk.de/ttsb_database/getdbjson.php");
 	}
-	
-	private class readDatabaseTask extends AsyncTask<String, Integer, AppSyncListAdapter> {
+
+	private class readDatabaseTask extends
+			AsyncTask<String, Integer, AppSyncListAdapter> {
 		private AlertDialog progress;
-		
+
 		protected void onPreExecute() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setMessage(R.string.loadingsync_msg);
@@ -105,7 +112,9 @@ public class SyncActivity extends Activity {
 		@SuppressLint({ "WorldReadableFiles", "SimpleDateFormat" })
 		@SuppressWarnings("deprecation")
 		protected AppSyncListAdapter doInBackground(String... params) {
-			AppSyncListAdapter lA1 = new AppSyncListAdapter(context, new ArrayList<ApplicationInfo>(), null, null, null, null, null);
+			AppSyncListAdapter lA1 = new AppSyncListAdapter(context,
+					new ArrayList<ApplicationInfo>(), null, null, null, null,
+					null);
 			PackageManager pkgMan = context.getPackageManager();
 			List<PackageInfo> pkgs = pkgMan.getInstalledPackages(0);
 			List<ApplicationInfo> apps = new ArrayList<ApplicationInfo>();
@@ -119,10 +128,13 @@ public class SyncActivity extends Activity {
 			for (int i = 0; i < pkgs.size(); i++) {
 				apps.add(pkgs.get(i).applicationInfo);
 			}
-			Collections.sort(apps, new ApplicationInfo.DisplayNameComparator(pkgMan));
-			SharedPreferences sPref = context.getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
-			TreeMap<String, ?> tree_sPref = new TreeMap<String, Object>(sPref.getAll());
-			
+			Collections.sort(apps, new ApplicationInfo.DisplayNameComparator(
+					pkgMan));
+			SharedPreferences sPref = context.getSharedPreferences(
+					Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+			TreeMap<String, ?> tree_sPref = new TreeMap<String, Object>(
+					sPref.getAll());
+
 			database = new TreeMap<String, String>();
 			InputStream is;
 			String result = "";
@@ -134,19 +146,21 @@ public class SyncActivity extends Activity {
 				HttpResponse response = httpclient.execute(httppost);
 				HttpEntity entity = response.getEntity();
 				is = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is,"utf-8"),8);
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(is, "utf-8"), 8);
 				StringBuilder sb = new StringBuilder();
 				String line = null;
 				while ((line = reader.readLine()) != null) {
 					sb.append(line + "\n");
-				} 
+				}
 				is.close();
 				result = sb.toString();
 				JSONArray jArray = new JSONArray(result);
-				for (int i = 0; i < jArray.length(); i++){
+				for (int i = 0; i < jArray.length(); i++) {
 					JSONObject json_data = jArray.getJSONObject(i);
 					String packageName = json_data.getString("package");
-					String key = packageName + "/" + json_data.getString("activity");
+					String key = packageName + "/"
+							+ json_data.getString("activity");
 					database.put(key, json_data.getString("setting"));
 					String setting = sPref.getString(key, null);
 					String timeStamp = json_data.getString("timestamp");
@@ -165,24 +179,30 @@ public class SyncActivity extends Activity {
 			}
 
 			for (int i = 0; i < apps.size(); i++) {
-				if (!Settings.Loader.containsPackage(database, apps.get(i).packageName)) {
+				if (!Settings.Loader.containsPackage(database,
+						apps.get(i).packageName)) {
 					apps.remove(i);
 					i--;
 					continue;
 				}
 				String packageName = apps.get(i).packageName;
-				boolean is_current_set = Settings.Loader.containsPackage(tree_sPref, packageName);
+				boolean is_current_set = Settings.Loader.containsPackage(
+						tree_sPref, packageName);
 				is_set.add(is_current_set);
 				boolean is_edited = false;
-				if (db_edited.containsKey(packageName)) is_edited = db_edited.get(packageName);
+				if (db_edited.containsKey(packageName))
+					is_edited = db_edited.get(packageName);
 				boolean is_newer = false;
 				try {
 					String timestamp = db_timestamps.get(packageName);
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"yyyy-MM-dd-HH-mm");
 					Date date;
 					date = sdf.parse(timestamp);
 					timestamps.add(DateFormat.getInstance().format(date));
-					String lastupdate = sPref.getString(Helpers.TTSB_PREF_LASTUPDATE, getString(R.string.never));
+					String lastupdate = sPref.getString(
+							Helpers.TTSB_PREF_LASTUPDATE,
+							getString(R.string.never));
 					Date datelast;
 					try {
 						datelast = sdf.parse(lastupdate);
@@ -206,12 +226,13 @@ public class SyncActivity extends Activity {
 			lA1.timestamps_isnewer = timestamps_isnewer;
 			return lA1;
 		}
-		
+
 		protected void onProgressUpdate(Integer... progress) {
 			if (progress[0] == 404)
-				Toast.makeText(SyncActivity.this, R.string.no_connection_e, Toast.LENGTH_LONG).show();
+				Toast.makeText(SyncActivity.this, R.string.no_connection_e,
+						Toast.LENGTH_LONG).show();
 		}
-		
+
 		protected void onPostExecute(AppSyncListAdapter result) {
 			lA.apps.clear();
 			lA.is_set.clear();
@@ -231,11 +252,12 @@ public class SyncActivity extends Activity {
 			progress.dismiss();
 		}
 	}
-	
+
 	@SuppressLint({ "WorldReadableFiles", "SimpleDateFormat" })
 	@SuppressWarnings("deprecation")
 	protected void saveSelected() {
-		SharedPreferences sPref = context.getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+		SharedPreferences sPref = context.getSharedPreferences(
+				Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
 		SharedPreferences.Editor edit = sPref.edit();
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 		String formattedDate = f.format(new Date());
@@ -243,27 +265,34 @@ public class SyncActivity extends Activity {
 		edit.apply();
 		List<String> packageNames = new ArrayList<String>();
 		for (int i = 0; i < lA.apps.size(); i++) {
-			if (lA.checked.get(i)) packageNames.add(lA.apps.get(i).packageName);
+			if (lA.checked.get(i))
+				packageNames.add(lA.apps.get(i).packageName);
 		}
-		if (packageNames.size() == 0) return;
+		if (packageNames.size() == 0)
+			return;
 		Settings.Saver.deleteEverythingFromPackages(sPref, packageNames);
 		for (int i = 0; i < lA.apps.size(); i++) {
 			if (lA.checked.get(i)) {
-				SortedMap<String, String> appdb = database.subMap(lA.apps.get(i).packageName, lA.apps.get(i).packageName + Character.MAX_VALUE);
+				SortedMap<String, String> appdb = database.subMap(
+						lA.apps.get(i).packageName, lA.apps.get(i).packageName
+								+ Character.MAX_VALUE);
 				for (Entry<String, String> entry : appdb.entrySet()) {
-					Settings.Parser parser = new Settings.Parser(entry.getValue());
+					Settings.Parser parser = new Settings.Parser(
+							entry.getValue());
 					parser.parseToSettings();
 					Settings.Saver.save(sPref, entry.getKey(), parser);
 				}
 			}
 		}
-		Toast.makeText(this, R.string.settings_synced_success, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.settings_synced_success,
+				Toast.LENGTH_SHORT).show();
 	}
-	
+
 	@SuppressLint({ "WorldReadableFiles", "SimpleDateFormat" })
 	@SuppressWarnings("deprecation")
 	protected void saveSelectedLayout() {
-		SharedPreferences sPref = context.getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+		SharedPreferences sPref = context.getSharedPreferences(
+				Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
 		SharedPreferences.Editor edit = sPref.edit();
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 		String formattedDate = f.format(new Date());
@@ -271,16 +300,23 @@ public class SyncActivity extends Activity {
 		edit.apply();
 		boolean isSyncable = false;
 		for (int i = 0; i < lA.apps.size(); i++) {
-			if (lA.checked.get(i)) isSyncable = true;
+			if (lA.checked.get(i))
+				isSyncable = true;
 		}
-		if (!isSyncable) return;
+		if (!isSyncable)
+			return;
 		for (int i = 0; i < lA.apps.size(); i++) {
 			if (lA.checked.get(i)) {
-				SortedMap<String, String> appdb = database.subMap(lA.apps.get(i).packageName, lA.apps.get(i).packageName + Character.MAX_VALUE);
+				SortedMap<String, String> appdb = database.subMap(
+						lA.apps.get(i).packageName, lA.apps.get(i).packageName
+								+ Character.MAX_VALUE);
 				for (Entry<String, String> entry : appdb.entrySet()) {
-					if (!Settings.Loader.contains(sPref, entry.getKey())) continue;
-					Settings.Parser parser = Settings.Loader.load(sPref, entry.getKey());
-					Settings.Parser parser_new = new Settings.Parser(entry.getValue());
+					if (!Settings.Loader.contains(sPref, entry.getKey()))
+						continue;
+					Settings.Parser parser = Settings.Loader.load(sPref,
+							entry.getKey());
+					Settings.Parser parser_new = new Settings.Parser(
+							entry.getValue());
 					parser_new.parseToSettings();
 					Settings.Setting setting = parser.getSetting();
 					int s_plus_sav = setting.rules.s_plus;
@@ -293,6 +329,7 @@ public class SyncActivity extends Activity {
 				}
 			}
 		}
-		Toast.makeText(this, R.string.settings_synced_success, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.settings_synced_success,
+				Toast.LENGTH_SHORT).show();
 	}
 }

@@ -27,10 +27,12 @@ public class AppSyncListAdapter extends ArrayAdapter<ApplicationInfo> {
 	public List<Boolean> checked;
 	public List<Boolean> edited;
 
-	public AppSyncListAdapter(Activity context, List<ApplicationInfo> apps, List<Boolean> is_set, List<Boolean> checked, List<Boolean> edited, List<String> timestamps, List<Boolean> timestamps_isnewer) {
+	public AppSyncListAdapter(Activity context, List<ApplicationInfo> apps,
+			List<Boolean> is_set, List<Boolean> checked, List<Boolean> edited,
+			List<String> timestamps, List<Boolean> timestamps_isnewer) {
 		super(context, R.layout.item_applist, apps);
 		this.context = context;
-		
+
 		this.apps = apps;
 		this.is_set = is_set;
 		this.checked = checked;
@@ -50,22 +52,33 @@ public class AppSyncListAdapter extends ArrayAdapter<ApplicationInfo> {
 		TextView txtTime = (TextView) rowView.findViewById(R.id.textTimestamp);
 		ImageView imgIcon = (ImageView) rowView.findViewById(R.id.imageIcon);
 		ImageView imgCheck = (ImageView) rowView.findViewById(R.id.imageCheck);
-		ImageView imgEdited = (ImageView) rowView.findViewById(R.id.imageEdited);
+		ImageView imgEdited = (ImageView) rowView
+				.findViewById(R.id.imageEdited);
 		CheckBox checkSync = (CheckBox) rowView.findViewById(R.id.checkSync);
-		txtName.setText(context.getPackageManager().getApplicationLabel(apps.get(pos)));
+		txtName.setText(context.getPackageManager().getApplicationLabel(
+				apps.get(pos)));
 		txtPkg.setText(apps.get(pos).packageName);
-		txtTime.setText(context.getString(R.string.prefix_timestamp) + " " + timestamps.get(pos));
-		if (timestamps_isnewer != null && !timestamps_isnewer.isEmpty() && timestamps_isnewer.get(pos)) {
+		txtTime.setText(context.getString(R.string.prefix_timestamp) + " "
+				+ timestamps.get(pos));
+		if (timestamps_isnewer != null && !timestamps_isnewer.isEmpty()
+				&& timestamps_isnewer.get(pos)) {
 			txtTime.setTextColor(0xffff5500);
 			txtTime.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
 		}
-		imgIcon.setImageDrawable(context.getPackageManager().getApplicationIcon(apps.get(pos)));
-		if (is_set != null && is_set.size() > pos) if (is_set.get(pos)) imgCheck.setVisibility(View.VISIBLE);
-		if (edited != null && edited.size() > pos) if (edited.get(pos)) imgEdited.setVisibility(View.VISIBLE);
-		if (checked != null && checked.size() > pos) checkSync.setChecked(checked.get(pos));
+		imgIcon.setImageDrawable(context.getPackageManager()
+				.getApplicationIcon(apps.get(pos)));
+		if (is_set != null && is_set.size() > pos)
+			if (is_set.get(pos))
+				imgCheck.setVisibility(View.VISIBLE);
+		if (edited != null && edited.size() > pos)
+			if (edited.get(pos))
+				imgEdited.setVisibility(View.VISIBLE);
+		if (checked != null && checked.size() > pos)
+			checkSync.setChecked(checked.get(pos));
 		checkSync.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				checked.set(pos, isChecked);
 			}
 		});

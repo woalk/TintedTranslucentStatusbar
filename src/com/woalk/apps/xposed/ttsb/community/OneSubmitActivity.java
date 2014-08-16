@@ -1,6 +1,5 @@
 package com.woalk.apps.xposed.ttsb.community;
 
-import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,31 +8,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TimeZone;
-import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.woalk.apps.xposed.ttsb.Helpers;
-import com.woalk.apps.xposed.ttsb.R;
-import com.woalk.apps.xposed.ttsb.Settings;
 
 import android.R.color;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,23 +32,37 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.woalk.apps.xposed.ttsb.Helpers;
+import com.woalk.apps.xposed.ttsb.R;
+import com.woalk.apps.xposed.ttsb.Settings;
+import com.woalk.apps.xposed.ttsb.community.SQL_Operations.Q;
 
 public class OneSubmitActivity extends Activity {
-	public static final String PASS_APP = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_APP"; // Parcelable
-	public static final String PASS_DESCR = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_DESCR";
-	public static final String PASS_ID = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_ID";
-	public static final String PASS_IS_TOPVOTE = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_IS_TOPVOTE";
-	public static final String PASS_VOTES = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_VOTES";
-	public static final String PASS_VERSION = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_VERSION";
-	public static final String PASS_INSTALLED = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_INSTALLED";
-	public static final String PASS_USER = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_USER";
-	public static final String PASS_USER_TRUST = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_USER_TRUST";
-	public static final String PASS_TIMESTAMP = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_TIMESTAMP"; // Serializable
-	public static final String PASS_SETTINGS = Helpers.TTSB_PACKAGE_NAME + ".community.OneSubmitActivity.PASS_SETTINGS";
-	
+	public static final String PASS_APP = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_APP"; // Parcelable
+	public static final String PASS_DESCR = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_DESCR";
+	public static final String PASS_ID = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_ID";
+	public static final String PASS_IS_TOPVOTE = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_IS_TOPVOTE";
+	public static final String PASS_VOTES = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_VOTES";
+	public static final String PASS_VERSION = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_VERSION";
+	public static final String PASS_INSTALLED = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_INSTALLED";
+	public static final String PASS_USER = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_USER";
+	public static final String PASS_USER_TRUST = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_USER_TRUST";
+	public static final String PASS_TIMESTAMP = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_TIMESTAMP"; // Serializable
+	public static final String PASS_SETTINGS = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.OneSubmitActivity.PASS_SETTINGS";
+
 	protected ApplicationInfo app;
 	protected String description;
 	protected int id;
@@ -69,20 +74,20 @@ public class OneSubmitActivity extends Activity {
 	protected boolean user_trust;
 	protected Date timestamp;
 	protected SortedMap<String, String> settings;
-	
+
 	protected ListView lv;
 	protected SubmitCommentsAdapter lA;
-	
+
 	protected EditText edit_comment;
 	protected TextView tv_comment_charremain;
 	protected ImageButton btn_send;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_one_submit);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		Intent it = getIntent();
 		app = (ApplicationInfo) it.getParcelableExtra(PASS_APP);
 		description = it.getStringExtra(PASS_DESCR);
@@ -94,8 +99,9 @@ public class OneSubmitActivity extends Activity {
 		user = it.getStringExtra(PASS_USER);
 		user_trust = it.getBooleanExtra(PASS_USER_TRUST, false);
 		timestamp = (Date) it.getSerializableExtra(PASS_TIMESTAMP);
-		settings = Settings.Loader.importStringToSettingsString(it.getStringExtra(PASS_SETTINGS));
-		
+		settings = Settings.Loader.importStringToSettingsString(it
+				.getStringExtra(PASS_SETTINGS));
+
 		lA = new SubmitCommentsAdapter(this, new ArrayList<String>());
 		lA.app = app;
 		lA.author = user;
@@ -108,33 +114,38 @@ public class OneSubmitActivity extends Activity {
 		lA.timestamp = timestamp;
 		lA.votes = votes;
 		lA.addBegin();
-		
+
 		lv = (ListView) findViewById(R.id.listView1);
 		lv.setAdapter(lA);
-		
+
 		lA.notifyDataSetChanged();
-		
+
 		lv.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				final int pos = position;
-				AlertDialog.Builder builder = new AlertDialog.Builder(OneSubmitActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						OneSubmitActivity.this);
 				builder.setTitle(R.string.title_comment_options);
-				builder.setItems(R.array.comment_options, new AlertDialog.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						switch (which) {
-						case 0:
-							ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
-							ClipData clip = ClipData.newPlainText("comment", lA.comments.get(pos));
-							clipboard.setPrimaryClip(clip);
-							break;
-						case 1:
-							
-							break;
-						}
-					}
-				});
+				builder.setItems(R.array.comment_options,
+						new AlertDialog.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								switch (which) {
+								case 0:
+									ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+									ClipData clip = ClipData.newPlainText(
+											"comment", lA.comments.get(pos));
+									clipboard.setPrimaryClip(clip);
+									break;
+								case 1:
+
+									break;
+								}
+							}
+						});
 				builder.show();
 			}
 		});
@@ -193,34 +204,43 @@ public class OneSubmitActivity extends Activity {
 		edit_comment = (EditText) findViewById(R.id.editText1);
 		tv_comment_charremain = (TextView) findViewById(R.id.textView1);
 		btn_send = (ImageButton) findViewById(R.id.button_send);
-		
+
 		edit_comment.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 				int length = s.length();
-				tv_comment_charremain.setText(String.valueOf(Database.Constants.COMMENT_MAX_LENGTH - length));
+				tv_comment_charremain.setText(String
+						.valueOf(Database.Constants.COMMENT_MAX_LENGTH - length));
 				boolean isLengthOk = Database.Constants.COMMENT_MAX_LENGTH >= length;
-				tv_comment_charremain.setTextColor(isLengthOk ? getResources().getColor(color.darker_gray) : getResources().getColor(color.holo_red_light));
+				tv_comment_charremain.setTextColor(isLengthOk ? getResources()
+						.getColor(color.darker_gray) : getResources().getColor(
+						color.holo_red_light));
 				btn_send.setEnabled(isLengthOk);
 				btn_send.setImageAlpha(isLengthOk ? 0xFF : 0x60);
 			}
+
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
 			@Override
-			public void afterTextChanged(Editable s) { }
+			public void afterTextChanged(Editable s) {
+			}
 		});
 		edit_comment.setText("");
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	    // Respond to the action bar's Up/Home button
-	    case android.R.id.home:
-	    	finish();
-	        return true;
-	    }
-	    return super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+		// Respond to the action bar's Up/Home button
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	protected static class Comment implements Parcelable {
@@ -230,8 +250,9 @@ public class OneSubmitActivity extends Activity {
 		public Date timestamp;
 		public boolean user_trust;
 		public int spamvotes;
-		
-		public Comment(int id, String comment, String username, Date timestamp, boolean user_trust, int spamvotes) {
+
+		public Comment(int id, String comment, String username, Date timestamp,
+				boolean user_trust, int spamvotes) {
 			this.id = id;
 			this.comment = comment;
 			this.user = username;
@@ -263,5 +284,15 @@ public class OneSubmitActivity extends Activity {
 			dest.writeByte((user_trust ? (byte) 1 : (byte) 0));
 			dest.writeInt(spamvotes);
 		}
+
+		public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
+			public Comment createFromParcel(Parcel in) {
+				return new Comment(in);
+			}
+
+			public Comment[] newArray(int size) {
+				return new Comment[size];
+			}
+		};
 	}
 }

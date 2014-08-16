@@ -25,19 +25,21 @@ import android.widget.TextView;
 public class SettingsActivity extends Activity {
 
 	SharedPreferences sPref;
-	
+
 	@SuppressLint({ "WorldReadableFiles", "SimpleDateFormat" })
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
-		
-		sPref = getApplicationContext().getSharedPreferences(Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
-		
+
+		sPref = getApplicationContext().getSharedPreferences(
+				Helpers.TTSB_PREFERENCES, Context.MODE_WORLD_READABLE);
+
 		PackageInfo pInfo = null;
 		try {
-			pInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
+			pInfo = getPackageManager().getPackageInfo(getPackageName(),
+					PackageManager.GET_META_DATA);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -48,12 +50,14 @@ public class SettingsActivity extends Activity {
 			String te_ver = "";
 			String ui_ver = "";
 			try {
-				te_ver = pInfo.applicationInfo.metaData.getString("tintengine_version");
+				te_ver = pInfo.applicationInfo.metaData
+						.getString("tintengine_version");
 				ui_ver = pInfo.applicationInfo.metaData.getString("ui_version");
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			String lastupdate = sPref.getString(Helpers.TTSB_PREF_LASTUPDATE, getString(R.string.never));
+			String lastupdate = sPref.getString(Helpers.TTSB_PREF_LASTUPDATE,
+					getString(R.string.never));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 			Date date;
 			try {
@@ -61,42 +65,47 @@ public class SettingsActivity extends Activity {
 				lastupdate = DateFormat.getInstance().format(date);
 			} catch (ParseException e) {
 			}
-			
+
 			textView2.setText(getString(R.string.version_prefix) + ":\n\n"
-					+ getString(R.string.tintengine_ver_prefix) + ":\n" 
+					+ getString(R.string.tintengine_ver_prefix) + ":\n"
 					+ getString(R.string.ui_ver_prefix) + ":\n"
 					+ getString(R.string.database_prefix) + ":\n");
-			textView4.setText(pInfo.versionName + "\n\n"
-					+ te_ver + "\n"
-					+ ui_ver + "\n"
-					+ lastupdate);
+			textView4.setText(pInfo.versionName + "\n\n" + te_ver + "\n"
+					+ ui_ver + "\n" + lastupdate);
 		}
-		
+
 		CheckBox checkBox1 = (CheckBox) findViewById(R.id.checkBox_status);
-		checkBox1.setChecked(sPref.getBoolean(Helpers.TTSB_PREF_SHOW_ACTIVITY_TOAST, false));
+		checkBox1.setChecked(sPref.getBoolean(
+				Helpers.TTSB_PREF_SHOW_ACTIVITY_TOAST, false));
 		checkBox1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				SharedPreferences.Editor edit = sPref.edit();
-				edit.putBoolean(Helpers.TTSB_PREF_SHOW_ACTIVITY_TOAST, isChecked);
+				edit.putBoolean(Helpers.TTSB_PREF_SHOW_ACTIVITY_TOAST,
+						isChecked);
 				edit.commit();
 			}
 		});
 		CheckBox checkBox2 = (CheckBox) findViewById(R.id.checkBox_log);
-		checkBox2.setChecked(sPref.getBoolean(Helpers.TTSB_PREF_DEBUGLOG, false));
+		checkBox2.setChecked(sPref
+				.getBoolean(Helpers.TTSB_PREF_DEBUGLOG, false));
 		checkBox2.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				SharedPreferences.Editor edit = sPref.edit();
 				edit.putBoolean(Helpers.TTSB_PREF_DEBUGLOG, isChecked);
 				edit.commit();
 			}
 		});
-		
+
 		findViewById(R.id.button1).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://repo.xposed.info/module/com.woalk.apps.xposed.translucentstyle"));
+				Intent browserIntent = new Intent(
+						Intent.ACTION_VIEW,
+						Uri.parse("http://repo.xposed.info/module/com.woalk.apps.xposed.translucentstyle"));
 				startActivity(browserIntent);
 			}
 		});

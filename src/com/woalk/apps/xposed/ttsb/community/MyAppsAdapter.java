@@ -17,20 +17,21 @@ import android.widget.TextView;
 
 public class MyAppsAdapter extends ArrayAdapter<ApplicationInfo> {
 	private Activity context;
-	
+
 	protected List<ApplicationInfo> apps;
 	protected List<Boolean> is_set;
 	protected List<Boolean> has_update;
 
-	public MyAppsAdapter(Activity context, List<ApplicationInfo> apps, List<Boolean> is_set, List<Boolean> has_update) {
+	public MyAppsAdapter(Activity context, List<ApplicationInfo> apps,
+			List<Boolean> is_set, List<Boolean> has_update) {
 		super(context, R.layout.item_myapps, apps);
-		
+
 		this.context = context;
 		this.apps = apps;
 		this.is_set = is_set;
 		this.has_update = has_update;
 	}
-	
+
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		View rowView;

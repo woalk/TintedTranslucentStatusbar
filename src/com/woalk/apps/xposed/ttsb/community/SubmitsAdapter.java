@@ -49,6 +49,7 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 		this.settings = new ArrayList<String>();
 		this.timestamps = new ArrayList<Date>();
 	}
+
 	public SubmitsAdapter(SubmitsAdapter copy) {
 		super(copy.context, R.layout.item_submit, copy.descriptions);
 		this.context = copy.context;
@@ -79,7 +80,8 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View view, ViewGroup parent) {
 		if (position == 0) {
 			LayoutInflater inflater = context.getLayoutInflater();
-			View rowView = inflater.inflate(R.layout.item_applist, parent, false);
+			View rowView = inflater.inflate(R.layout.item_applist, parent,
+					false);
 
 			rowView.setBackground(new ColorDrawable(0xACFFFFFF));
 
@@ -104,35 +106,46 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 				rowView = view;
 
 			TextView tvVote = (TextView) rowView.findViewById(R.id.textVotes);
-			TextView tvDescr = (TextView) rowView.findViewById(R.id.textDescription);
+			TextView tvDescr = (TextView) rowView
+					.findViewById(R.id.textDescription);
 			TextView tvUser = (TextView) rowView.findViewById(R.id.textUser);
 			TextView tvTime = (TextView) rowView.findViewById(R.id.textTime);
-			TextView tvChosen = (TextView) rowView.findViewById(R.id.textView_chosen);
+			TextView tvChosen = (TextView) rowView
+					.findViewById(R.id.textView_chosen);
 
 			DateFormat d_f = DateFormat.getInstance();
-			String date = d_f.format(timestamps.get(pos)); 
+			String date = d_f.format(timestamps.get(pos));
 
 			tvDescr.setText(descriptions.get(pos));
-			tvUser.setText(context.getString(R.string.community_prefix_by) + " " + users.get(pos));
-			tvUser.setCompoundDrawablesWithIntrinsicBounds(null, null,
-					users_trust.get(pos) ? context.getResources().getDrawable(R.drawable.ic_community_trust_small) : null, null);
-			tvTime.setText(context.getString(R.string.community_prefix_at) + " " + date + " " +
-					context.getString(R.string.community_prefix_for_ver) + " " + String.valueOf(versions.get(pos)));
+			tvUser.setText(context.getString(R.string.community_prefix_by)
+					+ " " + users.get(pos));
+			tvUser.setCompoundDrawablesWithIntrinsicBounds(
+					null,
+					null,
+					users_trust.get(pos) ? context.getResources().getDrawable(
+							R.drawable.ic_community_trust_small) : null, null);
+			tvTime.setText(context.getString(R.string.community_prefix_at)
+					+ " " + date + " "
+					+ context.getString(R.string.community_prefix_for_ver)
+					+ " " + String.valueOf(versions.get(pos)));
 
 			int this_votes = votes.get(pos);
 			String str_votes = String.valueOf(this_votes);
 			if (this_votes > 0) {
 				str_votes = "+" + str_votes;
-				tvVote.setTextColor(context.getResources().getColor(R.color.votes_positive));
+				tvVote.setTextColor(context.getResources().getColor(
+						R.color.votes_positive));
 			} else if (this_votes < 0) {
-				tvVote.setTextColor(context.getResources().getColor(R.color.votes_negative));
+				tvVote.setTextColor(context.getResources().getColor(
+						R.color.votes_negative));
 			} else {
 				str_votes = "±" + str_votes;
 				tvVote.setTextColor(Color.BLACK);
 			}
 			tvVote.setText(str_votes);
 
-			tvChosen.setVisibility(pos == selected_pos + 1 ? View.VISIBLE : View.GONE);
+			tvChosen.setVisibility(pos == selected_pos + 1 ? View.VISIBLE
+					: View.GONE);
 
 			return rowView;
 
@@ -141,7 +154,9 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 
 	@Override
 	public boolean isEnabled(int position) {
-		if (position == 0) return false;
-		else return super.isEnabled(position);
+		if (position == 0)
+			return false;
+		else
+			return super.isEnabled(position);
 	}
 }

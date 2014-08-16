@@ -44,11 +44,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MyAppsActivity extends Activity {
-	public static final String PASS_ALL_APPS = Helpers.TTSB_PACKAGE_NAME + ".community.MyAppsActivity.PASS_ALL_APPS";
-	
+	public static final String PASS_ALL_APPS = Helpers.TTSB_PACKAGE_NAME
+			+ ".community.MyAppsActivity.PASS_ALL_APPS";
+
 	protected ListView lv;
 	protected MyAppsAdapter lA;
-	
+
 	protected List<ApplicationInfo> all_apps;
 	protected SortedMap<String, ApplicationInfo> all_apps_p = null;
 
@@ -57,22 +58,25 @@ public class MyAppsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_apps);
-		
-		Serializable intentextra = getIntent().getSerializableExtra(PASS_ALL_APPS);
+
+		Serializable intentextra = getIntent().getSerializableExtra(
+				PASS_ALL_APPS);
 		all_apps = (List<ApplicationInfo>) intentextra;
-		
+
 		lv = (ListView) findViewById(R.id.listView1);
-		lA = new MyAppsAdapter(this, new ArrayList<ApplicationInfo>(), new ArrayList<Boolean>(), new ArrayList<Boolean>());
+		lA = new MyAppsAdapter(this, new ArrayList<ApplicationInfo>(),
+				new ArrayList<Boolean>(), new ArrayList<Boolean>());
 		lv.setAdapter(lA);
-		
+
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				openAppDetails(lA.apps.get(position));
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -82,13 +86,15 @@ public class MyAppsActivity extends Activity {
 	protected void getSyncables() {
 		new readDatabaseTask().execute(Database.DATABASE_URL);
 	}
-	
-	private class readDatabaseTask extends AsyncTask<String, String, MyAppsAdapter> {
+
+	private class readDatabaseTask extends
+			AsyncTask<String, String, MyAppsAdapter> {
 		private AlertDialog progress;
 
 		@Override
 		protected void onPreExecute() {
-			AlertDialog.Builder builder = new AlertDialog.Builder(MyAppsActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MyAppsActivity.this);
 			builder.setMessage(R.string.loadingsync_msg);
 			builder.setView(new ProgressBar(MyAppsActivity.this));
 			progress = builder.create();
@@ -103,7 +109,7 @@ public class MyAppsActivity extends Activity {
 					all_apps_p.put(app.packageName, app);
 				}
 			}
-			
+
 			List<ApplicationInfo> apps = new ArrayList<ApplicationInfo>();
 			List<String> packageNames = new ArrayList<String>();
 			List<Boolean> is_set = new ArrayList<Boolean>();
@@ -115,36 +121,51 @@ public class MyAppsActivity extends Activity {
 				HttpClient httpclient = new DefaultHttpClient();
 				HttpPost httppost = new HttpPost(params[0]);
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN));
-				nameValuePairs.add(new BasicNameValuePair(Database.POST_FUNCTION, Database.FUNCTION_GET_PACKAGES));
+				nameValuePairs.add(new BasicNameValuePair(Database.POST_PIN,
+						Database.COMMUNITY_PIN));
+				nameValuePairs
+						.add(new BasicNameValuePair(Database.POST_FUNCTION,
+								Database.FUNCTION_GET_PACKAGES));
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				HttpResponse response = httpclient.execute(httppost);
 				HttpEntity entity = response.getEntity();
-				
+
 				InputStream is = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(is, "utf-8"), 8);
 				StringBuilder sb = new StringBuilder();
 				String line = null;
 				while ((line = reader.readLine()) != null) {
 					sb.append(line + "\n");
-				} 
+				}
 				is.close();
 				result = sb.toString();
 				JSONArray jArray = new JSONArray(result);
 				for (int i = 0; i < jArray.length(); i++) {
 					JSONObject json_data = jArray.getJSONObject(i);
 					String packageName = json_data.getString("package");
-					if (packageNames.contains(packageName)) continue;
+					if (packageNames.contains(packageName))
+						continue;
 					packageNames.add(packageName);
 					apps.add(all_apps_p.get(packageName));
-					boolean is_current_set = Settings.Loader.containsPackage(getApplicationContext(), packageName);
+					boolean is_current_set = Settings.Loader.containsPackage(
+							getApplicationContext(), packageName);
 					boolean has_current_update = false;
 					if (is_current_set) {
-						SharedPreferences communityPref = getApplicationContext().getSharedPreferences(
-								Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
-						if (communityPref.getBoolean(Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED + packageName, false)) {
-							int topvoted_id = communityPref.getInt(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID + packageName, -1);
-							has_current_update = topvoted_id != Integer.valueOf(json_data.getString("id")) && topvoted_id != -1;
+						SharedPreferences communityPref = getApplicationContext()
+								.getSharedPreferences(
+										Database.Preferences.COMMUNITY_PREF_NAME,
+										Context.MODE_PRIVATE);
+						if (communityPref
+								.getBoolean(
+										Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED
+												+ packageName, false)) {
+							int topvoted_id = communityPref
+									.getInt(Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID
+											+ packageName, -1);
+							has_current_update = topvoted_id != Integer
+									.valueOf(json_data.getString("id"))
+									&& topvoted_id != -1;
 						}
 					}
 					is_set.add(is_current_set);
@@ -157,41 +178,44 @@ public class MyAppsActivity extends Activity {
 				e.printStackTrace();
 				return null;
 			}
-			
-			return new MyAppsAdapter(MyAppsActivity.this, apps, is_set, has_update);
+
+			return new MyAppsAdapter(MyAppsActivity.this, apps, is_set,
+					has_update);
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(String... progress) {
 			if (progress[0] == "404")
-				Toast.makeText(MyAppsActivity.this, R.string.no_connection_e, Toast.LENGTH_LONG).show();
+				Toast.makeText(MyAppsActivity.this, R.string.no_connection_e,
+						Toast.LENGTH_LONG).show();
 			else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(MyAppsActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						MyAppsActivity.this);
 				builder.setMessage(Html.fromHtml(progress[0]));
 				builder.show();
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(MyAppsAdapter result) {
 			if (result != null) {
 				lA.apps.clear();
 				lA.is_set.clear();
 				lA.has_update.clear();
-				
+
 				lA.apps.addAll(result.apps);
 				lA.is_set.addAll(result.is_set);
 				lA.has_update.addAll(result.has_update);
-				
+
 				lA.notifyDataSetChanged();
-				
+
 				lv.setFastScrollEnabled(true);
 			}
 			progress.dismiss();
 		}
 
 	}
-	
+
 	protected void openAppDetails(ApplicationInfo app) {
 		Intent intent = new Intent(this, AppDetailsActivity.class);
 		intent.putExtra(AppDetailsActivity.PASS_APPINFO, (Parcelable) app);
@@ -201,18 +225,18 @@ public class MyAppsActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.myapps, menu);
-	    return super.onCreateOptionsMenu(menu);
+		inflater.inflate(R.menu.myapps, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_goto_user:
-			
+
 			return true;
 		case R.id.action_goto_my:
-			
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

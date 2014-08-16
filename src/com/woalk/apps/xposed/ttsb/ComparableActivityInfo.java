@@ -2,7 +2,8 @@ package com.woalk.apps.xposed.ttsb;
 
 import android.content.pm.ActivityInfo;
 
-public class ComparableActivityInfo extends ActivityInfo implements Comparable<ActivityInfo> {
+public class ComparableActivityInfo extends ActivityInfo implements
+		Comparable<ActivityInfo> {
 	public boolean is_set;
 
 	public ComparableActivityInfo(ActivityInfo activityInfo) {

@@ -13,15 +13,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class AppListAdapter extends ArrayAdapter<ApplicationInfo> {
-	
+
 	public final Activity context;
 	public List<ApplicationInfo> apps;
 	public List<Boolean> is_set;
 
-	public AppListAdapter(Activity context, List<ApplicationInfo> apps, List<Boolean> is_set) {
+	public AppListAdapter(Activity context, List<ApplicationInfo> apps,
+			List<Boolean> is_set) {
 		super(context, R.layout.item_applist, apps);
 		this.context = context;
-		
+
 		this.apps = apps;
 		this.is_set = is_set;
 	}
@@ -43,7 +44,8 @@ public class AppListAdapter extends ArrayAdapter<ApplicationInfo> {
 		txtPkg.setText(apps.get(position).packageName);
 		imgIcon.setImageDrawable(pkgMan.getApplicationIcon(apps.get(position)));
 		if (is_set != null && is_set.size() > position)
-			imgCheck.setVisibility(is_set.get(position) ? View.VISIBLE : View.GONE);
+			imgCheck.setVisibility(is_set.get(position) ? View.VISIBLE
+					: View.GONE);
 		else
 			imgCheck.setVisibility(View.GONE);
 		return rowView;
