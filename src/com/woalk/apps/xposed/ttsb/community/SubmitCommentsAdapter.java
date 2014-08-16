@@ -148,14 +148,14 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 						builder.setMessage(R.string.msg_already_set);
 						builder.setTitle(R.string.title_already_set);
 						builder.setIcon(R.drawable.ic_warning_holo_light);
-						builder.setNegativeButton(android.R.string.no, null);
+						builder.setNegativeButton(android.R.string.cancel, null);
 						builder.setNeutralButton(R.string.merge_already_set, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								new AsyncSave().execute(SAVEMODE_MERGE);
 							}
 						});
-						builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+						builder.setPositiveButton(R.string.overwrite_already_set, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								new AsyncSave().execute(SAVEMODE_OVERWRITE);
