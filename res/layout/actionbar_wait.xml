@@ -7,6 +7,8 @@
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:minHeight="36dp"
+        android:minWidth="36dp" />
 
 </RelativeLayout>
