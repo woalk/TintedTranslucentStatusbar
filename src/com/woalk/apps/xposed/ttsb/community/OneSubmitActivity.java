@@ -41,6 +41,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -252,7 +254,7 @@ public class OneSubmitActivity extends Activity {
 		}
 	}
 	
-	protected static class Comment {
+	protected static class Comment implements Parcelable {
 		public int id;
 		public String comment;
 		public String user;
@@ -267,6 +269,30 @@ public class OneSubmitActivity extends Activity {
 			this.timestamp = timestamp;
 			this.user_trust = user_trust;
 			this.spamvotes = spamvotes;
+		}
+
+		public Comment(Parcel from) {
+			this.id = from.readInt();
+			this.comment = from.readString();
+			this.user = from.readString();
+			this.timestamp = (Date) from.readSerializable();
+			this.user_trust = from.readByte() == (byte) 1;
+			this.spamvotes = from.readInt();
+		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(id);
+			dest.writeString(comment);
+			dest.writeString(user);
+			dest.writeSerializable(timestamp);
+			dest.writeByte((user_trust ? (byte) 1 : (byte) 0));
+			dest.writeInt(spamvotes);
 		}
 	}
 }
