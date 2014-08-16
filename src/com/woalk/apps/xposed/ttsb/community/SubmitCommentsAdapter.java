@@ -96,6 +96,17 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 		spamvotes.add(spamvotes.size() - 1, comment.spamvotes);
 	}
 
+	public void addAll(List<OneSubmitActivity.Comment> comments) {
+		for (OneSubmitActivity.Comment comment : comments) {
+			this.comments.add(this.comments.size() - 1, comment.comment);
+			this.users.add(this.users.size() - 1, comment.user);
+			this.users_trust.add(this.users_trust.size() - 1,
+					comment.user_trust);
+			this.timestamps.add(this.timestamps.size() - 1, comment.timestamp);
+			this.spamvotes.add(this.spamvotes.size() - 1, comment.spamvotes);
+		}
+	}
+
 	@Override
 	public View getView(int position, View view, ViewGroup parent) {
 		if (position == 0) {
