@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,8 +57,12 @@ public final class SQL_Operations {
 			 * @return A {@link Bundle} with data that is passed to
 			 *         {@link PostExecuteListener#onPostExecute(Bundle)} to make
 			 *         it accessible from there.
+			 * @throws JSONException
+			 *             When an error in the JSON array appears when
+			 *             processing.
 			 */
-			public abstract Bundle onDataLoaded(JSONArray data);
+			public abstract Bundle onDataLoaded(JSONArray data)
+					throws JSONException;
 		}
 
 		public static interface PostExecuteListener {

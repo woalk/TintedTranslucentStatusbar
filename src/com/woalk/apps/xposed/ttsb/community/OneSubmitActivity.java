@@ -1,10 +1,8 @@
 package com.woalk.apps.xposed.ttsb.community;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,15 +11,8 @@ import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.woalk.apps.xposed.ttsb.Helpers;
@@ -29,7 +20,6 @@ import com.woalk.apps.xposed.ttsb.R;
 import com.woalk.apps.xposed.ttsb.Settings;
 
 import android.R.color;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
@@ -39,7 +29,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -149,9 +138,58 @@ public class OneSubmitActivity extends Activity {
 				builder.show();
 			}
 		});
-		
-		new getCommentsTask().execute(Database.DATABASE_URL);
-		
+
+		final String commentListKey = "commentlist";
+		Q q = new Q(Database.DATABASE_URL);
+		q.setPreExecuteListener(new Q.PreExecuteListener() {
+			@Override
+			public void onPreExecute() {
+				lA.isLoading = true;
+				lA.notifyDataSetChanged();
+			}
+		});
+		q.setDataLoadedListener(new Q.DataLoadedListener() {
+			@Override
+			public Bundle onDataLoaded(JSONArray data) throws JSONException {
+				ArrayList<Comment> comments = new ArrayList<Comment>();
+				for (int i = 0; i < data.length(); i++) {
+					JSONObject json_data = data.getJSONObject(i);
+					DateFormat d_f = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+					d_f.setTimeZone(TimeZone.getTimeZone("GMT"));
+					Date timestamp;
+					try {
+						timestamp = d_f.parse(json_data.getString("timestamp"));
+					} catch (ParseException e) {
+						timestamp = new Date();
+						e.printStackTrace();
+					}
+					comments.add(new Comment(Integer.valueOf(json_data
+							.getString("id")), json_data.getString("comment"),
+							json_data.getString("username"), timestamp,
+							json_data.getString("user_trust").equals("1"),
+							Integer.valueOf(json_data.getString("spamvotes"))));
+				}
+				Bundle bundle = new Bundle();
+				bundle.putParcelableArrayList(commentListKey, comments);
+				return bundle;
+			}
+		});
+		q.setPostExecuteListener(new Q.PostExecuteListener() {
+			@Override
+			public void onPostExecute(Bundle processed) {
+				List<Comment> list = processed
+						.getParcelableArrayList(commentListKey);
+				lA.addAll(list);
+				lA.isLoading = false;
+				lA.notifyDataSetChanged();
+			}
+		});
+		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
+		q.addNameValuePair(Database.POST_FUNCTION,
+				Database.FUNCTION_GET_COMMENTS_FOR_SUBMIT);
+		q.addNameValuePair(Database.POST_COMMENTS_SUBMIT, String.valueOf(id));
+		q.exec();
+
 		edit_comment = (EditText) findViewById(R.id.editText1);
 		tv_comment_charremain = (TextView) findViewById(R.id.textView1);
 		btn_send = (ImageButton) findViewById(R.id.button_send);
@@ -184,76 +222,7 @@ public class OneSubmitActivity extends Activity {
 	    }
 	    return super.onOptionsItemSelected(item);
 	}
-	
-	
-	private class getCommentsTask extends AsyncTask<String, Comment, Void> {
-		@Override
-		protected void onPreExecute() {
-			lA.isLoading = true;
-			lA.notifyDataSetChanged();
-		}
 
-		@SuppressLint("SimpleDateFormat")
-		@Override
-		protected Void doInBackground(String... params) {
-			String result = "";
-			try {
-				// get database connection & package entries
-				HttpClient httpclient = new DefaultHttpClient();
-				HttpPost httppost = new HttpPost(params[0]);
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN));
-				nameValuePairs.add(new BasicNameValuePair(Database.POST_FUNCTION, Database.FUNCTION_GET_COMMENTS_FOR_SUBMIT));
-				nameValuePairs.add(new BasicNameValuePair(Database.POST_COMMENTS_SUBMIT, String.valueOf(id)));
-				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-				HttpResponse response = httpclient.execute(httppost);
-				HttpEntity entity = response.getEntity();
-				
-				InputStream is = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
-				StringBuilder sb = new StringBuilder();
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line + "\n");
-				} 
-				is.close();
-				result = sb.toString();
-				JSONArray jArray = new JSONArray(result);
-				for (int i = 0; i < jArray.length(); i++) {
-					JSONObject json_data = jArray.getJSONObject(i);
-					DateFormat d_f = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
-					d_f.setTimeZone(TimeZone.getTimeZone("GMT"));
-					Date timestamp = d_f.parse(json_data.getString("timestamp"));
-					publishProgress(new Comment(
-							Integer.valueOf(json_data.getString("id")),
-							json_data.getString("comment"),
-							json_data.getString("username"),
-							timestamp,
-							json_data.getString("user_trust").equals("1"),
-							Integer.valueOf(json_data.getString("spamvotes"))));
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-			return null;
-		}
-		
-		@Override
-		protected void onProgressUpdate(Comment... progress) {
-			for (Comment c : progress) {
-				lA.add(c);
-				lA.notifyDataSetChanged();
-			}
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-			lA.isLoading = false;
-			lA.notifyDataSetChanged();
-		}
-	}
-	
 	protected static class Comment implements Parcelable {
 		public int id;
 		public String comment;
