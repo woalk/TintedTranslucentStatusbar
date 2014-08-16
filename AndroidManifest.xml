@@ -66,7 +66,7 @@
             android:parentActivityName=".community.MyAppsActivity" >
         </activity>
         <activity
-            android:name="com.woalk.apps.xposed.ttsb.community.OneSubmitActivity"
+            android:name=".community.OneSubmitActivity"
             android:label="@string/title_activity_one_submit"
             android:parentActivityName=".community.AppDetailsActivity"
             android:windowSoftInputMode="adjustResize|stateUnchanged" >
@@ -88,6 +88,10 @@
             android:name="ui_version"
             android:value="\ 2.2.2" />
 
+        <activity
+            android:name="com.woalk.apps.xposed.ttsb.community.OneUserActivity"
+            android:label="@string/title_activity_one_user" >
+        </activity>
     </application>
 
 </manifest>

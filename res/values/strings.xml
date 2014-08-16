@@ -111,5 +111,8 @@
     <string name="msg_already_set_layout">Do you want to overwrite existing layout settings of this app?\nColor settings will remain unchanged.</string>
     <string name="title_comment_options">Comment</string>
     <string name="no_comments">No comments yet.</string>
+    <string name="title_activity_one_user">User info</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
