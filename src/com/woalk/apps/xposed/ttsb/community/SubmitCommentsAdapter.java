@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -161,6 +162,16 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 				tv_votes.setTextColor(Color.BLACK);
 			}
 			tv_votes.setText(str_votes);
+
+			tv_author.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, OneUserActivity.class);
+					intent.putExtra(OneUserActivity.PASS_USERNAME, author);
+					context.startActivity(intent);
+				}
+			});
 
 			Button btn_choose = (Button) rowView
 					.findViewById(R.id.button_choose);

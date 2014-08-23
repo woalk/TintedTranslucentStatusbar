@@ -114,5 +114,6 @@
     <string name="title_activity_one_user">User info</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="user_vote_sum">Total vote sum:</string>
 
 </resources>
