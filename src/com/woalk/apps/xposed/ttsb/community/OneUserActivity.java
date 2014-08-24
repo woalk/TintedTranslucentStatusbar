@@ -14,11 +14,15 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -40,13 +44,50 @@ public class OneUserActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_one_user);
-		
+
 		username = getIntent().getStringExtra(PASS_USERNAME);
 
 		lv = (ListView) findViewById(R.id.listView1);
 		lA = new UserSubmitsAdapter(this, new ArrayList<String>());
 		lA.username = username;
 		lv.setAdapter(lA);
+
+		lv.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(OneUserActivity.this,
+						OneSubmitActivity.class);
+				intent.putExtra(OneSubmitActivity.PASS_APP,
+						(Parcelable) lA.apps.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_DESCR,
+						lA.descriptions.get(position));
+				Date timestamp;
+				try {
+					DateFormat d_f = DateFormat.getInstance();
+					timestamp = d_f.parse(lA.timestamps.get(position));
+				} catch (ParseException e) {
+					timestamp = new Date();
+					e.printStackTrace();
+				}
+				intent.putExtra(OneSubmitActivity.PASS_TIMESTAMP, timestamp);
+				intent.putExtra(OneSubmitActivity.PASS_ID, lA.ids.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_IS_TOPVOTE,
+						position == 1);
+				intent.putExtra(OneSubmitActivity.PASS_INSTALLED, false);
+				intent.putExtra(OneSubmitActivity.PASS_SETTINGS,
+						lA.settings.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_USER, lA.username);
+				intent.putExtra(OneSubmitActivity.PASS_USER_TRUST,
+						lA.user_trust);
+				intent.putExtra(OneSubmitActivity.PASS_VERSION,
+						lA.versions.get(position));
+				intent.putExtra(OneSubmitActivity.PASS_VOTES,
+						lA.votes.get(position));
+				startActivity(intent);
+			}
+		});
 
 		Q q = new Q(Database.DATABASE_URL);
 		q.setPreExecuteListener(new Q.PreExecuteListener() {
@@ -137,7 +178,7 @@ public class OneUserActivity extends Activity {
 			}
 		});
 		q.setPostExecuteListener(new Q.PostExecuteListener() {
-			
+
 			@Override
 			public void onPostExecute(Bundle processed) {
 				lA.apps.clear();
