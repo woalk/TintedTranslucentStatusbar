@@ -4,21 +4,23 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tV_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_margin="6dp"
+        android:drawablePadding="4dp"
         android:text="Username"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textSize="26sp" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView1"
-        android:layout_below="@+id/textView1"
+        android:layout_alignStart="@+id/tV_user_name"
+        android:layout_below="@+id/tV_user_name"
+        android:layout_marginBottom="6dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/user_vote_sum" />
 

@@ -31,7 +31,7 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 	public int user_votes;
 	public boolean user_trust;
 
-	public int selected_pos;
+	public List<Integer> disabled_items;
 
 	protected Activity context;
 	private LayoutInflater inflater;
@@ -51,6 +51,7 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 		this.versions = new ArrayList<Integer>();
 		this.settings = new ArrayList<String>();
 		this.timestamps = new ArrayList<String>();
+		this.disabled_items = new ArrayList<Integer>();
 	}
 
 	public UserSubmitsAdapter(UserSubmitsAdapter copy) {
@@ -67,7 +68,7 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 		this.timestamps = new ArrayList<String>(copy.timestamps);
 		this.username = copy.username;
 		this.user_votes = copy.user_votes;
-		this.selected_pos = copy.selected_pos;
+		this.disabled_items = new ArrayList<Integer>(copy.disabled_items);
 
 		this.inflater = context.getLayoutInflater();
 	}
@@ -87,16 +88,15 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View view, ViewGroup parent) {
 		if (position == 0) {
 			View rowView;
-			if (view == null)
-				rowView = inflater
-						.inflate(R.layout.item_applist, parent,
-					false);
+			if (view == null || view.getId() != R.layout.item_one_user)
+				rowView = inflater.inflate(R.layout.item_one_user, parent,
+						false);
 			else
 				rowView = view;
 
 			rowView.setBackground(new ColorDrawable(0xACFFFFFF));
 
-			TextView tv1 = (TextView) rowView.findViewById(R.id.textView1);
+			TextView tv1 = (TextView) rowView.findViewById(R.id.tV_user_name);
 			TextView tv2 = (TextView) rowView.findViewById(R.id.tV_user_votes);
 
 			tv1.setText(username);
@@ -109,11 +109,11 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 			StringBuilder votesB = new StringBuilder();
 			if (user_votes < 0) {
 				tv2.setTextColor(context.getResources().getColor(
-						android.R.color.holo_red_light));
+						R.color.votes_negative));
 			} else if (user_votes > 0) {
 				votesB.append('+');
 				tv2.setTextColor(context.getResources().getColor(
-						android.R.color.holo_green_light));
+						R.color.votes_positive));
 			} else {
 				votesB.append('±');
 				tv2.setTextColor(context.getResources().getColor(
@@ -145,8 +145,11 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 			} else {
 				label = pkgs.get(pos);
 				rowView.setAlpha(0.6f);
+				if (!disabled_items.contains(pos)) {
+					disabled_items.add(pos);
+				}
 			}
-			tvDescr.setText(Html.fromHtml("<b>" + label + "</b>\n"
+			tvDescr.setText(Html.fromHtml("<b>" + label + "</b><br />"
 					+ descriptions.get(pos)));
 			tvUser.setText(context.getString(R.string.community_prefix_by)
 					+ " " + username);
@@ -175,8 +178,7 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 			}
 			tvVote.setText(str_votes);
 
-			tvChosen.setVisibility(pos == selected_pos + 1 ? View.VISIBLE
-					: View.GONE);
+			tvChosen.setVisibility(View.GONE);
 
 			return rowView;
 
@@ -185,7 +187,7 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 
 	@Override
 	public boolean isEnabled(int position) {
-		if (position == 0)
+		if (position == 0 || disabled_items.contains(position))
 			return false;
 		else
 			return super.isEnabled(position);

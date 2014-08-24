@@ -45,6 +45,7 @@ public class OneUserActivity extends Activity {
 
 		lv = (ListView) findViewById(R.id.listView1);
 		lA = new UserSubmitsAdapter(this, new ArrayList<String>());
+		lA.username = username;
 		lv.setAdapter(lA);
 
 		Q q = new Q(Database.DATABASE_URL);
@@ -66,7 +67,6 @@ public class OneUserActivity extends Activity {
 		final String key_pkgs = "pkgs";
 		final String key_descriptions = "descr";
 		final String key_versions = "ver";
-		final String key_user = "user";
 		final String key_user_trust = "trust";
 		final String key_user_votes = "uvotes";
 		final String key_timestamps = "time";
@@ -88,7 +88,6 @@ public class OneUserActivity extends Activity {
 				boolean user_trust;
 				int user_votes;
 
-				user = data.getJSONObject(0).getString("username");
 				user_trust = data.getJSONObject(0).getString("user_trust")
 						.equals("1");
 				user_votes = Integer.valueOf(data.getJSONObject(0).getString(
@@ -132,7 +131,6 @@ public class OneUserActivity extends Activity {
 				bundle.putIntegerArrayList(key_versions, versions);
 				bundle.putStringArrayList(key_timestamps, timestamps);
 				bundle.putStringArrayList(key_settings, settings);
-				bundle.putString(key_user, user);
 				bundle.putBoolean(key_user_trust, user_trust);
 				bundle.putInt(key_user_votes, user_votes);
 				return bundle;
@@ -151,6 +149,8 @@ public class OneUserActivity extends Activity {
 				lA.versions.clear();
 				lA.votes.clear();
 
+				lA.addBegin();
+
 				ArrayList<ApplicationInfo> apps = processed
 						.getParcelableArrayList(key_apps);
 				lA.apps.addAll(apps);
@@ -164,11 +164,12 @@ public class OneUserActivity extends Activity {
 				lA.versions.addAll(processed.getIntegerArrayList(key_versions));
 				lA.votes.addAll(processed.getIntegerArrayList(key_votes));
 
-				lA.username = processed.getString(key_user);
 				lA.user_trust = processed.getBoolean(key_user_trust);
 				lA.user_votes = processed.getInt(key_user_votes);
 
 				lA.notifyDataSetChanged();
+
+				progress.dismiss();
 			}
 		});
 		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
