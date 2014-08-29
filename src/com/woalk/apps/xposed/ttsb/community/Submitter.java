@@ -7,9 +7,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import com.woalk.apps.xposed.ttsb.R;
+import com.woalk.apps.xposed.ttsb.community.SQL_Operations.CustomQ;
 import com.woalk.apps.xposed.ttsb.community.SQL_Operations.Q;
 
 public class Submitter {
@@ -56,16 +59,50 @@ public class Submitter {
 				public void onShow(DialogInterface dialog) {
 					View pos_btn = d
 							.findViewById(DialogInterface.BUTTON_POSITIVE);
+					final String KEY_SIGN_IN_SUCCESS = "signinsucc";
 					pos_btn.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-
+							final String sel_username = ((EditText) d.findViewById(R.id.editText1)).getText().toString();
+							final String sel_password = ((EditText) d.findViewById(R.id.editText2)).getText().toString();
+							CustomQ q = new CustomQ(Database.DATABASE_URL);
+							q.addNameValuePair(Database.POST_PIN,
+									Database.COMMUNITY_PIN);
+							q.addNameValuePair(Database.POST_FUNCTION,
+									Database.FUNCTION_SIGN_IN);
+							q.addNameValuePair(Database.POST_ACC_USERNAME, sel_username);
+							q.addNameValuePair(Database.POST_ACC_PASSWORD, sel_password);
+							q.setHttpResultListener(new CustomQ.HttpResultListener() {
+								@Override
+								public Bundle onHttpResult(String result) {
+									Bundle bundle = new Bundle();
+									if (result == "0") {
+										bundle.putBoolean(KEY_SIGN_IN_SUCCESS,
+												false);
+									} else if (result == "1") {
+										bundle.putBoolean(KEY_SIGN_IN_SUCCESS,
+												true);
+									}
+									return bundle;
+								}
+							});
+							q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+								@Override
+								public void onPostExecute(Bundle processed) {
+									if (processed
+											.getBoolean(KEY_SIGN_IN_SUCCESS)) {
+										saveAccount(getActivity(), new Account(
+												sel_username, sel_password));
+										d.dismiss();
+									}
+								}
+							});
+							q.exec();
 						}
 					});
 				}
 			});
 		}
-
 	}
 
 	/**
@@ -144,6 +181,27 @@ public class Submitter {
 			return null;
 		} else {
 			return new Account(uname, pw);
+		}
+	}
+
+	/**
+	 * Save an account to {@link SharedPreferences}, e.g. when signed in.
+	 * 
+	 * @param context
+	 *            The context Activity. Used to get the preferences.
+	 * @param acc
+	 *            The {@link Account} to save.
+	 */
+	public static void saveAccount(Activity context, Account acc) {
+		SharedPreferences sPref = context.getSharedPreferences(
+				Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+		if (acc != null && !acc.isEmpty()) {
+			SharedPreferences.Editor edit = sPref.edit();
+			edit.putString(Database.Preferences.PREF_USERNAME,
+					acc.getUsername());
+			edit.putString(Database.Preferences.PREF_PASSWORD,
+					acc.getPassword());
+			edit.apply();
 		}
 	}
 }
