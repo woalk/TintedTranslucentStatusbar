@@ -112,6 +112,18 @@ public class Submitter {
 			q.addNameValuePair(Database.POST_ACC_USERNAME, getUsername());
 			q.addNameValuePair(Database.POST_ACC_PASSWORD, getPassword());
 		}
+
+		/**
+		 * Checks if this account instance has the neccessary values set
+		 * (username and password).
+		 * 
+		 * @return {@code true}, if there are these values in this account
+		 *         object.
+		 */
+		public boolean isEmpty() {
+			return username != null && !username.equals("") && password != null
+					&& !password.equals("");
+		}
 	}
 
 	/**
