@@ -3,7 +3,6 @@ package com.woalk.apps.xposed.ttsb.community;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -45,7 +44,7 @@ public class Submitter {
 			builder.setView(getActivity().getLayoutInflater().inflate(
 					R.layout.signin, null));
 			builder.setPositiveButton(android.R.string.ok, null);
-			builder.setNegativeButton(android.R.string.ok, null);
+			builder.setNegativeButton(android.R.string.cancel, null);
 			builder.setNeutralButton(R.string.signup,
 					new DialogInterface.OnClickListener() {
 						@Override
@@ -53,12 +52,11 @@ public class Submitter {
 							// TODO: Signup
 						}
 					});
-			final Dialog d = builder.create();
+			final AlertDialog d = builder.create();
 			d.setOnShowListener(new DialogInterface.OnShowListener() {
 				@Override
 				public void onShow(DialogInterface dialog) {
-					View pos_btn = d
-							.findViewById(DialogInterface.BUTTON_POSITIVE);
+					View pos_btn = d.getButton(AlertDialog.BUTTON_POSITIVE);
 					final String KEY_SIGN_IN_SUCCESS = "signinsucc";
 					pos_btn.setOnClickListener(new View.OnClickListener() {
 						@Override
