@@ -61,15 +61,21 @@ public class Submitter {
 					pos_btn.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							final String sel_username = ((EditText) d.findViewById(R.id.editText1)).getText().toString();
-							final String sel_password = ((EditText) d.findViewById(R.id.editText2)).getText().toString();
+							final String sel_username = ((EditText) d
+									.findViewById(R.id.editText1)).getText()
+									.toString();
+							final String sel_password = ((EditText) d
+									.findViewById(R.id.editText2)).getText()
+									.toString();
 							CustomQ q = new CustomQ(Database.DATABASE_URL);
 							q.addNameValuePair(Database.POST_PIN,
 									Database.COMMUNITY_PIN);
 							q.addNameValuePair(Database.POST_FUNCTION,
 									Database.FUNCTION_SIGN_IN);
-							q.addNameValuePair(Database.POST_ACC_USERNAME, sel_username);
-							q.addNameValuePair(Database.POST_ACC_PASSWORD, sel_password);
+							q.addNameValuePair(Database.POST_ACC_USERNAME,
+									sel_username);
+							q.addNameValuePair(Database.POST_ACC_PASSWORD,
+									sel_password);
 							q.setHttpResultListener(new CustomQ.HttpResultListener() {
 								@Override
 								public Bundle onHttpResult(String result) {
@@ -92,6 +98,9 @@ public class Submitter {
 										saveAccount(getActivity(), new Account(
 												sel_username, sel_password));
 										d.dismiss();
+									} else {
+										d.findViewById(R.id.tV_err)
+												.setVisibility(View.VISIBLE);
 									}
 								}
 							});
