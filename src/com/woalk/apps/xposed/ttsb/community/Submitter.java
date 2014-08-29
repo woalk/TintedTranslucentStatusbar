@@ -183,6 +183,13 @@ public class Submitter {
 		}
 	}
 
+	public static boolean isAccountDialogDismissed(Activity context) {
+		SharedPreferences sPref = context.getSharedPreferences(
+				Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+		return sPref.getBoolean(Database.Preferences.PREF_ACCOUNT_DISMISSED,
+				false);
+	}
+
 	/**
 	 * Save an account to {@link SharedPreferences}, e.g. when signed in.
 	 * 
@@ -202,5 +209,13 @@ public class Submitter {
 					acc.getPassword());
 			edit.apply();
 		}
+	}
+
+	public static void setAccountDialogDismissed(Activity context, boolean val) {
+		SharedPreferences sPref = context.getSharedPreferences(
+				Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+		sPref.edit()
+				.putBoolean(Database.Preferences.PREF_ACCOUNT_DISMISSED, val)
+				.apply();
 	}
 }

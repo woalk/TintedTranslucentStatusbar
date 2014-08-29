@@ -64,6 +64,11 @@ public class MyAppsActivity extends Activity {
 				openAppDetails(lA.apps.get(position));
 			}
 		});
+
+		if (Submitter.getSavedAccount(this) == null
+				&& !Submitter.isAccountDialogDismissed(this)) {
+			new Submitter.SignInDialog(this).show();
+		}
 	}
 
 	@Override
