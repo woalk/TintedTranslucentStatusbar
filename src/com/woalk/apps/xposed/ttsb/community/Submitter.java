@@ -56,7 +56,8 @@ public class Submitter {
 			d.setOnShowListener(new DialogInterface.OnShowListener() {
 				@Override
 				public void onShow(DialogInterface dialog) {
-					View pos_btn = d.getButton(AlertDialog.BUTTON_POSITIVE);
+					final View pos_btn = d
+							.getButton(AlertDialog.BUTTON_POSITIVE);
 					final String KEY_SIGN_IN_SUCCESS = "signinsucc";
 					pos_btn.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -76,6 +77,12 @@ public class Submitter {
 									sel_username);
 							q.addNameValuePair(Database.POST_ACC_PASSWORD,
 									sel_password);
+							q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+								@Override
+								public void onPreExecute() {
+									pos_btn.setEnabled(false);
+								}
+							});
 							q.setHttpResultListener(new CustomQ.HttpResultListener() {
 								@Override
 								public Bundle onHttpResult(String result) {
@@ -102,6 +109,7 @@ public class Submitter {
 										d.findViewById(R.id.tV_err)
 												.setVisibility(View.VISIBLE);
 									}
+									pos_btn.setEnabled(true);
 								}
 							});
 							q.exec();
