@@ -348,13 +348,11 @@ public final class SQL_Operations {
 					InputStream is = entity.getContent();
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(is, "utf-8"), 8);
-					StringBuilder sb = new StringBuilder();
 					String line = null;
 					while ((line = reader.readLine()) != null) {
-						sb.append(line + "\n");
+						result += line;
 					}
 					is.close();
-					result = sb.toString();
 					Bundle processedData = mResultL.onHttpResult(result);
 					return processedData;
 				} catch (UnknownHostException e) {

@@ -49,7 +49,7 @@ public class Submitter {
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO: Signup
+							new SignUpDialog(getActivity()).show();
 						}
 					});
 			final AlertDialog d = builder.create();
@@ -87,10 +87,10 @@ public class Submitter {
 								@Override
 								public Bundle onHttpResult(String result) {
 									Bundle bundle = new Bundle();
-									if (result == "0") {
+									if (result.equals("0")) {
 										bundle.putBoolean(KEY_SIGN_IN_SUCCESS,
 												false);
-									} else if (result == "1") {
+									} else if (result.equals("1")) {
 										bundle.putBoolean(KEY_SIGN_IN_SUCCESS,
 												true);
 									}
@@ -107,6 +107,114 @@ public class Submitter {
 										d.dismiss();
 									} else {
 										d.findViewById(R.id.tV_err)
+												.setVisibility(View.VISIBLE);
+									}
+									pos_btn.setEnabled(true);
+								}
+							});
+							q.exec();
+						}
+					});
+				}
+			});
+			d.show();
+		}
+	}
+
+	public static class SignUpDialog {
+		private Activity activity;
+
+		public interface SignedUpListener {
+			public abstract void onSignedIn();
+		}
+
+		public SignUpDialog(Activity context) {
+			setActivity(context);
+		}
+
+		public Activity getActivity() {
+			return activity;
+		}
+
+		public void setActivity(Activity activity) {
+			this.activity = activity;
+		}
+
+		@SuppressLint("InflateParams")
+		public void show() {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(R.string.signup);
+			builder.setView(getActivity().getLayoutInflater().inflate(
+					R.layout.signup, null));
+			builder.setPositiveButton(android.R.string.ok, null);
+			builder.setNegativeButton(android.R.string.cancel, null);
+			final AlertDialog d = builder.create();
+			d.setOnShowListener(new DialogInterface.OnShowListener() {
+				@Override
+				public void onShow(DialogInterface dialog) {
+					final View pos_btn = d
+							.getButton(AlertDialog.BUTTON_POSITIVE);
+					final String KEY_SIGN_UP_SUCCESS = "signupsucc";
+					pos_btn.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							String sel_username = ((EditText) d
+									.findViewById(R.id.editText1)).getText()
+									.toString();
+							String sel_password = ((EditText) d
+									.findViewById(R.id.editText2)).getText()
+									.toString();
+							final Account acc = new Account(sel_username,
+									sel_password);
+							final String confirm_password = ((EditText) d
+									.findViewById(R.id.editText3)).getText()
+									.toString();
+							if (!sel_password.equals(confirm_password)) {
+								d.findViewById(R.id.tV_err_not_confirmed)
+										.setVisibility(View.VISIBLE);
+								return;
+							} else {
+								d.findViewById(R.id.tV_err_not_confirmed)
+										.setVisibility(View.GONE);
+							}
+							CustomQ q = new CustomQ(Database.DATABASE_URL);
+							q.addNameValuePair(Database.POST_PIN,
+									Database.COMMUNITY_PIN);
+							q.addNameValuePair(Database.POST_FUNCTION,
+									Database.FUNCTION_SIGN_UP);
+							acc.addToQ(q);
+							q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+								@Override
+								public void onPreExecute() {
+									d.findViewById(R.id.tV_err_already_given)
+											.setVisibility(View.GONE);
+									pos_btn.setEnabled(false);
+								}
+							});
+							q.setHttpResultListener(new CustomQ.HttpResultListener() {
+								@Override
+								public Bundle onHttpResult(String result) {
+									Bundle bundle = new Bundle();
+									if (result.equals("0")) {
+										bundle.putBoolean(KEY_SIGN_UP_SUCCESS,
+												false);
+									} else if (result.equals("1")) {
+										bundle.putBoolean(KEY_SIGN_UP_SUCCESS,
+												true);
+									}
+									return bundle;
+								}
+							});
+							q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+								@Override
+								public void onPostExecute(Bundle processed) {
+									if (processed
+											.getBoolean(KEY_SIGN_UP_SUCCESS)) {
+										saveAccount(getActivity(), acc);
+										d.dismiss();
+									} else {
+										d.findViewById(
+												R.id.tV_err_already_given)
 												.setVisibility(View.VISIBLE);
 									}
 									pos_btn.setEnabled(true);
@@ -161,7 +269,7 @@ public class Submitter {
 		 * @param q
 		 *            The {@link Q} instance to add the values to.
 		 */
-		public void addToQ(Q q) {
+		public void addToQ(CustomQ q) {
 			q.addNameValuePair(Database.POST_ACC_USERNAME, getUsername());
 			q.addNameValuePair(Database.POST_ACC_PASSWORD, getPassword());
 		}
@@ -174,8 +282,8 @@ public class Submitter {
 		 *         object.
 		 */
 		public boolean isEmpty() {
-			return username != null && !username.equals("") && password != null
-					&& !password.equals("");
+			return username == null || username.equals("") || password == null
+					|| password.equals("");
 		}
 	}
 
