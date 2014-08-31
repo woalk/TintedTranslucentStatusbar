@@ -221,6 +221,7 @@ public final class SQL_Operations {
 		private List<NameValuePair> mNameValuePairs = new ArrayList<NameValuePair>();
 		private PreExecuteListener mPreExecuteL;
 		private PostExecuteListener mPostExecuteL;
+		private PreHttpPostListener mPreHttp;
 		private HttpResultListener mResultL;
 
 		public static interface PreExecuteListener {
@@ -228,6 +229,17 @@ public final class SQL_Operations {
 			 * Called in the UI Thread before the execution begins.
 			 */
 			public abstract void onPreExecute();
+		}
+
+		public static interface PreHttpPostListener {
+			/**
+			 * Called in the <b>worker</b> thread before any execution of
+			 * Http-things.
+			 * 
+			 * @param q
+			 *            The calling {@link CustomQ}.
+			 */
+			public abstract void onPreHttpPost(CustomQ q);
 		}
 
 		public static interface HttpResultListener {
@@ -302,6 +314,18 @@ public final class SQL_Operations {
 		}
 
 		/**
+		 * Set the {@link PreHttpPostListener} of this query object.
+		 * 
+		 * @param l
+		 *            The listener to assign.<br />
+		 *            Can be easily defined per
+		 *            <code>new PreHttpPostListener() { ... }</code>.
+		 */
+		public void setPreHttpPostListener(PreHttpPostListener l) {
+			this.mPreHttp = l;
+		}
+
+		/**
 		 * Adds a new NameValuePair to include in the {@link HttpPost}.
 		 * 
 		 * @param nvp
@@ -336,6 +360,8 @@ public final class SQL_Operations {
 
 			@Override
 			protected Bundle doInBackground(Void... params) {
+				if (mPreHttp != null)
+					mPreHttp.onPreHttpPost(CustomQ.this);
 				String result = "";
 				try {
 					// get database connection & package entries
