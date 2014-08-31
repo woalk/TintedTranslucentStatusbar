@@ -132,7 +132,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 
 			tv_app.setText(pkgMan.getApplicationLabel(app));
 			tv_pkg.setText(app.packageName);
-			tv_descr.setText(description);
+			tv_descr.setText(Html.fromHtml(description));
 			tv_author.setText(Html.fromHtml(context
 					.getString(R.string.community_prefix_by)
 					+ " <b>"

@@ -5,19 +5,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.woalk.apps.xposed.ttsb.R;
-
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.woalk.apps.xposed.ttsb.R;
 
 public class SubmitsAdapter extends ArrayAdapter<String> {
 	public List<Integer> votes;
@@ -116,7 +117,7 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 			DateFormat d_f = DateFormat.getInstance();
 			String date = d_f.format(timestamps.get(pos));
 
-			tvDescr.setText(descriptions.get(pos));
+			tvDescr.setText(Html.fromHtml(descriptions.get(pos)));
 			tvUser.setText(context.getString(R.string.community_prefix_by)
 					+ " " + users.get(pos));
 			tvUser.setCompoundDrawablesWithIntrinsicBounds(
