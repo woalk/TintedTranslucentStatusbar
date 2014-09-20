@@ -7,8 +7,6 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.woalk.apps.xposed.ttsb.community.Database;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,7 +14,8 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
-import android.util.Log;
+
+import com.woalk.apps.xposed.ttsb.community.Database;
 
 public class Settings {
 	private Settings() {
@@ -717,6 +716,13 @@ public class Settings {
 			ActivityInfo[] act_inf = context.getPackageManager()
 					.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES).activities;
 			StringBuilder sb = new StringBuilder();
+			// "[ALL]"
+			String all_str = sPref.getString(packageName + "/", "%%%%");
+			if (all_str != "%%%%") {
+				sb.append("|");
+				sb.append(all_str);
+				sb.append("||");
+			}
 			for (ActivityInfo act : act_inf) {
 				String str = sPref.getString(packageName + "/" + act.name,
 						"%%%%");

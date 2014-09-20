@@ -123,5 +123,8 @@
     <string name="signin_fail">Username or password is wrong.</string>
     <string name="signup_fail_already_given">Username is already in use.</string>
     <string name="signup_fail_not_confirmed">Your passwords do not match.</string>
+    <string name="submit_descr_title">Submit</string>
+    <string name="submit_descr_msg">Please enter a description:</string>
+    <string name="submit_descr_info"><i>You can use HTML tags such as <b>&lt;b&gt;</b>, <b>&lt;i&gt;</b>, <b>&lt;br /&gt;</b>, &#8230;</i></string>
 
 </resources>

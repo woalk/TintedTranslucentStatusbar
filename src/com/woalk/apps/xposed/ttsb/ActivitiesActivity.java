@@ -12,8 +12,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.woalk.apps.xposed.ttsb.community.Database;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,10 +30,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.woalk.apps.xposed.ttsb.community.Database;
+import com.woalk.apps.xposed.ttsb.community.SQL_Operations.CustomQ;
+import com.woalk.apps.xposed.ttsb.community.Submitter;
 
 public class ActivitiesActivity extends Activity {
 
@@ -148,23 +151,28 @@ public class ActivitiesActivity extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case R.id.action_send_to_database:
-			AlertDialog.Builder alert = new AlertDialog.Builder(this);
-			alert.setTitle(R.string.suggest_qu_title);
-			alert.setMessage(R.string.suggest_qu_msg);
-			alert.setNegativeButton(android.R.string.no, null);
-			alert.setPositiveButton(android.R.string.yes,
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-							submitToDB();
-						}
-					});
-			alert.show();
+			final View descr_view = getLayoutInflater().inflate(
+					R.layout.submit_description, null);
+			new AlertDialog.Builder(ActivitiesActivity.this)
+					.setTitle(R.string.submit_descr_title)
+					.setView(descr_view)
+					.setPositiveButton(android.R.string.ok,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									submitToDB(((EditText) descr_view
+											.findViewById(R.id.editText1))
+											.getText().toString());
+								}
+							}).setNegativeButton(android.R.string.cancel, null)
+					.show();
 			return true;
 		case R.id.action_delete_package_settings:
 			AlertDialog.Builder alert1 = new AlertDialog.Builder(this);
@@ -197,20 +205,75 @@ public class ActivitiesActivity extends Activity {
 		}
 	}
 
-	protected void submitToDB() {
-		new SuggestTask()
-				.execute("http://ext.woalk.de/ttsb_database/insertsuggestion.php");
+	protected void submitToDB(String description) {
+		final AlertDialog progress = new AlertDialog.Builder(context)
+				.setMessage(R.string.suggestsync_msg)
+				.setView(new ProgressBar(context)).create();
+		CustomQ q = new CustomQ(Database.DATABASE_URL);
+		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
+		Submitter.Account acc = Submitter.getSavedAccount(this);
+		if (acc == null || acc.isEmpty()) {
+			new Submitter.SignInDialog(this).show();
+			return;
+		}
+		acc.addToQ(q);
+		q.addNameValuePair(Database.POST_FUNCTION, Database.FUNCTION_SUBMIT);
+		q.addNameValuePair(Database.POST_SUBMITS_PACKAGE, app.packageName);
+		try {
+			q.addNameValuePair(
+					Database.POST_SUBMIT_VERSION,
+					String.valueOf(getPackageManager().getPackageInfo(
+							app.packageName, 0).versionCode));
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		q.addNameValuePair(Database.POST_SUBMIT_DESCRIPTION, description);
+		q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+			@Override
+			public void onPreExecute() {
+				progress.show();
+			}
+		});
+		q.setPreHttpPostListener(new CustomQ.PreHttpPostListener() {
+			@Override
+			public void onPreHttpPost(CustomQ q) {
+				try {
+					String settings = Settings.Saver.getExportAppString(
+							getApplicationContext(), app.packageName);
+					q.addNameValuePair(Database.POST_SUBMIT_SETTINGS, settings);
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		final String KEY_RESULT = "result";
+		q.setHttpResultListener(new CustomQ.HttpResultListener() {
+			@Override
+			public Bundle onHttpResult(String result) {
+				Bundle bundle = new Bundle();
+				try {
+					bundle.putInt(KEY_RESULT, Integer.valueOf(result));
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+				return bundle;
+			}
+		});
+		q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+			@Override
+			public void onPostExecute(Bundle processed) {
+				if (processed.getInt(KEY_RESULT) == 1)
+					Toast.makeText(context, R.string.settings_suggest_success,
+							Toast.LENGTH_SHORT).show();
+				progress.dismiss();
+			}
+		});
+		q.exec();
 	}
 
 	private class SuggestTask extends AsyncTask<String, Void, HttpResponse> {
-		private AlertDialog progress;
 
 		protected void onPreExecute() {
-			AlertDialog.Builder builder = new AlertDialog.Builder(context);
-			builder.setMessage(R.string.suggestsync_msg);
-			builder.setView(new ProgressBar(context));
-			progress = builder.create();
-			progress.show();
 		}
 
 		@SuppressLint("WorldReadableFiles")
@@ -261,10 +324,6 @@ public class ActivitiesActivity extends Activity {
 		}
 
 		protected void onPostExecute(HttpResponse result) {
-			if (result != null)
-				Toast.makeText(context, R.string.settings_suggest_success,
-						Toast.LENGTH_SHORT).show();
-			progress.dismiss();
 		}
 	}
 
