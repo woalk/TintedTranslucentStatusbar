@@ -126,5 +126,8 @@
     <string name="submit_descr_title">Submit</string>
     <string name="submit_descr_msg">Please enter a description:</string>
     <string name="submit_descr_info"><i>You can use HTML tags such as <b>&lt;b&gt;</b>, <b>&lt;i&gt;</b>, <b>&lt;br /&gt;</b>, &#8230;</i></string>
+    <string name="action_delete_submit">Delete submit</string>
+    <string name="q_delete_submit">Do you really want to permanently delete this submit?</string>
+    <string name="error_try_again">An error occurred, please try again later.</string>
 
 </resources>

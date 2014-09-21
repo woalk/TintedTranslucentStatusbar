@@ -26,17 +26,22 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.woalk.apps.xposed.ttsb.Helpers;
 import com.woalk.apps.xposed.ttsb.R;
 import com.woalk.apps.xposed.ttsb.Settings;
+import com.woalk.apps.xposed.ttsb.community.SQL_Operations.CustomQ;
 import com.woalk.apps.xposed.ttsb.community.SQL_Operations.Q;
 
 public class OneSubmitActivity extends Activity {
@@ -198,7 +203,7 @@ public class OneSubmitActivity extends Activity {
 		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
 		q.addNameValuePair(Database.POST_FUNCTION,
 				Database.FUNCTION_GET_COMMENTS_FOR_SUBMIT);
-		q.addNameValuePair(Database.POST_COMMENTS_SUBMIT, String.valueOf(id));
+		q.addNameValuePair(Database.POST_SUBMIT, String.valueOf(id));
 		q.exec();
 
 		edit_comment = (EditText) findViewById(R.id.editText1);
@@ -233,11 +238,102 @@ public class OneSubmitActivity extends Activity {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		Submitter.Account acc = Submitter
+				.getSavedAccount(OneSubmitActivity.this);
+		if (acc != null && !acc.isEmpty()) {
+			if (acc.getUsername().equals(user)) {
+				MenuInflater inflater = getMenuInflater();
+				inflater.inflate(R.menu.one_submit, menu);
+			}
+			return super.onCreateOptionsMenu(menu);
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Respond to the action bar's Up/Home button
 		case android.R.id.home:
 			finish();
+			return true;
+		case R.id.action_delete_submit:
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.action_delete_submit)
+					.setMessage(R.string.q_delete_submit)
+					.setPositiveButton(android.R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// delete entry
+									Submitter.Account acc = Submitter
+											.getSavedAccount(OneSubmitActivity.this);
+									if (acc != null && !acc.isEmpty()) {
+										CustomQ q = new CustomQ(
+												Database.DATABASE_URL);
+										q.addNameValuePair(Database.POST_PIN,
+												Database.COMMUNITY_PIN);
+										q.addNameValuePair(
+												Database.POST_FUNCTION,
+												Database.FUNCTION_DELETE_SUBMIT);
+										acc.addToQ(q);
+										q.addNameValuePair(
+												Database.POST_SUBMIT,
+												String.valueOf(id));
+										final AlertDialog progress = new AlertDialog.Builder(
+												OneSubmitActivity.this)
+												.setMessage(
+														R.string.loadingsync_msg)
+												.setView(
+														new ProgressBar(
+																OneSubmitActivity.this))
+												.create();
+										q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+											@Override
+											public void onPreExecute() {
+												progress.show();
+											}
+										});
+										final String KEY_RESULT = "result";
+										q.setHttpResultListener(new CustomQ.HttpResultListener() {
+											@Override
+											public Bundle onHttpResult(
+													String result) {
+												Bundle bundle = new Bundle();
+												try {
+													bundle.putInt(
+															KEY_RESULT,
+															Integer.parseInt(result));
+												} catch (Throwable e) {
+													e.printStackTrace();
+												}
+												return bundle;
+											}
+										});
+										q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+											@Override
+											public void onPostExecute(
+													Bundle processed) {
+												progress.dismiss();
+												if (processed
+														.getInt(KEY_RESULT) != 1) {
+													Toast.makeText(
+															OneSubmitActivity.this,
+															R.string.error_try_again,
+															Toast.LENGTH_SHORT)
+															.show();
+												} else
+													finish();
+											}
+										});
+										q.exec();
+									}
+								}
+							}).setNegativeButton(android.R.string.no, null)
+					.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
