@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.woalk.apps.xposed.ttsb.Helpers;
 import com.woalk.apps.xposed.ttsb.R;
@@ -181,6 +182,14 @@ public class OneUserActivity extends Activity {
 
 			@Override
 			public void onPostExecute(Bundle processed) {
+				if (processed == null) {
+					progress.dismiss();
+					Toast.makeText(OneUserActivity.this,
+							R.string.user_not_found,
+							Toast.LENGTH_SHORT).show();
+					finish();
+					return;
+				}
 				lA.apps.clear();
 				lA.descriptions.clear();
 				lA.ids.clear();

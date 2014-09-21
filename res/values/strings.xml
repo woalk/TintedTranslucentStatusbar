@@ -85,6 +85,7 @@
     <string name="advertise_translucentstyle_btn">Get it from Xposed Repository!</string>
     <string name="title_activity_my_apps">Community: My apps</string>
     <string name="str_action_goto_user">Find user by name&#8230;</string>
+    <string name="msg_action_goto_user">Please enter the user name you\'re looking for:</string>
     <string name="str_action_goto_my">My profile</string>
     <string name="title_versionselect">Select version</string>
     <string name="msg_versionselect">There are multiple versions of this app in the TTSB Community. Please select the version you\'re looking for:</string>
@@ -129,5 +130,6 @@
     <string name="action_delete_submit">Delete submit</string>
     <string name="q_delete_submit">Do you really want to permanently delete this submit?</string>
     <string name="error_try_again">An error occurred, please try again later.</string>
+    <string name="user_not_found">This user does not exist.</string>
 
 </resources>
