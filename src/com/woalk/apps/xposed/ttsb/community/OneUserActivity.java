@@ -228,6 +228,8 @@ public class OneUserActivity extends Activity {
 				Database.FUNCTION_GET_SUBMITS_BY_USER);
 		q.addNameValuePair(Database.POST_USERNAME, username);
 		q.exec();
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -247,6 +249,9 @@ public class OneUserActivity extends Activity {
 			return false;
 		}
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
 		case R.id.action_edit_name:
 			new Submitter.ChangeNamePwDialog(this).show();
 			return true;
