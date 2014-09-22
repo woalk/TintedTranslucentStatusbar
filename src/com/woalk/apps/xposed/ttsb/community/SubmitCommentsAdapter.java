@@ -453,7 +453,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	private static final boolean VOTETYPE_UP = true;
 	private static final boolean VOTETYPE_DOWN = false;
 
-	private void vote(boolean votetype) {
+	private void vote(final boolean votetype) {
 		String vote_t = votetype ? "1" : "0";
 
 		CustomQ q = new CustomQ(Database.DATABASE_URL);
@@ -481,6 +481,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 				try {
 					bundle.putInt(KEY_RESULT, Integer.valueOf(result));
 				} catch (Throwable e) {
+					bundle.putString(KEY_RESULT, result);
 					e.printStackTrace();
 				}
 				return bundle;
@@ -489,9 +490,13 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 		q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
 			@Override
 			public void onPostExecute(Bundle processed) {
-				if (processed.getInt(KEY_RESULT) != 1)
+				if (processed.getString(KEY_RESULT) != null)
 					Toast.makeText(context, R.string.error_try_again,
 							Toast.LENGTH_SHORT).show();
+				else {
+					votes = processed.getInt(KEY_RESULT);
+					notifyDataSetChanged();
+				}
 				progress.dismiss();
 			}
 		});
