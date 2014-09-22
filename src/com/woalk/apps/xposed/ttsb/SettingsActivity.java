@@ -1,10 +1,5 @@
 package com.woalk.apps.xposed.ttsb;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -56,22 +51,12 @@ public class SettingsActivity extends Activity {
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			String lastupdate = sPref.getString(Helpers.TTSB_PREF_LASTUPDATE,
-					getString(R.string.never));
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
-			Date date;
-			try {
-				date = sdf.parse(lastupdate);
-				lastupdate = DateFormat.getInstance().format(date);
-			} catch (ParseException e) {
-			}
 
 			textView2.setText(getString(R.string.version_prefix) + ":\n\n"
 					+ getString(R.string.tintengine_ver_prefix) + ":\n"
-					+ getString(R.string.ui_ver_prefix) + ":\n"
-					+ getString(R.string.database_prefix) + ":\n");
+					+ getString(R.string.ui_ver_prefix) + ":\n");
 			textView4.setText(pInfo.versionName + "\n\n" + te_ver + "\n"
-					+ ui_ver + "\n" + lastupdate);
+					+ ui_ver);
 		}
 
 		CheckBox checkBox1 = (CheckBox) findViewById(R.id.checkBox_status);

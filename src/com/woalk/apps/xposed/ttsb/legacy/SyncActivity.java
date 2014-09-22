@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,10 +23,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import com.woalk.apps.xposed.ttsb.Helpers;
-import com.woalk.apps.xposed.ttsb.R;
-import com.woalk.apps.xposed.ttsb.Settings;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -48,6 +43,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.woalk.apps.xposed.ttsb.Helpers;
+import com.woalk.apps.xposed.ttsb.R;
+import com.woalk.apps.xposed.ttsb.Settings;
 
 public class SyncActivity extends Activity {
 	protected AppSyncListAdapter lA;
@@ -193,28 +192,18 @@ public class SyncActivity extends Activity {
 				if (db_edited.containsKey(packageName))
 					is_edited = db_edited.get(packageName);
 				boolean is_newer = false;
-				try {
-					String timestamp = db_timestamps.get(packageName);
-					SimpleDateFormat sdf = new SimpleDateFormat(
-							"yyyy-MM-dd-HH-mm");
-					Date date;
-					date = sdf.parse(timestamp);
-					timestamps.add(DateFormat.getInstance().format(date));
-					String lastupdate = sPref.getString(
-							Helpers.TTSB_PREF_LASTUPDATE,
-							getString(R.string.never));
-					Date datelast;
-					try {
-						datelast = sdf.parse(lastupdate);
-					} catch (ParseException e) {
-						datelast = new Date();
-					}
-					is_newer = date.compareTo(datelast) > 0;
-					timestamps_isnewer.add(is_newer);
-				} catch (ParseException e) {
-					timestamps.add("‹?›");
-					timestamps_isnewer.add(false);
-				}
+				/*
+				 * try { String timestamp = db_timestamps.get(packageName);
+				 * SimpleDateFormat sdf = new SimpleDateFormat(
+				 * "yyyy-MM-dd-HH-mm"); Date date; date = sdf.parse(timestamp);
+				 * timestamps.add(DateFormat.getInstance().format(date)); String
+				 * lastupdate = sPref.getString( Helpers.TTSB_PREF_LASTUPDATE,
+				 * getString(R.string.never)); Date datelast; try { datelast =
+				 * sdf.parse(lastupdate); } catch (ParseException e) { datelast
+				 * = new Date(); } is_newer = date.compareTo(datelast) > 0;
+				 * timestamps_isnewer.add(is_newer); } catch (ParseException e)
+				 * { timestamps.add("‹?›"); timestamps_isnewer.add(false); }
+				 */
 				edited.add(is_edited);
 				checked.add(!is_current_set || is_newer);
 			}
@@ -261,7 +250,7 @@ public class SyncActivity extends Activity {
 		SharedPreferences.Editor edit = sPref.edit();
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 		String formattedDate = f.format(new Date());
-		edit.putString(Helpers.TTSB_PREF_LASTUPDATE, formattedDate);
+		// edit.putString(Helpers.TTSB_PREF_LASTUPDATE, formattedDate);
 		edit.apply();
 		List<String> packageNames = new ArrayList<String>();
 		for (int i = 0; i < lA.apps.size(); i++) {
@@ -296,7 +285,7 @@ public class SyncActivity extends Activity {
 		SharedPreferences.Editor edit = sPref.edit();
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 		String formattedDate = f.format(new Date());
-		edit.putString(Helpers.TTSB_PREF_LASTUPDATE, formattedDate);
+		// edit.putString(Helpers.TTSB_PREF_LASTUPDATE, formattedDate);
 		edit.apply();
 		boolean isSyncable = false;
 		for (int i = 0; i < lA.apps.size(); i++) {

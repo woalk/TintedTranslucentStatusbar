@@ -2,21 +2,20 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.List;
 
-import de.robv.android.xposed.XposedBridge;
 import android.app.Activity;
+import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.content.pm.PackageInfo;
+import de.robv.android.xposed.XposedBridge;
 
 public final class Helpers {
 
 	public static String TTSB_PACKAGE_NAME = "com.woalk.apps.xposed.ttsb";
 	public static String TTSB_PREFERENCES = "com.woalk.apps.xposed.ttsb.TTSB_PREFERENCES";
 	public static String TTSB_PREF_SHOW_ACTIVITY_TOAST = "com.woalk.apps.xposed.ttsb.SHOW_TOAST";
-	public static String TTSB_PREF_LASTUPDATE = "com.woalk.apps.xposed.ttsb.LAST_UPDATE";
 	public static String TTSB_PREF_DEBUGLOG = "com.woalk.apps.xposed.ttsb.DEBUGLOG";
 
 	public static final int FLAG_FLOATING_WINDOW = 0x00002000;
