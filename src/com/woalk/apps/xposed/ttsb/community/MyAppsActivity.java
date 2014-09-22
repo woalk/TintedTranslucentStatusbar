@@ -241,10 +241,15 @@ public class MyAppsActivity extends Activity {
 			return true;
 		case R.id.action_goto_my:
 			Submitter.Account acc = Submitter.getSavedAccount(this);
-			Intent intent = new Intent(MyAppsActivity.this,
-					OneUserActivity.class);
-			intent.putExtra(OneUserActivity.PASS_USERNAME, acc.getUsername());
-			startActivity(intent);
+			if (acc == null || acc.isEmpty()) {
+				new Submitter.SignInDialog(this).show();
+			} else {
+				Intent intent = new Intent(MyAppsActivity.this,
+						OneUserActivity.class);
+				intent.putExtra(OneUserActivity.PASS_USERNAME,
+						acc.getUsername());
+				startActivity(intent);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import com.woalk.apps.xposed.ttsb.Helpers;
 import com.woalk.apps.xposed.ttsb.R;
+import com.woalk.apps.xposed.ttsb.community.SQL_Operations.CustomQ;
 import com.woalk.apps.xposed.ttsb.community.SQL_Operations.Q;
 
 public class OneUserActivity extends Activity {
@@ -185,8 +187,7 @@ public class OneUserActivity extends Activity {
 				if (processed == null) {
 					progress.dismiss();
 					Toast.makeText(OneUserActivity.this,
-							R.string.user_not_found,
-							Toast.LENGTH_SHORT).show();
+							R.string.user_not_found, Toast.LENGTH_SHORT).show();
 					finish();
 					return;
 				}
@@ -231,12 +232,102 @@ public class OneUserActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.one_user, menu);
-		return true;
+		Submitter.Account acc = Submitter.getSavedAccount(this);
+		if (acc != null && !acc.isEmpty() && acc.getUsername().equals(username)) {
+			getMenuInflater().inflate(R.menu.one_user, menu);
+			return super.onCreateOptionsMenu(menu);
+		} else
+			return false;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Submitter.Account acc = Submitter.getSavedAccount(this);
+		if (acc == null || acc.isEmpty()) {
+			return false;
+		}
+		switch (item.getItemId()) {
+		case R.id.action_edit_name:
+			new Submitter.ChangeNamePwDialog(this).show();
+			return true;
+		case R.id.action_logout:
+			Submitter.deleteSavedAccount(this);
+			finish();
+			return true;
+		case R.id.action_delete_profile:
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.str_action_delete_profile)
+					.setMessage(R.string.str_q_delete_profile)
+					.setPositiveButton(android.R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									CustomQ q = new CustomQ(
+											Database.DATABASE_URL);
+									q.addNameValuePair(Database.POST_PIN,
+											Database.COMMUNITY_PIN);
+									q.addNameValuePair(Database.POST_FUNCTION,
+											Database.FUNCTION_DELETE_PROFILE);
+									Submitter.Account delacc = Submitter
+											.getSavedAccount(OneUserActivity.this);
+									delacc.addToQ(q);
+									q.addNameValuePair(
+											Database.POST_ACC_DELETION_SURE,
+											Database.DELETION_SURE_PIN);
+
+									final AlertDialog progress = new AlertDialog.Builder(
+											OneUserActivity.this)
+											.setMessage(
+													R.string.loadingsync_msg)
+											.setView(
+													new ProgressBar(
+															OneUserActivity.this))
+											.create();
+									q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+										@Override
+										public void onPreExecute() {
+											progress.show();
+										}
+									});
+									final String KEY_RESULT = "result";
+									q.setHttpResultListener(new CustomQ.HttpResultListener() {
+										@Override
+										public Bundle onHttpResult(String result) {
+											Bundle bundle = new Bundle();
+											try {
+												bundle.putInt(KEY_RESULT,
+														Integer.valueOf(result));
+											} catch (Throwable e) {
+												e.printStackTrace();
+											}
+											return bundle;
+										}
+									});
+									q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+										@Override
+										public void onPostExecute(
+												Bundle processed) {
+											if (processed.getInt(KEY_RESULT) != 1)
+												Toast.makeText(
+														OneUserActivity.this,
+														R.string.error_try_again,
+														Toast.LENGTH_SHORT)
+														.show();
+											else {
+												Submitter
+														.deleteSavedAccount(OneUserActivity.this);
+												finish();
+											}
+											progress.dismiss();
+										}
+									});
+									q.exec();
+								}
+							}).setNegativeButton(android.R.string.no, null)
+					.show();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 }

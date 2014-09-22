@@ -229,6 +229,119 @@ public class Submitter {
 		}
 	}
 
+	public static class ChangeNamePwDialog {
+		private Activity activity;
+
+		public interface SignedUpListener {
+			public abstract void onSignedIn();
+		}
+
+		public ChangeNamePwDialog(Activity context) {
+			setActivity(context);
+		}
+
+		public Activity getActivity() {
+			return activity;
+		}
+
+		public void setActivity(Activity activity) {
+			this.activity = activity;
+		}
+
+		@SuppressLint("InflateParams")
+		public void show() {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(R.string.str_action_edit_name);
+			builder.setView(getActivity().getLayoutInflater().inflate(
+					R.layout.signup, null));
+			builder.setPositiveButton(android.R.string.ok, null);
+			builder.setNegativeButton(android.R.string.cancel, null);
+			final AlertDialog d = builder.create();
+			d.setOnShowListener(new DialogInterface.OnShowListener() {
+				@Override
+				public void onShow(DialogInterface dialog) {
+					final View pos_btn = d
+							.getButton(AlertDialog.BUTTON_POSITIVE);
+					final String KEY_SIGN_UP_SUCCESS = "signupsucc";
+					pos_btn.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							String sel_username = ((EditText) d
+									.findViewById(R.id.editText1)).getText()
+									.toString();
+							String sel_password = ((EditText) d
+									.findViewById(R.id.editText2)).getText()
+									.toString();
+							final Account acc = new Account(sel_username,
+									sel_password);
+							final String confirm_password = ((EditText) d
+									.findViewById(R.id.editText3)).getText()
+									.toString();
+							if (!sel_password.equals(confirm_password)) {
+								d.findViewById(R.id.tV_err_not_confirmed)
+										.setVisibility(View.VISIBLE);
+								return;
+							} else {
+								d.findViewById(R.id.tV_err_not_confirmed)
+										.setVisibility(View.GONE);
+							}
+							CustomQ q = new CustomQ(Database.DATABASE_URL);
+							q.addNameValuePair(Database.POST_PIN,
+									Database.COMMUNITY_PIN);
+							q.addNameValuePair(Database.POST_FUNCTION,
+									Database.FUNCTION_CHANGE_USERNAME_PASSWORD);
+							getSavedAccount(getActivity()).addToQ(q);
+							q.addNameValuePair(Database.POST_ACC_NEW_USERNAME,
+									acc.getUsername());
+							q.addNameValuePair(Database.POST_ACC_NEW_PASSWORD,
+									acc.getPassword());
+							q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+								@Override
+								public void onPreExecute() {
+									d.findViewById(R.id.tV_err_already_given)
+											.setVisibility(View.GONE);
+									pos_btn.setEnabled(false);
+								}
+							});
+							q.setHttpResultListener(new CustomQ.HttpResultListener() {
+								@Override
+								public Bundle onHttpResult(String result) {
+									Bundle bundle = new Bundle();
+									if (result.equals("0")) {
+										bundle.putBoolean(KEY_SIGN_UP_SUCCESS,
+												false);
+									} else if (result.equals("1")) {
+										bundle.putBoolean(KEY_SIGN_UP_SUCCESS,
+												true);
+									}
+									return bundle;
+								}
+							});
+							q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+								@Override
+								public void onPostExecute(Bundle processed) {
+									if (processed
+											.getBoolean(KEY_SIGN_UP_SUCCESS)) {
+										saveAccount(getActivity(), acc);
+										d.dismiss();
+										getActivity().finish();
+									} else {
+										d.findViewById(
+												R.id.tV_err_already_given)
+												.setVisibility(View.VISIBLE);
+									}
+									pos_btn.setEnabled(true);
+								}
+							});
+							q.exec();
+						}
+					});
+				}
+			});
+			d.show();
+		}
+	}
+
 	/**
 	 * Simple combination class of a username and password.
 	 * 
@@ -334,6 +447,21 @@ public class Submitter {
 					acc.getPassword());
 			edit.apply();
 		}
+	}
+
+	/**
+	 * Delete the account saved in the {@link SharedPreferences} (log out).
+	 * 
+	 * @param context
+	 *            The context Activity. Used to get the preferences.
+	 */
+	public static void deleteSavedAccount(Activity context) {
+		SharedPreferences sPref = context.getSharedPreferences(
+				Database.Preferences.COMMUNITY_PREF_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor edit = sPref.edit();
+		edit.remove(Database.Preferences.PREF_USERNAME);
+		edit.remove(Database.Preferences.PREF_PASSWORD);
+		edit.apply();
 	}
 
 	public static void setAccountDialogDismissed(Activity context, boolean val) {

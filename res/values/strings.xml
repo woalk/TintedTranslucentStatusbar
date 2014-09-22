@@ -131,5 +131,9 @@
     <string name="q_delete_submit">Do you really want to permanently delete this submit?</string>
     <string name="error_try_again">An error occurred, please try again later.</string>
     <string name="user_not_found">This user does not exist.</string>
+    <string name="str_action_edit_name">Change name and password</string>
+    <string name="str_action_logout">Logout</string>
+    <string name="str_action_delete_profile">Delete my profile</string>
+    <string name="str_q_delete_profile"><b>Warning.</b> You selected to delete your profile.\n<i>Maybe you meant logout, one option above it?</i>\n\nIf you delete your profile, you <b>won\'t</b> be able to to login again after that, and your username becomes free again.\n<b>All</b> of your submits, comments, and votes would be deleted.<br />\nDo you want to continue and delete your profile?</string>
 
 </resources>

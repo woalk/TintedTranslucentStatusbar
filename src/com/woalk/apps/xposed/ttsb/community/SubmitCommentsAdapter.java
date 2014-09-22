@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 import com.woalk.apps.xposed.ttsb.Helpers;
 import com.woalk.apps.xposed.ttsb.R;
 import com.woalk.apps.xposed.ttsb.Settings;
+import com.woalk.apps.xposed.ttsb.community.SQL_Operations.CustomQ;
 
 public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	private Activity context;
@@ -170,6 +172,23 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 					Intent intent = new Intent(context, OneUserActivity.class);
 					intent.putExtra(OneUserActivity.PASS_USERNAME, author);
 					context.startActivity(intent);
+				}
+			});
+
+			Button btn_upvote = (Button) rowView.findViewById(R.id.button_up);
+			Button btn_downvote = (Button) rowView
+					.findViewById(R.id.button_down);
+
+			btn_upvote.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					vote(VOTETYPE_UP);
+				}
+			});
+			btn_downvote.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					vote(VOTETYPE_DOWN);
 				}
 			});
 
@@ -431,4 +450,51 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 		return position != 0 && position != getCount() - 1;
 	}
 
+	private static final boolean VOTETYPE_UP = true;
+	private static final boolean VOTETYPE_DOWN = false;
+
+	private void vote(boolean votetype) {
+		String vote_t = votetype ? "1" : "0";
+
+		CustomQ q = new CustomQ(Database.DATABASE_URL);
+		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
+		q.addNameValuePair(Database.POST_FUNCTION, Database.FUNCTION_VOTE);
+		Submitter.Account acc = Submitter.getSavedAccount(context);
+		acc.addToQ(q);
+		q.addNameValuePair(Database.POST_VOTE_TYPE, vote_t);
+		q.addNameValuePair(Database.POST_SUBMIT, String.valueOf(id));
+
+		final AlertDialog progress = new AlertDialog.Builder(context)
+				.setMessage(R.string.loadingsync_msg)
+				.setView(new ProgressBar(context)).create();
+		q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+			@Override
+			public void onPreExecute() {
+				progress.show();
+			}
+		});
+		final String KEY_RESULT = "result";
+		q.setHttpResultListener(new CustomQ.HttpResultListener() {
+			@Override
+			public Bundle onHttpResult(String result) {
+				Bundle bundle = new Bundle();
+				try {
+					bundle.putInt(KEY_RESULT, Integer.valueOf(result));
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+				return bundle;
+			}
+		});
+		q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+			@Override
+			public void onPostExecute(Bundle processed) {
+				if (processed.getInt(KEY_RESULT) != 1)
+					Toast.makeText(context, R.string.error_try_again,
+							Toast.LENGTH_SHORT).show();
+				progress.dismiss();
+			}
+		});
+		q.exec();
+	}
 }
