@@ -490,10 +490,17 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 		q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
 			@Override
 			public void onPostExecute(Bundle processed) {
-				if (processed.getString(KEY_RESULT) != null)
-					Toast.makeText(context, R.string.error_try_again,
+				String procStr = processed.getString(KEY_RESULT);
+				if (procStr != null) {
+					String str;
+					if (procStr.equals("dlyos")) {
+						str = context.getString(R.string.dlyos);
+					} else {
+						str = context.getString(R.string.error_try_again);
+					}
+					Toast.makeText(context, str,
 							Toast.LENGTH_SHORT).show();
-				else {
+				} else {
 					votes = processed.getInt(KEY_RESULT);
 					notifyDataSetChanged();
 				}

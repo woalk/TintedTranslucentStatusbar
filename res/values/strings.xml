@@ -125,7 +125,7 @@
     <string name="signup_fail_already_given">Username is already in use.</string>
     <string name="signup_fail_not_confirmed">Your passwords do not match.</string>
     <string name="submit_descr_title">Submit</string>
-    <string name="submit_descr_msg">Please enter a description:</string>
+    <string name="submit_descr_msg">Please enter a description.\nAn empty description is not allowed.</string>
     <string name="submit_descr_info"><i>You can use HTML tags such as <b>&lt;b&gt;</b>, <b>&lt;i&gt;</b>, <b>&lt;br /&gt;</b>, &#8230;</i></string>
     <string name="action_delete_submit">Delete submit</string>
     <string name="q_delete_submit">Do you really want to permanently delete this submit?</string>
@@ -135,5 +135,6 @@
     <string name="str_action_logout">Logout</string>
     <string name="str_action_delete_profile">Delete my profile</string>
     <string name="str_q_delete_profile"><b>Warning.</b> You selected to delete your profile.\n<i>Maybe you meant logout, one option above it?</i>\n\nIf you delete your profile, you <b>won\'t</b> be able to to login again after that, and your username becomes free again.\n<b>All</b> of your submits, comments, and votes would be deleted.<br />\nDo you want to continue and delete your profile?</string>
+    <string name="dlyos">Don\'t like your own submit!</string>
 
 </resources>
