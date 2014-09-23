@@ -208,6 +208,7 @@ public class OneUserActivity extends Activity {
 				lA.addBegin();
 
 				if (!processed.containsKey(key_ids)) {
+					lA.notifyDataSetChanged();
 					progress.dismiss();
 					return;
 				}
