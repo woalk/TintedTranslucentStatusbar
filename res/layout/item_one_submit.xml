@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/linearLayout1"
+            android:layout_marginRight="6dp"
             android:layout_toRightOf="@+id/linearLayout1"
             android:fontFamily="sans-serif-condensed"
             android:text="Application Title"
@@ -58,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/textView_app"
             android:layout_below="@+id/textView_app"
+            android:layout_marginRight="6dp"
             android:fontFamily="sans-serif-light"
             android:text="package.name" />
 
@@ -67,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/textView_package"
             android:layout_below="@+id/textView_package"
+            android:layout_marginRight="6dp"
             android:layout_marginTop="16dp"
             android:text="Description"
             android:textAppearance="?android:attr/textAppearanceMedium" />
