@@ -44,7 +44,13 @@ public class Submitter {
 			builder.setView(getActivity().getLayoutInflater().inflate(
 					R.layout.signin, null));
 			builder.setPositiveButton(android.R.string.ok, null);
-			builder.setNegativeButton(android.R.string.cancel, null);
+			builder.setNegativeButton(android.R.string.cancel,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							setAccountDialogDismissed(getActivity(), true);
+						}
+					});
 			builder.setNeutralButton(R.string.signup,
 					new DialogInterface.OnClickListener() {
 						@Override
