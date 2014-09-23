@@ -128,7 +128,6 @@ public class OneUserActivity extends Activity {
 				ArrayList<Integer> versions = new ArrayList<Integer>();
 				ArrayList<String> timestamps = new ArrayList<String>();
 				ArrayList<String> settings = new ArrayList<String>();
-				String user;
 				boolean user_trust;
 				int user_votes;
 
@@ -136,6 +135,12 @@ public class OneUserActivity extends Activity {
 						.equals("1");
 				user_votes = Integer.valueOf(data.getJSONObject(0).getString(
 						"user_votes"));
+				if (data.getJSONObject(0).isNull("id")) {
+					Bundle bundle = new Bundle();
+					bundle.putBoolean(key_user_trust, user_trust);
+					bundle.putInt(key_user_votes, user_votes);
+					return bundle;
+				}
 				for (int i = 0; i < data.length(); i++) {
 					JSONObject json_data = data.getJSONObject(i);
 					Integer id = Integer.valueOf(json_data.getString("id"));
@@ -201,6 +206,11 @@ public class OneUserActivity extends Activity {
 				lA.votes.clear();
 
 				lA.addBegin();
+
+				if (!processed.containsKey(key_ids)) {
+					progress.dismiss();
+					return;
+				}
 
 				ArrayList<ApplicationInfo> apps = processed
 						.getParcelableArrayList(key_apps);
