@@ -460,6 +460,10 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
 		q.addNameValuePair(Database.POST_FUNCTION, Database.FUNCTION_VOTE);
 		Submitter.Account acc = Submitter.getSavedAccount(context);
+		if (acc == null || acc.isEmpty()) {
+			new Submitter.SignInDialog(context).show();
+			return;
+		}
 		acc.addToQ(q);
 		q.addNameValuePair(Database.POST_VOTE_TYPE, vote_t);
 		q.addNameValuePair(Database.POST_SUBMIT, String.valueOf(id));
