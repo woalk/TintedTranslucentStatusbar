@@ -584,7 +584,7 @@ public class Settings {
 			for (String set : sets) {
 				String[] set_spl = set.split("\\|");
 				String act_name = set_spl[0];
-				String setting_str = set_spl[1];
+				String setting_str = set_spl.length > 1 ? set_spl[1] : "";
 				result.put(act_name, setting_str);
 			}
 			return result;
