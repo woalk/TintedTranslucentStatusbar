@@ -234,6 +234,78 @@ public class OneSubmitActivity extends Activity {
 			public void afterTextChanged(Editable s) {
 			}
 		});
+		btn_send.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (!edit_comment.getText().equals("")
+						&& edit_comment.getText().length() <= Database.Constants.COMMENT_MAX_LENGTH) {
+					CustomQ q = new CustomQ(Database.DATABASE_URL);
+					q.addNameValuePair(Database.POST_PIN,
+							Database.COMMUNITY_PIN);
+					final Submitter.Account acc = Submitter
+							.getSavedAccount(OneSubmitActivity.this);
+					if (acc == null || acc.isEmpty()) {
+						new Submitter.SignInDialog(OneSubmitActivity.this)
+								.show();
+						return;
+					}
+					acc.addToQ(q);
+					q.addNameValuePair(Database.POST_FUNCTION,
+							Database.FUNCTION_COMMENT);
+					q.addNameValuePair(Database.POST_SUBMIT, String.valueOf(id));
+					q.addNameValuePair(Database.POST_COMMENT_TEXT, edit_comment
+							.getText().toString());
+
+					final AlertDialog progress = new AlertDialog.Builder(
+							OneSubmitActivity.this)
+							.setMessage(R.string.loadingsync_msg)
+							.setView(new ProgressBar(OneSubmitActivity.this))
+							.create();
+					q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+						@Override
+						public void onPreExecute() {
+							progress.show();
+						}
+					});
+					final String KEY_RESULT = "result";
+					q.setHttpResultListener(new CustomQ.HttpResultListener() {
+						@Override
+						public Bundle onHttpResult(String result) {
+							Bundle bundle = new Bundle();
+							try {
+								bundle.putInt(KEY_RESULT,
+										Integer.valueOf(result));
+							} catch (Throwable e) {
+								bundle.putString(KEY_RESULT, result);
+								e.printStackTrace();
+							}
+							return bundle;
+						}
+					});
+					q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+						@Override
+						public void onPostExecute(Bundle processed) {
+							String procStr = processed.getString(KEY_RESULT);
+							if (procStr != null) {
+								Toast.makeText(OneSubmitActivity.this,
+										R.string.error_try_again,
+										Toast.LENGTH_SHORT).show();
+							} else {
+								lA.add(new Comment(
+										processed.getInt(KEY_RESULT),
+										edit_comment.getText().toString(), acc
+												.getUsername(), new Date(),
+										false, 0));
+								lA.notifyDataSetChanged();
+								edit_comment.setText("");
+							}
+							progress.dismiss();
+						}
+					});
+					q.exec();
+				}
+			}
+		});
 		edit_comment.setText("");
 	}
 
