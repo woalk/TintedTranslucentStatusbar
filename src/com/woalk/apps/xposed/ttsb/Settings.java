@@ -582,7 +582,7 @@ public class Settings {
 			} else
 				sets = fullsettings.split("\\|\\|");
 			for (String set : sets) {
-				String[] set_spl = set.split("\\|");
+				String[] set_spl = set.split("/");
 				String act_name = set_spl[0];
 				String setting_str = set_spl.length > 1 ? set_spl[1] : "";
 				result.put(act_name, setting_str);
@@ -594,7 +594,7 @@ public class Settings {
 				SharedPreferences sPref_TTSB, SharedPreferences sPref_community) {
 			String[] sets = fullsettings.split("\\|\\|");
 			for (String set : sets) {
-				String[] set_spl = set.split("\\|");
+				String[] set_spl = set.split("/");
 				String act_name = set_spl[0];
 				String setting_str = set_spl[1];
 				Saver.save(sPref_TTSB, packageName, act_name, new Parser(
@@ -719,7 +719,7 @@ public class Settings {
 			// "[ALL]"
 			String all_str = sPref.getString(packageName + "/", "%%%%");
 			if (all_str != "%%%%") {
-				sb.append("|");
+				sb.append("/");
 				sb.append(all_str);
 				sb.append("||");
 			}
@@ -728,7 +728,7 @@ public class Settings {
 						"%%%%");
 				if (str != "%%%%") {
 					sb.append(act.name);
-					sb.append("|");
+					sb.append("/");
 					sb.append(str);
 					sb.append("||");
 				}
