@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
 
-import com.woalk.apps.xposed.ttsb.community.MyAppsActivity;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,6 +22,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import com.woalk.apps.xposed.ttsb.community.MyAppsActivity;
 
 public class MainActivity extends Activity {
 
@@ -41,7 +42,7 @@ public class MainActivity extends Activity {
 		context = this;
 		lv = (ListView) findViewById(R.id.listView1);
 		lA = new AppListAdapter(context, new ArrayList<ApplicationInfo>(),
-				new ArrayList<Boolean>());
+				new ArrayList<Boolean>(), new ArrayList<Drawable>());
 		lv.setAdapter(lA);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -73,7 +74,8 @@ public class MainActivity extends Activity {
 		@SuppressWarnings("deprecation")
 		protected AppListAdapter doInBackground(Boolean... bools) {
 			AppListAdapter lA1 = new AppListAdapter(context,
-					new ArrayList<ApplicationInfo>(), new ArrayList<Boolean>());
+					new ArrayList<ApplicationInfo>(), new ArrayList<Boolean>(),
+					new ArrayList<Drawable>());
 			PackageManager pkgMan = context.getPackageManager();
 			if (Helpers.pkgs == null) {
 				Helpers.pkgs = pkgMan
@@ -94,6 +96,7 @@ public class MainActivity extends Activity {
 			for (int i = 0; i < lA1.apps.size(); i++) {
 				lA1.is_set.add(Settings.Loader.containsPackage(tree,
 						lA1.apps.get(i).packageName));
+				lA1.icons.add(pkgMan.getApplicationIcon(lA1.apps.get(i)));
 			}
 			return lA1;
 		}
@@ -103,6 +106,7 @@ public class MainActivity extends Activity {
 			lA.is_set.clear();
 			lA.apps.addAll(result.apps);
 			lA.is_set.addAll(result.is_set);
+			lA.icons.addAll(result.icons);
 			lA.notifyDataSetChanged();
 			lv.setFastScrollEnabled(true);
 			if (prog != null)
