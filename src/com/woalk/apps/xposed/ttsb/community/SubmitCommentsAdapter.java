@@ -49,6 +49,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	protected Date timestamp;
 	protected int votes;
 	protected SortedMap<String, String> settings;
+	protected List<Integer> ids;
 	protected List<String> comments;
 	protected List<String> users;
 	protected List<Boolean> users_trust;
@@ -67,6 +68,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 		super(context, 0, comments);
 		this.context = context;
 		this.comments = comments;
+		this.ids = new ArrayList<Integer>();
 		this.users = new ArrayList<String>();
 		this.users_trust = new ArrayList<Boolean>();
 		this.timestamps = new ArrayList<Date>();
@@ -79,11 +81,14 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	}
 
 	public void addBegin() {
+		this.ids.add(null);
 		this.comments.add(null);
 		this.users_trust.add(null);
 		this.users.add(null);
 		this.timestamps.add(null);
 		this.spamvotes.add(null);
+
+		this.ids.add(null);
 		this.comments.add(null);
 		this.users_trust.add(null);
 		this.users.add(null);
@@ -92,6 +97,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	}
 
 	public void add(OneSubmitActivity.Comment comment) {
+		ids.add(comments.size() - 1, comment.id);
 		comments.add(comments.size() - 1, comment.comment);
 		users.add(users.size() - 1, comment.user);
 		users_trust.add(users_trust.size() - 1, comment.user_trust);
@@ -101,6 +107,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 
 	public void addAll(List<OneSubmitActivity.Comment> comments) {
 		for (OneSubmitActivity.Comment comment : comments) {
+			this.ids.add(comments.size() - 1, comment.id);
 			this.comments.add(this.comments.size() - 1, comment.comment);
 			this.users.add(this.users.size() - 1, comment.user);
 			this.users_trust.add(this.users_trust.size() - 1,
@@ -108,6 +115,15 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 			this.timestamps.add(this.timestamps.size() - 1, comment.timestamp);
 			this.spamvotes.add(this.spamvotes.size() - 1, comment.spamvotes);
 		}
+	}
+
+	public void removeAt(int i) {
+		this.ids.remove(i);
+		this.comments.remove(i);
+		this.users.remove(i);
+		this.users_trust.remove(i);
+		this.timestamps.remove(i);
+		this.spamvotes.remove(i);
 	}
 
 	@Override

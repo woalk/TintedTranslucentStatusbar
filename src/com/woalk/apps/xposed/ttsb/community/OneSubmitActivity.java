@@ -133,7 +133,15 @@ public class OneSubmitActivity extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						OneSubmitActivity.this);
 				builder.setTitle(R.string.title_comment_options);
-				builder.setItems(R.array.comment_options,
+				int options_list_id;
+				final Submitter.Account acc = Submitter
+						.getSavedAccount(OneSubmitActivity.this);
+				if (acc != null && !acc.isEmpty()
+						&& acc.getUsername().equals(lA.users.get(pos)))
+					options_list_id = R.array.comment_options;
+				else
+					options_list_id = R.array.comment_options_al;
+				builder.setItems(options_list_id,
 						new AlertDialog.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
@@ -146,7 +154,62 @@ public class OneSubmitActivity extends Activity {
 									clipboard.setPrimaryClip(clip);
 									break;
 								case 1:
-
+									CustomQ q = new CustomQ(
+											Database.DATABASE_URL);
+									q.addNameValuePair(Database.POST_PIN,
+											Database.COMMUNITY_PIN);
+									q.addNameValuePair(Database.POST_FUNCTION,
+											Database.FUNCTION_DELETE_COMMENT);
+									acc.addToQ(q);
+									q.addNameValuePair(Database.POST_SUBMIT,
+											String.valueOf(lA.ids.get(pos)));
+									final AlertDialog progress = new AlertDialog.Builder(
+											OneSubmitActivity.this)
+											.setMessage(
+													R.string.loadingsync_msg)
+											.setView(
+													new ProgressBar(
+															OneSubmitActivity.this))
+											.create();
+									q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
+										@Override
+										public void onPreExecute() {
+											progress.show();
+										}
+									});
+									final String KEY_RESULT = "result";
+									q.setHttpResultListener(new CustomQ.HttpResultListener() {
+										@Override
+										public Bundle onHttpResult(String result) {
+											Bundle bundle = new Bundle();
+											try {
+												bundle.putInt(
+														KEY_RESULT,
+														Integer.parseInt(result));
+											} catch (Throwable e) {
+												e.printStackTrace();
+											}
+											return bundle;
+										}
+									});
+									q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+										@Override
+										public void onPostExecute(
+												Bundle processed) {
+											progress.dismiss();
+											if (processed.getInt(KEY_RESULT) != 1) {
+												Toast.makeText(
+														OneSubmitActivity.this,
+														R.string.error_try_again,
+														Toast.LENGTH_SHORT)
+														.show();
+											} else {
+												lA.removeAt(pos);
+												lA.notifyDataSetChanged();
+											}
+										}
+									});
+									q.exec();
 									break;
 								}
 							}

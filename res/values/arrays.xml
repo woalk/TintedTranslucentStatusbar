@@ -17,6 +17,9 @@
         <item >Sync layout only</item>
     </string-array>
     
+    <string-array name="comment_options_al">
+        <item >@string/comment_options_0</item>
+    </string-array>
     <string-array name="comment_options">
         <item >@string/comment_options_0</item>
         <item >@string/comment_options_1</item>
