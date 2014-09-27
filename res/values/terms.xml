@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_terms_of_use"><u>TTSB\'s terms of use</u></string>
+    <string name="community_terms_of_use">
+<b>Woalk Software\n
+TTSB COMMUNITY\n
+<i>Terms of use</i></b>\n
+\n
+Welcome to the TTSB community!\n
+Before you can register your account and begin submitting or voting, please <b>read these terms of use</b>.\n
+\n
+The TTSB community should be a way to share configurations for a design modding project.
+So, please, be precise and serious when posting things.\n
+I expect only you to follow some rules that most likely are just understandable.\n
+\n
+<u>General: Writing</u>\n
+Please write in English. This is the main language of the internet and the main language of TTSB.
+Please don\'t include expressions in your postings that are discriminating, offensive, attacking, or infringing local, global or German laws.
+Please fully avoid off-topic posts.\n
+\n
+<u>Descriptions</u>\n
+Please write a description to each of your submit, even if it is only \'normal settings for this app\' or something like this.
+Please be precise if it is for a special version or a special case of using the app.\n
+\n
+<u>Comments</u>\n
+Please don\'t use comments to say "thank you" or something like this, this will only result in spammed thank discussions where feature requests or critics are just not seen.
+Please use constructive critism, don\'t offend others, and don\'t try to force believing in your opinion and things like that.\n
+\n
+<u>Settings</u>\n
+Please don\'t post settings that maybe are already there. Search for working settings for the case you need before posting a new one, otherwise it may be not easy for other users to decide.\n
+\n
+<u>Privacy</u>\n
+Please <b>use a password that is not your password in other accounts</b>. The password is not encrypted and is stored in the MySQL database, visible for Woalk. It will not be used for anything, not published, not given to a third party; I don\'t even think that I will remember some passwords I maybe will see there.
+The password is just needed to stop other users from using your account, and you need it only once when signing in. But keep it in mind or save it somewhere, as you won\'t be able to recover your password if it gets lost.\n
+All data except the password you post in TTSB community is public, just to say that.\n
+\n
+By creating a TTSB account, you accept these terms of use.\n
+By deleting your account, this contract expires.\n
+Woalk reserves the right to do this for you if you infringe the terms.
+    </string>
+</resources>

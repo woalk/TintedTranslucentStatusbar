@@ -150,8 +150,21 @@ public class Submitter {
 		public void show() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle(R.string.signup);
-			builder.setView(getActivity().getLayoutInflater().inflate(
-					R.layout.signup, null));
+			View v = getActivity().getLayoutInflater().inflate(R.layout.signup,
+					null);
+			View tv_terms = v.findViewById(R.id.tV_terms);
+			tv_terms.setVisibility(View.VISIBLE);
+			tv_terms.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					new AlertDialog.Builder(getActivity())
+							.setTitle(R.string.link_terms_of_use)
+							.setMessage(R.string.community_terms_of_use)
+							.setPositiveButton(android.R.string.ok, null)
+							.show();
+				}
+			});
+			builder.setView(v);
 			builder.setPositiveButton(android.R.string.ok, null);
 			builder.setNegativeButton(android.R.string.cancel, null);
 			final AlertDialog d = builder.create();
