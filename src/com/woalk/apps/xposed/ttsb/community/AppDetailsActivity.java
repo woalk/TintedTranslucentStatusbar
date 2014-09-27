@@ -22,9 +22,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.woalk.apps.xposed.ttsb.Helpers;
-import com.woalk.apps.xposed.ttsb.R;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,6 +43,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.woalk.apps.xposed.ttsb.Helpers;
+import com.woalk.apps.xposed.ttsb.R;
 
 public class AppDetailsActivity extends Activity {
 	public static final String PASS_APPINFO = Helpers.TTSB_PACKAGE_NAME
@@ -168,18 +168,14 @@ public class AppDetailsActivity extends Activity {
 						.getSharedPreferences(
 								Database.Preferences.COMMUNITY_PREF_NAME,
 								Context.MODE_PRIVATE);
-				if (sPref.getBoolean(
-						Database.Preferences.PREF_PREFIX_IS_TOPVOTED_USED
-								+ app.packageName, false)) {
-					topvote_id = sPref.getInt(
-							Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID
-									+ app.packageName, -1);
-				}
+				topvote_id = sPref.getInt(
+						Database.Preferences.PREF_PREFIX_USED_SUBMIT_ID
+								+ app.packageName, -1);
 				for (int i = 0; i < jArray.length(); i++) {
 					JSONObject json_data = jArray.getJSONObject(i);
 					Integer id = Integer.valueOf(json_data.getString("id"));
 					ids.add(id);
-					if (id.equals(topvote_id))
+					if (id == topvote_id)
 						selected_pos = i;
 					votes.add(Integer.valueOf(json_data.getString("votes")));
 					descriptions.add(json_data.getString("description"));
