@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.woalk.apps.xposed.ttsb"
     android:versionCode="18"
-    android:versionName="Beta 3.0dev" >
+    android:versionName="Beta 3.0" >
 
     <uses-sdk
         android:minSdkVersion="19"
