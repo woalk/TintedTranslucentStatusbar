@@ -261,24 +261,9 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 				public void onClick(View v) {
 					List<String> act = new ArrayList<String>();
 					List<String> set = new ArrayList<String>();
-					ActivityInfo[] act_inf = null;
-					try {
-						act_inf = pkgMan.getPackageInfo(app.packageName,
-								PackageManager.GET_ACTIVITIES).activities;
-					} catch (NameNotFoundException e) {
-						e.printStackTrace();
-					}
-					if (act_inf != null) {
-						if (settings.containsKey("")) {
-							act.add("All");
-							set.add(settings.get(""));
-						}
-						for (ActivityInfo inf : act_inf) {
-							if (settings.containsKey(inf.name)) {
-								act.add(inf.name);
-								set.add(settings.get(inf.name));
-							}
-						}
+					for (Entry<String, String> entry : settings.entrySet()) {
+						act.add(entry.getKey());
+						set.add(entry.getValue());
 					}
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							context);
@@ -502,8 +487,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 					} else {
 						str = context.getString(R.string.error_try_again);
 					}
-					Toast.makeText(context, str,
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
 				} else {
 					votes = processed.getInt(KEY_RESULT);
 					notifyDataSetChanged();
