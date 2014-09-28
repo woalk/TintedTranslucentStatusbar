@@ -19,30 +19,6 @@
         <requestFocus />
     </EditText>
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginTop="3dp"
-        android:ems="10"
-        android:fontFamily="sans-serif"
-        android:hint="@string/hint_password"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/editText3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:ems="10"
-        android:fontFamily="sans-serif"
-        android:hint="@string/hint_password_repeat"
-        android:inputType="textPassword" />
     <TextView
         android:id="@+id/tV_err_already_given"
         android:layout_width="wrap_content"
@@ -51,17 +27,6 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:text="@string/signup_fail_already_given"
-        android:textColor="@android:color/holo_red_light"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tV_err_not_confirmed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:text="@string/signup_fail_not_confirmed"
         android:textColor="@android:color/holo_red_light"
         android:visibility="gone" />
 

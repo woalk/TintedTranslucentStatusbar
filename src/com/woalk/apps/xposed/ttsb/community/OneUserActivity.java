@@ -266,6 +266,21 @@ public class OneUserActivity extends Activity {
 		case R.id.action_edit_name:
 			new Submitter.ChangeNamePwDialog(this).show();
 			return true;
+		case R.id.action_new_pw:
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.str_action_new_pw)
+					.setMessage(R.string.msg_generate_pw)
+					.setPositiveButton(android.R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Submitter
+											.generateNewPassword(OneUserActivity.this);
+								}
+							}).setNegativeButton(android.R.string.no, null)
+					.show();
+			return true;
 		case R.id.action_logout:
 			Submitter.deleteSavedAccount(this);
 			finish();

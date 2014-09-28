@@ -6,9 +6,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.woalk.apps.xposed.ttsb.R;
 import com.woalk.apps.xposed.ttsb.community.SQL_Operations.CustomQ;
@@ -180,27 +184,12 @@ public class Submitter {
 							String sel_username = ((EditText) d
 									.findViewById(R.id.editText1)).getText()
 									.toString();
-							String sel_password = ((EditText) d
-									.findViewById(R.id.editText2)).getText()
-									.toString();
-							final Account acc = new Account(sel_username,
-									sel_password);
-							final String confirm_password = ((EditText) d
-									.findViewById(R.id.editText3)).getText()
-									.toString();
-							if (!sel_password.equals(confirm_password)) {
-								d.findViewById(R.id.tV_err_not_confirmed)
-										.setVisibility(View.VISIBLE);
-								return;
-							} else {
-								d.findViewById(R.id.tV_err_not_confirmed)
-										.setVisibility(View.GONE);
-							}
+							final Account acc = new Account(sel_username, "");
 							CustomQ q = new CustomQ(Database.DATABASE_URL);
 							q.addNameValuePair(Database.POST_PIN,
 									Database.COMMUNITY_PIN);
 							q.addNameValuePair(Database.POST_FUNCTION,
-									Database.FUNCTION_SIGN_UP);
+									Database.FUNCTION_NEW_SIGN_UP);
 							acc.addToQ(q);
 							q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
 								@Override
@@ -216,10 +205,10 @@ public class Submitter {
 									Bundle bundle = new Bundle();
 									if (result.equals("0")) {
 										bundle.putBoolean(KEY_SIGN_UP_SUCCESS,
-												false);
-									} else if (result.equals("1")) {
-										bundle.putBoolean(KEY_SIGN_UP_SUCCESS,
 												true);
+									} else {
+										bundle.putString(KEY_SIGN_UP_SUCCESS,
+												result);
 									}
 									return bundle;
 								}
@@ -229,12 +218,37 @@ public class Submitter {
 								public void onPostExecute(Bundle processed) {
 									if (processed
 											.getBoolean(KEY_SIGN_UP_SUCCESS)) {
-										saveAccount(getActivity(), acc);
-										d.dismiss();
-									} else {
 										d.findViewById(
 												R.id.tV_err_already_given)
 												.setVisibility(View.VISIBLE);
+									} else {
+										acc.setPassword(processed
+												.getString(KEY_SIGN_UP_SUCCESS));
+										TextView v = new TextView(getActivity());
+										v.setTextSize(
+												TypedValue.COMPLEX_UNIT_SP, 32);
+										v.setTypeface(Typeface.MONOSPACE);
+										v.setText("   " + acc.getPassword());
+										new AlertDialog.Builder(getActivity())
+												.setCancelable(false)
+												.setTitle(R.string.signup)
+												.setMessage(
+														R.string.signuo_your_pw)
+												.setView(v)
+												.setPositiveButton(
+														android.R.string.ok,
+														new DialogInterface.OnClickListener() {
+
+															@Override
+															public void onClick(
+																	DialogInterface dialog,
+																	int which) {
+																d.dismiss();
+																saveAccount(
+																		getActivity(),
+																		acc);
+															}
+														}).show();
 									}
 									pos_btn.setEnabled(true);
 								}
@@ -288,32 +302,17 @@ public class Submitter {
 							String sel_username = ((EditText) d
 									.findViewById(R.id.editText1)).getText()
 									.toString();
-							String sel_password = ((EditText) d
-									.findViewById(R.id.editText2)).getText()
-									.toString();
-							final Account acc = new Account(sel_username,
-									sel_password);
-							final String confirm_password = ((EditText) d
-									.findViewById(R.id.editText3)).getText()
-									.toString();
-							if (!sel_password.equals(confirm_password)) {
-								d.findViewById(R.id.tV_err_not_confirmed)
-										.setVisibility(View.VISIBLE);
-								return;
-							} else {
-								d.findViewById(R.id.tV_err_not_confirmed)
-										.setVisibility(View.GONE);
-							}
 							CustomQ q = new CustomQ(Database.DATABASE_URL);
 							q.addNameValuePair(Database.POST_PIN,
 									Database.COMMUNITY_PIN);
 							q.addNameValuePair(Database.POST_FUNCTION,
-									Database.FUNCTION_CHANGE_USERNAME_PASSWORD);
-							getSavedAccount(getActivity()).addToQ(q);
+									Database.FUNCTION_CHANGE_USERNAME);
+							Account s_acc = getSavedAccount(getActivity());
+							s_acc.addToQ(q);
+							final Account acc = new Account(sel_username, s_acc
+									.getPassword());
 							q.addNameValuePair(Database.POST_ACC_NEW_USERNAME,
 									acc.getUsername());
-							q.addNameValuePair(Database.POST_ACC_NEW_PASSWORD,
-									acc.getPassword());
 							q.setPreExecuteListener(new CustomQ.PreExecuteListener() {
 								@Override
 								public void onPreExecute() {
@@ -359,6 +358,59 @@ public class Submitter {
 			});
 			d.show();
 		}
+	}
+
+	public static void generateNewPassword(final Activity context) {
+		CustomQ q = new CustomQ(Database.DATABASE_URL);
+		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
+		q.addNameValuePair(Database.POST_FUNCTION,
+				Database.FUNCTION_CHANGE_PASSWORD);
+		final Account acc = getSavedAccount(context);
+		acc.addToQ(q);
+		final String KEY_SIGN_UP_SUCCESS = "sigsucc";
+		q.setHttpResultListener(new CustomQ.HttpResultListener() {
+			@Override
+			public Bundle onHttpResult(String result) {
+				Bundle bundle = new Bundle();
+				if (result.equals("0")) {
+					bundle.putBoolean(KEY_SIGN_UP_SUCCESS, true);
+				} else {
+					bundle.putString(KEY_SIGN_UP_SUCCESS, result);
+				}
+				return bundle;
+			}
+		});
+		q.setPostExecuteListener(new CustomQ.PostExecuteListener() {
+			@Override
+			public void onPostExecute(Bundle processed) {
+				if (processed.getBoolean(KEY_SIGN_UP_SUCCESS)) {
+					Toast.makeText(context, R.string.error_try_again,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					acc.setPassword(processed.getString(KEY_SIGN_UP_SUCCESS));
+					TextView v = new TextView(context);
+					v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
+					v.setTypeface(Typeface.MONOSPACE);
+					v.setText("   " + acc.getPassword());
+					new AlertDialog.Builder(context)
+							.setCancelable(false)
+							.setTitle(R.string.signup)
+							.setMessage(R.string.signuo_your_pw)
+							.setView(v)
+							.setPositiveButton(android.R.string.ok,
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											saveAccount(context, acc);
+										}
+									}).show();
+				}
+			}
+		});
+		q.exec();
 	}
 
 	/**
