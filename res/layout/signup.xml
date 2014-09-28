@@ -14,7 +14,7 @@
         android:layout_marginTop="6dp"
         android:ems="10"
         android:hint="@string/hint_username"
-        android:digits="abcdefghijklmnopqrstuvwxyz0123456789_" >
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_" >
 
         <requestFocus />
     </EditText>
@@ -43,7 +43,6 @@
         android:fontFamily="sans-serif"
         android:hint="@string/hint_password_repeat"
         android:inputType="textPassword" />
-
     <TextView
         android:id="@+id/tV_err_already_given"
         android:layout_width="wrap_content"
