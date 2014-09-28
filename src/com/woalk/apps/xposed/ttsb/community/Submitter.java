@@ -397,12 +397,24 @@ public class Submitter {
 
 		/**
 		 * Adds this account (combination of username and password) as
+		 * {@code NameValuePairs} to a {@link CustomQ} instance.
+		 * 
+		 * @param q
+		 *            The {@link CustomQ} instance to add the values to.
+		 */
+		public void addToQ(CustomQ q) {
+			q.addNameValuePair(Database.POST_ACC_USERNAME, getUsername());
+			q.addNameValuePair(Database.POST_ACC_PASSWORD, getPassword());
+		}
+
+		/**
+		 * Adds this account (combination of username and password) as
 		 * {@code NameValuePairs} to a {@link Q} instance.
 		 * 
 		 * @param q
 		 *            The {@link Q} instance to add the values to.
 		 */
-		public void addToQ(CustomQ q) {
+		public void addToQ(Q q) {
 			q.addNameValuePair(Database.POST_ACC_USERNAME, getUsername());
 			q.addNameValuePair(Database.POST_ACC_PASSWORD, getPassword());
 		}
