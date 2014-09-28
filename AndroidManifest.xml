@@ -72,7 +72,7 @@
             android:windowSoftInputMode="adjustResize|stateUnchanged" >
         </activity>
         <activity
-            android:name="com.woalk.apps.xposed.ttsb.community.OneUserActivity"
+            android:name=".community.OneUserActivity"
             android:label="@string/title_activity_one_user"
             android:parentActivityName=".community.OneSubmitActivity" >
         </activity>
@@ -92,6 +92,15 @@
         <meta-data
             android:name="ui_version"
             android:value="\ 2.2.2" />
+
+        <activity
+            android:name="com.woalk.apps.xposed.ttsb.community.NotificationsActivity"
+            android:label="@string/title_activity_notifications"
+            android:parentActivityName=".community.MyAppsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.woalk.apps.xposed.ttsb.community.MyAppsActivity" />
+        </activity>
     </application>
 
 </manifest>

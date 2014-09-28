@@ -213,6 +213,10 @@ public class MyAppsActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_notifications:
+			Intent i = new Intent(this, NotificationsActivity.class);
+			startActivity(i);
+			return true;
 		case R.id.action_goto_user:
 			LayoutInflater inflater = getLayoutInflater();
 			final View v = inflater.inflate(R.layout.goto_user, null);
