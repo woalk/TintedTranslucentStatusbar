@@ -66,7 +66,7 @@ public final class Helpers {
 		if (parent instanceof ViewGroup) {
 			ViewGroup group = (ViewGroup) parent;
 			for (int i = 0; i < group.getChildCount(); i++) {
-				logContentView(group.getChildAt(i), indent + "╾");
+				logContentView(group.getChildAt(i), indent + "-");
 			}
 		}
 	}

@@ -1,11 +1,6 @@
 package com.woalk.apps.xposed.ttsb;
 
-import com.woalk.apps.xposed.ttsb.SystemBarTintManager;
-import com.woalk.apps.xposed.ttsb.Helpers;
-import de.robv.android.xposed.IXposedHookZygoteInit;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedHelpers;
+import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -14,8 +9,10 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.widget.Toast;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import de.robv.android.xposed.IXposedHookZygoteInit;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedHelpers;
 
 public class X_TranslucentTint implements IXposedHookZygoteInit {
 
@@ -65,7 +62,7 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 
 						if (log)
 							Helpers.logContentView(currentActivity.getWindow()
-									.getDecorView(), "┕");
+									.getDecorView(), "|>-");
 
 						if (Settings.Loader.contains(XsPref, packageName,
 								activityFullName)) {
