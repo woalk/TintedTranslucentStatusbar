@@ -86,8 +86,13 @@ public class Settings {
 					}
 					break;
 				case "s_color":
-					setting.s_color = Helpers.getColor(str_set[i].substring(cmd
-							.length() + 1));
+					String str_s_color = str_set[i].substring(cmd.length() + 1);
+					if (str_s_color.equals("auto")) {
+						setting.s_autocolor = true;
+					} else {
+						setting.s_autocolor = false;
+						setting.s_color = Helpers.getColor(str_s_color);
+					}
 					break;
 				case "n_color":
 					setting.n_color = Helpers.getColor(str_set[i].substring(cmd
@@ -253,8 +258,12 @@ public class Settings {
 			String line = "";
 			if (setting.status) {
 				line += "status:1;";
-				line += "s_color:" + Helpers.getColorHexString(setting.s_color)
-						+ ";";
+				line += "s_color:";
+				if (setting.s_autocolor)
+					line += "auto";
+				else
+					line += Helpers.getColorHexString(setting.s_color);
+				line += ";";
 				line += "s_plus:" + String.valueOf(setting.rules.s_plus) + ";";
 			}
 			if (setting.nav) {
@@ -377,6 +386,7 @@ public class Settings {
 		public boolean status = false;
 		public boolean nav = false;
 		public int s_color = Color.TRANSPARENT;
+		public boolean s_autocolor = false;
 		public int n_color = Color.TRANSPARENT;
 		public Rules rules;
 
