@@ -97,12 +97,12 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	}
 
 	public void add(OneSubmitActivity.Comment comment) {
-		ids.add(comments.size() - 1, comment.id);
-		comments.add(comments.size() - 1, comment.comment);
-		users.add(users.size() - 1, comment.user);
-		users_trust.add(users_trust.size() - 1, comment.user_trust);
-		timestamps.add(timestamps.size() - 1, comment.timestamp);
-		spamvotes.add(spamvotes.size() - 1, comment.spamvotes);
+		ids.add(1, comment.id);
+		comments.add(1, comment.comment);
+		users.add(1, comment.user);
+		users_trust.add(1, comment.user_trust);
+		timestamps.add(1, comment.timestamp);
+		spamvotes.add(1, comment.spamvotes);
 	}
 
 	public void addAll(List<OneSubmitActivity.Comment> comments) {
