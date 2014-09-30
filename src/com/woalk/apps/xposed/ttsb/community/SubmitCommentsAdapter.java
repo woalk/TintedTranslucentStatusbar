@@ -108,7 +108,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 	public void addAll(List<OneSubmitActivity.Comment> comments) {
 		for (OneSubmitActivity.Comment comment : comments) {
 			this.comments.add(this.comments.size() - 1, comment.comment);
-			this.ids.add(this.comments.size() - 1, comment.id);
+			this.ids.add(this.ids.size() - 1, comment.id);
 			this.users.add(this.users.size() - 1, comment.user);
 			this.users_trust.add(this.users_trust.size() - 1,
 					comment.user_trust);
