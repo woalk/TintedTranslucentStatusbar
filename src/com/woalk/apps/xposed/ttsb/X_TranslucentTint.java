@@ -244,7 +244,8 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 			tintMan.setStatusBarTintEnabled(settings.status);
 			tintMan.setNavigationBarTintEnabled(settings.nav);
 
-			tintMan.setStatusBarTintColor(settings.s_color);
+			if (!settings.s_autocolor)
+				tintMan.setStatusBarTintColor(settings.s_color);
 			tintMan.setNavigationBarTintColor(settings.n_color);
 
 			if (settings.rules.s_plus != 0) {
