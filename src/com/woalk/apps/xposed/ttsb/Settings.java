@@ -139,13 +139,16 @@ public class Settings {
 			String line = str;
 			Setting.ViewSettings vset = new Setting.ViewSettings();
 			if (str.startsWith("land(") && str.endsWith(")")) {
-				line = str.substring("land(".length(),
-						str.length() - ")".length());
+				line = str.substring("land(".length());
+				line = line.substring(0, line.length() - ")".length());
 				vset.if_land = true;
-			} else if (str.contains("land(")) {
-				int i = str.indexOf("land(");
-				vset.land = parseViewSettings(str.substring(i,
+			} else if (str.contains("&land(")) {
+				int i = str.indexOf("&land(");
+				vset.land = parseViewSettings(str.substring(i + "&".length(),
 						str.indexOf(")", i) + 1));
+				vset.if_land = false;
+				line = str.substring(0, i + "&".length())
+						+ str.substring(str.indexOf(")", i) + 1, str.length());
 			} else {
 				vset.if_land = false;
 			}
