@@ -2,8 +2,6 @@ package com.woalk.apps.xposed.ttsb;
 
 import java.util.ArrayList;
 
-import com.woalk.apps.xposed.ttsb.community.Database;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,6 +26,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.woalk.apps.xposed.ttsb.community.Database;
 
 public class EasySettingsActivity extends Activity {
 
@@ -148,6 +148,8 @@ public class EasySettingsActivity extends Activity {
 				&& setting.rules.cview.setFSW_value == true
 				&& setting.rules.cview.setCTP == true
 				&& setting.rules.cview.setCTP_value == false
+				&& setting.rules.cview.padding == null
+				&& setting.rules.cview.land == null
 				&& setting.rules.view == null)
 			spinner_layoutopt.setSelection(0);
 		else if (setting.rules.content == null
@@ -163,7 +165,9 @@ public class EasySettingsActivity extends Activity {
 				&& setting.rules.view.get(0).settings.setFSW == true
 				&& setting.rules.view.get(0).settings.setFSW_value == true
 				&& setting.rules.view.get(0).settings.setCTP == true
-				&& setting.rules.view.get(0).settings.setCTP_value == false)
+				&& setting.rules.view.get(0).settings.setCTP_value == false
+				&& setting.rules.view.get(0).settings.padding == null
+				&& setting.rules.view.get(0).settings.land == null)
 			spinner_layoutopt.setSelection(1);
 		else if (setting.rules.content == null && setting.rules.decview == null
 				&& setting.rules.cview != null
@@ -172,6 +176,7 @@ public class EasySettingsActivity extends Activity {
 				&& setting.rules.cview.padding != null
 				&& setting.rules.cview.padding.plus_nav_h
 				&& setting.rules.cview.padding.plus_status_h
+				&& setting.rules.cview.land == null
 				&& setting.rules.view == null)
 			spinner_layoutopt.setSelection(2);
 		else if (setting.rules.content == null && setting.rules.decview == null
