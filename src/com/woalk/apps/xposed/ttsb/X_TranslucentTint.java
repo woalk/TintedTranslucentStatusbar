@@ -12,6 +12,7 @@ import android.widget.Toast;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 public class X_TranslucentTint implements IXposedHookZygoteInit {
@@ -73,8 +74,11 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 								de.robv.android.xposed.XposedBridge
 										.log(">TTSB: [ INFO: ] Code is: "
 												+ settings.getLine());
-							setEverything(currentActivity,
-									settings.getSetting());
+							setEverything(
+									currentActivity,
+									settings.getSetting(),
+									(currentActivity.getResources()
+											.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE));
 						} else if (Settings.Loader.containsAll(XsPref,
 								packageName)) {
 							Settings.Parser settings = Settings.Loader.loadAll(
@@ -83,8 +87,11 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 								de.robv.android.xposed.XposedBridge
 										.log(">TTSB: [ INFO: ] Code is: "
 												+ settings.getLine());
-							setEverything(currentActivity,
-									settings.getSetting());
+							setEverything(
+									currentActivity,
+									settings.getSetting(),
+									(currentActivity.getResources()
+											.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE));
 						}
 
 						if (log)
@@ -132,10 +139,80 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 						if (param.args.length == 0
 								|| !(param.args[0] instanceof Configuration)
 								|| !(((Configuration) param.args[0]).orientation == Configuration.ORIENTATION_LANDSCAPE)
-								|| !(((Configuration) param.args[0]).orientation == Configuration.ORIENTATION_PORTRAIT)) {
+								&& !(((Configuration) param.args[0]).orientation == Configuration.ORIENTATION_PORTRAIT)) {
 							de.robv.android.xposed.XposedBridge
 									.log("config changed");
 							return;
+						} else {
+							XSharedPreferences XsPref = new XSharedPreferences(
+									Helpers.TTSB_PACKAGE_NAME,
+									Helpers.TTSB_PREFERENCES);
+
+							boolean log = XsPref.getBoolean(
+									Helpers.TTSB_PREF_DEBUGLOG, false);
+
+							if (log)
+								de.robv.android.xposed.XposedBridge
+										.log(">TTSB: Hooked in onConfigurationChanged().");
+
+							Object currentObj = param.thisObject;
+							Activity currentActivity;
+							if (currentObj instanceof Activity) {
+								if (log)
+									de.robv.android.xposed.XposedBridge
+											.log(">TTSB: [SUCCESS] The changed object is an activity. Got the instance. Proceed.");
+								currentActivity = (Activity) currentObj;
+							} else {
+								if (log)
+									de.robv.android.xposed.XposedBridge
+											.log(">TTSB: [ ERROR ] The changed object is not an activity. Return.");
+								return;
+							}
+
+							String activityFullName = currentActivity
+									.getComponentName().getClassName();
+							String packageName = currentActivity
+									.getPackageName();
+							if (log)
+								de.robv.android.xposed.XposedBridge
+										.log(">TTSB: [ INFO: ] Activity is "
+												+ activityFullName);
+
+							if (log)
+								Helpers.logContentView(currentActivity
+										.getWindow().getDecorView(), "|>-");
+
+							if (Settings.Loader.contains(XsPref, packageName,
+									activityFullName)) {
+								Settings.Parser settings = Settings.Loader
+										.load((SharedPreferences) XsPref,
+												packageName, activityFullName);
+								if (log)
+									de.robv.android.xposed.XposedBridge
+											.log(">TTSB: [ INFO: ] Code is: "
+													+ settings.getLine());
+								setEverything(
+										currentActivity,
+										settings.getSetting(),
+										((Configuration) param.args[0]).orientation == Configuration.ORIENTATION_LANDSCAPE);
+							} else if (Settings.Loader.containsAll(XsPref,
+									packageName)) {
+								Settings.Parser settings = Settings.Loader
+										.loadAll((SharedPreferences) XsPref,
+												packageName);
+								if (log)
+									de.robv.android.xposed.XposedBridge
+											.log(">TTSB: [ INFO: ] Code is: "
+													+ settings.getLine());
+								setEverything(
+										currentActivity,
+										settings.getSetting(),
+										((Configuration) param.args[0]).orientation == Configuration.ORIENTATION_LANDSCAPE);
+							}
+
+							if (log)
+								de.robv.android.xposed.XposedBridge
+										.log(">TTSB: [SUCCESS] Set tint and translucency, everything should be working here.");
 						}
 
 					}
@@ -152,7 +229,7 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 	 *            The settings to apply.
 	 */
 	public void setEverything(Activity currentActivity,
-			Settings.Setting settings) {
+			Settings.Setting settings, boolean landscape) {
 		SystemBarTintManager tintMan = null;
 		if ((currentActivity.getIntent().getFlags() & Helpers.FLAG_FLOATING_WINDOW) != 0)
 			return;
@@ -189,8 +266,6 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 				tintMan.mNavBarTintView.setLayoutParams(n_params);
 			}
 		}
-
-		boolean landscape = (currentActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
 
 		ViewGroup content = (ViewGroup) currentActivity
 				.findViewById(android.R.id.content);
