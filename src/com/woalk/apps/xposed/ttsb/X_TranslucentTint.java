@@ -310,7 +310,6 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 										.log(">TTSB [ ERROR ] No Activity for autotint search!");
 							}
 						} catch (Throwable e) {
-							XposedBridge.log(e);
 							XposedBridge
 									.log("No status view was found to auto-apply the color to.");
 						}
