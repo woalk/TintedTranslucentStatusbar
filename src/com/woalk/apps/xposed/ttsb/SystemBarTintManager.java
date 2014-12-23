@@ -83,6 +83,9 @@ public class SystemBarTintManager {
 									// were "private".
 	public View mNavBarTintView; // WOALK: ~
 
+	private Object statusview_tag; // WOALK: Added the tag variables
+	private Object navview_tag; // ~
+
 	/**
 	 * Constructor. Call this in the host activity onCreate method after its
 	 * content view has been set. You should always create new instances when
@@ -92,10 +95,14 @@ public class SystemBarTintManager {
 	 *            The host activity.
 	 */
 	@TargetApi(19)
-	public SystemBarTintManager(Activity activity) {
+	public SystemBarTintManager(Activity activity, Object statusViewTag,
+			Object navViewTag) { // WOALK: Added tag args
 
 		Window win = activity.getWindow();
 		ViewGroup decorViewGroup = (ViewGroup) win.getDecorView();
+
+		statusview_tag = statusViewTag; // WOALK: Added setting tag variables
+		navview_tag = navViewTag; // WOALK: ~
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			// check theme attrs
@@ -348,7 +355,16 @@ public class SystemBarTintManager {
 	}
 
 	private void setupStatusBarView(Context context, ViewGroup decorViewGroup) {
+		// -- WOALK \
+		View prev_StatusBarTintView = decorViewGroup
+				.findViewWithTag(statusview_tag);
+		if (prev_StatusBarTintView != null) {
+			decorViewGroup.removeViewAt(decorViewGroup
+					.indexOfChild(prev_StatusBarTintView));
+		}
+		// -- /
 		mStatusBarTintView = new View(context);
+		mStatusBarTintView.setTag(statusview_tag); // WOALK
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 				mConfig.getStatusBarHeight());
 		params.gravity = Gravity.TOP;
@@ -362,7 +378,18 @@ public class SystemBarTintManager {
 	}
 
 	private void setupNavBarView(Context context, ViewGroup decorViewGroup) {
+		// -- WOALK \
+		View prev_NavBarTintView = decorViewGroup.findViewWithTag(navview_tag);
+		if (prev_NavBarTintView != null) {
+			decorViewGroup.removeViewAt(decorViewGroup
+					.indexOfChild(prev_NavBarTintView));
+			Log.i("Xposed",
+					">TTSB: [ INFO ] Found and removed old navbar tint.");
+		} else
+			Log.w("Xposed", ">TTSB: [ INFO ] Old navbar tint not found!");
+		// -- /
 		mNavBarTintView = new View(context);
+		mNavBarTintView.setTag(navview_tag); // WOALK
 		LayoutParams params;
 		if (mConfig.isNavigationAtBottom()) {
 			params = new LayoutParams(LayoutParams.MATCH_PARENT,

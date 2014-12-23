@@ -17,6 +17,25 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class X_TranslucentTint implements IXposedHookZygoteInit {
 
+	public static final StatusBarTintViewTag statusview_tag = new StatusBarTintViewTag();
+	public static final NavigationBarTintViewTag navview_tag = new NavigationBarTintViewTag();
+
+	public static final class StatusBarTintViewTag {
+		public final long id;
+
+		public StatusBarTintViewTag() {
+			id = System.currentTimeMillis();
+		}
+	}
+
+	public static final class NavigationBarTintViewTag {
+		public final long id;
+
+		public NavigationBarTintViewTag() {
+			id = System.currentTimeMillis();
+		}
+	}
+
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
 
@@ -238,7 +257,8 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 		if (settings.nav)
 			Helpers.setTranslucentNavigation(currentActivity, true);
 		if (settings.status || settings.nav) {
-			tintMan = new SystemBarTintManager(currentActivity);
+			tintMan = new SystemBarTintManager(currentActivity, statusview_tag,
+					navview_tag);
 		}
 		if (tintMan != null) {
 			tintMan.setStatusBarTintEnabled(settings.status);
