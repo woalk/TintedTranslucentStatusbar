@@ -81,6 +81,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="30dp"
             android:text="@string/btn_advanced"
+            android:textColor="@color/text_black_material"
             android:textSize="16sp" />
 
         <CheckBox

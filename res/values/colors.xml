@@ -4,8 +4,12 @@
     <color name="submit_button_focused">#FF763020</color>
     <color name="submit_button_disabled">#AA403630</color>
     <color name="submit_button_disabled_focused">#CC555250</color>
-    <color name="submit_button_pressed">#FF501008</color>
+    <color name="submit_button_pressed">#FF400705</color>
     
     <color name="votes_positive">#FF00DB12</color>
     <color name="votes_negative">#FFDB0500</color>
+    
+    <color name="primaryColor">#662010</color>
+    <color name="secondaryColor">#FF8F00</color>
+    <color name="primaryDarkColor">#44150A</color>
 </resources>
