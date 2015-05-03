@@ -296,13 +296,13 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 									.getClass()
 									.getName()
 									.equals("android.support.v7.widget.Toolbar")) {
-						XposedBridge
+						de.robv.android.xposed.XposedBridge
 								.log(className
 										+ " has changed its background, but it's not relevant.");
 						return;
 					}
 					if (true) { // TODO: Check auto-tint setting
-						XposedBridge.log(className
+						de.robv.android.xposed.XposedBridge.log(className
 								+ " has changed its background.");
 						Drawable d = (Drawable) param.args[0];
 						if (d != null)
@@ -313,14 +313,14 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 											.getDecorView()
 											.findViewWithTag(statusview_tag);
 									statusView.setBackground(d);
-									XposedBridge
+									de.robv.android.xposed.XposedBridge
 											.log("Status view color updated. (OVERRIDE)");
 								} else {
-									XposedBridge
+									de.robv.android.xposed.XposedBridge
 											.log(">TTSB [ ERROR ] No Activity for autotint search!");
 								}
 							} catch (Throwable e) {
-								XposedBridge
+								de.robv.android.xposed.XposedBridge
 										.log("No status view was found to auto-apply the color to.");
 							}
 					}
@@ -337,7 +337,8 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 			protected void afterHookedMethod(MethodHookParam param)
 					throws Throwable {
 				String className = param.thisObject.getClass().getName();
-				XposedBridge.log(className + " has changed its background.");
+				de.robv.android.xposed.XposedBridge.log(className
+						+ " has changed its background.");
 				Drawable d = (Drawable) param.args[0];
 				if (d != null)
 					try {
@@ -346,15 +347,15 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 							View statusview = cA.getWindow().getDecorView()
 									.findViewWithTag(statusview_tag);
 							statusview.setBackground(d);
-							XposedBridge
+							de.robv.android.xposed.XposedBridge
 									.log("Status view color updated. (OVERRIDE)");
 						} else {
-							XposedBridge
+							de.robv.android.xposed.XposedBridge
 									.log(">TTSB [ ERROR ] No Activity for autotint search!");
 						}
 					} catch (Throwable e) {
-						XposedBridge.log(e);
-						XposedBridge
+						de.robv.android.xposed.XposedBridge.log(e);
+						de.robv.android.xposed.XposedBridge
 								.log("No status view was found to auto-apply the color to.");
 					}
 			}
