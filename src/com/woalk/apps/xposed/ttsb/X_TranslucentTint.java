@@ -116,7 +116,7 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 						}
 
 						if (XsPref.getBoolean(Helpers.TTSB_PREF_IMMERSIVE,
-								false)) {
+								true)) {
 							final Activity cA = currentActivity;
 							currentActivity
 									.getWindow()

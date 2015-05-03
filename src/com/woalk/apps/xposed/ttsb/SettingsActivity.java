@@ -86,7 +86,7 @@ public class SettingsActivity extends Activity {
 		});
 		CheckBox checkBox3 = (CheckBox) findViewById(R.id.checkBox_immersive);
 		checkBox3.setChecked(sPref.getBoolean(Helpers.TTSB_PREF_IMMERSIVE,
-				false));
+				true));
 		checkBox3.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
