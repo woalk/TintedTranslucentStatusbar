@@ -1,9 +1,14 @@
 package com.woalk.apps.xposed.ttsb;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -37,6 +42,8 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 			id = System.currentTimeMillis();
 		}
 	}
+
+	final ActivityHookings ahk = new ActivityHookings();
 
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
@@ -235,9 +242,139 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 								de.robv.android.xposed.XposedBridge
 										.log(">TTSB: [SUCCESS] Set tint and translucency, everything should be working here.");
 						}
-
 					}
 				});
+
+		final Class<?> viewClass = XposedHelpers.findClass("android.view.View",
+				null);
+
+		findAndHookMethod(viewClass, "setBackgroundDrawable", Drawable.class,
+				ahk.getViewSetBackgroundHook());
+
+		XposedHelpers.findAndHookMethod(ActivityClass, "onCreate",
+				android.os.Bundle.class, ahk.getActivityChangeHook());
+		XposedHelpers.findAndHookMethod(ActivityClass, "onResume",
+				ahk.getActivityChangeHook());
+	}
+
+	private class ActivityHookings {
+
+		final List<String> actionBarClasses = new ArrayList<String>();
+
+		public ActivityHookings() {
+			actionBarClasses.add("com.android.internal.widget.ActionBarView");
+			actionBarClasses
+					.add("android.support.v7.internal.widget.ActionBarView");
+			actionBarClasses
+					.add("android.support.v7.internal.widget.ActionBarContainer");
+			actionBarClasses.add("android.support.v7.widget.Toolbar");
+			actionBarClasses
+					.add("android.support.v7.widget.ActionBarContextView");
+			actionBarClasses.add("android.widget.TextView");
+		}
+
+		private Activity currentActivity;
+
+		public Activity getCurrentActivity() {
+			return currentActivity;
+		}
+
+		public void setCurrentActivity(Activity currentActivity) {
+			this.currentActivity = currentActivity;
+		}
+
+		private XC_MethodHook viewSetBackgroundHook = new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param)
+					throws Throwable {
+				String className = param.thisObject.getClass().getName();
+				if (actionBarClasses.contains(className)) {
+					if (className.equals("android.widget.TextView")
+							&& ((View) param.thisObject).getParent() == null
+							|| !((View) param.thisObject)
+									.getParent()
+									.getClass()
+									.getName()
+									.equals("android.support.v7.widget.Toolbar")) {
+						XposedBridge
+								.log(className
+										+ " has changed its background, but it's not relevant.");
+						return;
+					}
+					if (true) { // TODO: Check auto-tint setting
+						XposedBridge.log(className
+								+ " has changed its background.");
+						Drawable d = (Drawable) param.args[0];
+						if (d != null)
+							try {
+								Activity cA = getCurrentActivity();
+								if (cA != null) {
+									View statusView = cA.getWindow()
+											.getDecorView()
+											.findViewWithTag(statusview_tag);
+									statusView.setBackground(d);
+									XposedBridge
+											.log("Status view color updated. (OVERRIDE)");
+								} else {
+									XposedBridge
+											.log(">TTSB [ ERROR ] No Activity for autotint search!");
+								}
+							} catch (Throwable e) {
+								XposedBridge
+										.log("No status view was found to auto-apply the color to.");
+							}
+					}
+				}
+			}
+		};
+
+		public XC_MethodHook getViewSetBackgroundHook() {
+			return viewSetBackgroundHook;
+		}
+
+		private XC_MethodHook ActionBarSetBackgroundHook = new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param)
+					throws Throwable {
+				String className = param.thisObject.getClass().getName();
+				XposedBridge.log(className + " has changed its background.");
+				Drawable d = (Drawable) param.args[0];
+				if (d != null)
+					try {
+						Activity cA = getCurrentActivity();
+						if (cA != null) {
+							View statusview = cA.getWindow().getDecorView()
+									.findViewWithTag(statusview_tag);
+							statusview.setBackground(d);
+							XposedBridge
+									.log("Status view color updated. (OVERRIDE)");
+						} else {
+							XposedBridge
+									.log(">TTSB [ ERROR ] No Activity for autotint search!");
+						}
+					} catch (Throwable e) {
+						XposedBridge.log(e);
+						XposedBridge
+								.log("No status view was found to auto-apply the color to.");
+					}
+			}
+		};
+
+		public XC_MethodHook getActionBarSetBackgroundHook() {
+			return ActionBarSetBackgroundHook;
+		}
+
+		private XC_MethodHook activityChangeHook = new XC_MethodHook() {
+			@Override
+			protected void afterHookedMethod(MethodHookParam param)
+					throws Throwable {
+				setCurrentActivity((Activity) param.thisObject);
+			}
+		};
+
+		public XC_MethodHook getActivityChangeHook() {
+			return activityChangeHook;
+		}
 	}
 
 	@Override
@@ -289,6 +426,11 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 	 */
 	public void setEverything(Activity currentActivity,
 			Settings.Setting settings, boolean landscape) {
+		final Class<?> actionBarClass = XposedHelpers.findClass(
+				"android.support.v7.internal.app.WindowDecorActionBar", null);
+		findAndHookMethod(actionBarClass, "setBackgroundDrawable",
+				Drawable.class, ahk.getActionBarSetBackgroundHook());
+
 		SystemBarTintManager tintMan = null;
 		if ((currentActivity.getIntent().getFlags() & Helpers.FLAG_FLOATING_WINDOW) != 0)
 			return;
@@ -306,6 +448,13 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 
 			if (!settings.s_autocolor)
 				tintMan.setStatusBarTintColor(settings.s_color);
+			else {
+				final int actionBarId = currentActivity.getResources()
+						.getIdentifier("action_bar_container", "id", "android");
+				View actionBar = currentActivity.findViewById(actionBarId);
+				if (actionBar != null)
+					tintMan.setStatusBarTintDrawable(actionBar.getBackground());
+			}
 			tintMan.setNavigationBarTintColor(settings.n_color);
 
 			if (settings.rules.s_plus != 0) {
