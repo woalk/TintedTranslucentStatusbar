@@ -279,6 +279,9 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 		XSharedPreferences XsPref = new XSharedPreferences(
 				Helpers.TTSB_PACKAGE_NAME, Helpers.TTSB_PREFERENCES);
 
+		if (!XsPref.getBoolean(Helpers.TTSB_PREF_IMMERSIVE, false))
+			return;
+
 		final boolean log = XsPref
 				.getBoolean(Helpers.TTSB_PREF_DEBUGLOG, false);
 
