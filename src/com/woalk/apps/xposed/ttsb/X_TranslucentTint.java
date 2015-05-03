@@ -38,7 +38,7 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 		}
 	}
 
-	final ActivityHookings ahk = new ActivityHookings();
+	static ActivityHookings ahk;
 
 	@Override
 	public void initZygote(StartupParam startupParam) throws Throwable {
@@ -240,10 +240,15 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 					}
 				});
 
+		ahk = new ActivityHookings();
+
 		XposedHelpers.findAndHookMethod(ActivityClass, "onCreate",
 				android.os.Bundle.class, ahk.getActivityChangeHook());
 		XposedHelpers.findAndHookMethod(ActivityClass, "onResume",
 				ahk.getActivityChangeHook());
+
+		de.robv.android.xposed.XposedBridge
+				.log(">TTSB: [ INFO: ] Activity hookings now active.");
 	}
 
 	private class ActivityHookings {
@@ -308,8 +313,14 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 											+ (n_invis ? "invisible"
 													: "visible"));
 						}
-						if (ahk.getCurrentActivity() == null)
+
+						if (ahk.getCurrentActivity() == null) {
+							if (log)
+								de.robv.android.xposed.XposedBridge
+										.log(">TTSB: [ WARN! ] SystemUI change: No activity hookings class to change...");
 							return;
+						}
+
 						View s_view = ahk.getCurrentActivity().getWindow()
 								.getDecorView().findViewWithTag(statusview_tag);
 						if (s_view != null)
