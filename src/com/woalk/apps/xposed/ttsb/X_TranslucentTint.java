@@ -1,6 +1,8 @@
 package com.woalk.apps.xposed.ttsb;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -145,10 +147,17 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 															.getDecorView()
 															.findViewWithTag(
 																	statusview_tag);
-													if (s_view != null)
-														s_view.setVisibility(s_invis ? View.GONE
-																: View.VISIBLE);
-													else if (log)
+													if (s_view != null) {
+														if (s_invis
+																&& s_view
+																		.getVisibility() != View.GONE)
+															fadeOutView(s_view);
+														else if (!s_invis
+																&& s_view
+																		.getVisibility() != View.VISIBLE) {
+															fadeInView(s_view);
+														}
+													} else if (log)
 														de.robv.android.xposed.XposedBridge
 																.log(">TTSB: [ INFO: ] No status view found for SystemUI change.");
 													View n_view = cA
@@ -156,10 +165,17 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 															.getDecorView()
 															.findViewWithTag(
 																	navview_tag);
-													if (n_view != null)
-														n_view.setVisibility(n_invis ? View.GONE
-																: View.VISIBLE);
-													else if (log)
+													if (n_view != null) {
+														if (n_invis
+																&& n_view
+																		.getVisibility() != View.GONE)
+															fadeOutView(n_view);
+														else if (!n_invis
+																&& n_view
+																		.getVisibility() != View.VISIBLE) {
+															fadeInView(n_view);
+														}
+													} else if (log)
 														de.robv.android.xposed.XposedBridge
 																.log(">TTSB: [ INFO: ] No nav view found for SystemUI change.");
 													if (log)
@@ -493,6 +509,28 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 					+ top, view.getPaddingRight() + right,
 					view.getPaddingBottom() + bottom);
 		}
+	}
+
+	private static void fadeInView(final View v) {
+		v.setAlpha(0f);
+		v.setVisibility(View.VISIBLE);
+
+		// Animate the content view to 100% opacity, and clear any animation
+		// listener set on the view.
+		v.animate().alpha(1f).setDuration(200).setListener(null);
+	}
+
+	private static void fadeOutView(final View v) {
+		// Animate the loading view to 0% opacity. After the animation ends,
+		// set its visibility to GONE as an optimization step (it won't
+		// participate in layout passes, etc.)
+		v.animate().alpha(0f).setDuration(200)
+				.setListener(new AnimatorListenerAdapter() {
+					@Override
+					public void onAnimationEnd(Animator animation) {
+						v.setVisibility(View.GONE);
+					}
+				});
 	}
 
 }
