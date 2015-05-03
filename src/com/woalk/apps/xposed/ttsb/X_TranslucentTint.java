@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.widget.Toast;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
@@ -128,18 +129,21 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 														int visibility) {
 													boolean s_invis = false;
 													boolean n_invis = false;
-													if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0)
+													if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0
+															|| (cA.getWindow()
+																	.getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0)
 														s_invis = true;
 													if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0)
 														n_invis = true;
 													if (log) {
-														de.robv.android.xposed.XposedBridge
-																.log(">TTSB: [ INFO: ] SystemUI visibility changed. Now: statusbar "
-																		+ (s_invis ? "invisible"
-																				: "visible")
-																		+ ", navbar "
-																		+ (n_invis ? "invisible"
-																				: "visible"));
+														de.robv.android.xposed.XposedBridge.log(">TTSB: [ INFO: ] SystemUI visibility changed. Now: "
+																+ String.valueOf(visibility)
+																+ " statusbar "
+																+ (s_invis ? "invisible"
+																		: "visible")
+																+ ", navbar "
+																+ (n_invis ? "invisible"
+																		: "visible"));
 													}
 
 													View s_view = cA
