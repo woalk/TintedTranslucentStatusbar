@@ -84,6 +84,18 @@ public class SettingsActivity extends Activity {
 				edit.commit();
 			}
 		});
+		CheckBox checkBox3 = (CheckBox) findViewById(R.id.checkBox_immersive);
+		checkBox3.setChecked(sPref.getBoolean(Helpers.TTSB_PREF_IMMERSIVE,
+				false));
+		checkBox3.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				SharedPreferences.Editor edit = sPref.edit();
+				edit.putBoolean(Helpers.TTSB_PREF_IMMERSIVE, isChecked);
+				edit.commit();
+			}
+		});
 
 		findViewById(R.id.button1).setOnClickListener(new OnClickListener() {
 			@Override

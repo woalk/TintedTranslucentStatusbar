@@ -17,6 +17,7 @@ public final class Helpers {
 	public static String TTSB_PREFERENCES = "com.woalk.apps.xposed.ttsb.TTSB_PREFERENCES";
 	public static String TTSB_PREF_SHOW_ACTIVITY_TOAST = "com.woalk.apps.xposed.ttsb.SHOW_TOAST";
 	public static String TTSB_PREF_DEBUGLOG = "com.woalk.apps.xposed.ttsb.DEBUGLOG";
+	public static String TTSB_PREF_IMMERSIVE = "com.woalk.apps.xposed.ttsb.IMMERSIVE";
 
 	public static final int FLAG_FLOATING_WINDOW = 0x00002000;
 
