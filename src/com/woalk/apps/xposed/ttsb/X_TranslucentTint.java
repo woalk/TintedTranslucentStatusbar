@@ -305,6 +305,27 @@ public class X_TranslucentTint implements IXposedHookZygoteInit,
 											+ (n_invis ? "invisible"
 													: "visible"));
 						}
+						if (ahk.getCurrentActivity() == null)
+							return;
+						View s_view = ahk.getCurrentActivity().getWindow()
+								.getDecorView().findViewWithTag(statusview_tag);
+						if (s_view != null)
+							s_view.setVisibility(s_invis ? View.GONE
+									: View.VISIBLE);
+						else if (log)
+							de.robv.android.xposed.XposedBridge
+									.log(">TTSB: [ INFO: ] No status view found for SystemUI change.");
+						View n_view = ahk.getCurrentActivity().getWindow()
+								.getDecorView().findViewWithTag(navview_tag);
+						if (n_view != null)
+							n_view.setVisibility(n_invis ? View.GONE
+									: View.VISIBLE);
+						else if (log)
+							de.robv.android.xposed.XposedBridge
+									.log(">TTSB: [ INFO: ] No nav view found for SystemUI change.");
+						if (log)
+							de.robv.android.xposed.XposedBridge
+									.log(">TTSB: [SUCCESS] SystemUI change: Views update passed.");
 					}
 				});
 	}
