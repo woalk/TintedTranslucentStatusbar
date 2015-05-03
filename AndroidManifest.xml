@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.woalk.apps.xposed.ttsb"
-    android:versionCode="20"
-    android:versionName="Beta 3.2" >
+    android:versionCode="21"
+    android:versionName="Beta 3.3" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -88,10 +88,10 @@
             android:value="30" />
         <meta-data
             android:name="tintengine_version"
-            android:value="\ 2.2" />
+            android:value="\ 2.3" />
         <meta-data
             android:name="ui_version"
-            android:value="\ 2.2.4" />
+            android:value="\ 2.3" />
 
         <activity
             android:name="com.woalk.apps.xposed.ttsb.community.NotificationsActivity"
