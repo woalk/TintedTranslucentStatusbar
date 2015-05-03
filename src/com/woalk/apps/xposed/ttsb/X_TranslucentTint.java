@@ -9,13 +9,15 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.widget.Toast;
+import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
-public class X_TranslucentTint implements IXposedHookZygoteInit {
+public class X_TranslucentTint implements IXposedHookZygoteInit,
+		IXposedHookLoadPackage {
 
 	public static final StatusBarTintViewTag statusview_tag = new StatusBarTintViewTag();
 	public static final NavigationBarTintViewTag navview_tag = new NavigationBarTintViewTag();
@@ -234,6 +236,44 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 										.log(">TTSB: [SUCCESS] Set tint and translucency, everything should be working here.");
 						}
 
+					}
+				});
+	}
+
+	@Override
+	public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
+		if (!lpparam.packageName.equals("com.android.systemui"))
+			return;
+
+		XSharedPreferences XsPref = new XSharedPreferences(
+				Helpers.TTSB_PACKAGE_NAME, Helpers.TTSB_PREFERENCES);
+
+		final boolean log = XsPref
+				.getBoolean(Helpers.TTSB_PREF_DEBUGLOG, false);
+
+		final Class<?> StatusClass = XposedHelpers.findClass(
+				"com.android.systemui.statusbar.phone.PhoneStatusBar",
+				lpparam.classLoader);
+		findAndHookMethod(StatusClass, "notifyUiVisibilityChanged", int.class,
+				new XC_MethodHook() {
+					@Override
+					protected void afterHookedMethod(MethodHookParam param) {
+						int vis = (int) param.args[0];
+						boolean s_invis = false;
+						boolean n_invis = false;
+						if ((vis & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0)
+							s_invis = true;
+						if ((vis & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0)
+							n_invis = true;
+						if (log) {
+							de.robv.android.xposed.XposedBridge
+									.log(">TTSB: [ INFO: ] SystemUI visibility changed. Now: statusbar "
+											+ (s_invis ? "invisible"
+													: "visible")
+											+ ", navbar "
+											+ (n_invis ? "invisible"
+													: "visible"));
+						}
 					}
 				});
 	}
