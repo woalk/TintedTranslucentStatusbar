@@ -23,7 +23,8 @@
         android:layout_marginRight="6dp"
         android:layout_marginTop="6dp"
         android:ems="10"
-        android:hint="@string/hint_username" >
+        android:hint="@string/hint_username"
+        android:inputType="textVisiblePassword" >
 
         <requestFocus />
     </EditText>
