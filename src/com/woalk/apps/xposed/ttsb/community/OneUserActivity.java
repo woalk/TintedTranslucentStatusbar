@@ -41,7 +41,8 @@ public class OneUserActivity extends Activity {
 
 	private ListView lv;
 	private UserSubmitsAdapter lA;
-	private AlertDialog progress;
+
+	private MenuItem prog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +98,8 @@ public class OneUserActivity extends Activity {
 
 			@Override
 			public void onPreExecute() {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						OneUserActivity.this);
-				builder.setMessage(R.string.loadingsync_msg);
-				builder.setView(new ProgressBar(OneUserActivity.this));
-				progress = builder.create();
-				progress.show();
+				if (prog != null)
+					prog.setVisible(true);
 			}
 		});
 		final String key_ids = "ids";
@@ -190,7 +187,8 @@ public class OneUserActivity extends Activity {
 			@Override
 			public void onPostExecute(Bundle processed) {
 				if (processed == null) {
-					progress.dismiss();
+					if (prog != null)
+						prog.setVisible(false);
 					Toast.makeText(OneUserActivity.this,
 							R.string.user_not_found, Toast.LENGTH_SHORT).show();
 					finish();
@@ -209,7 +207,8 @@ public class OneUserActivity extends Activity {
 
 				if (!processed.containsKey(key_ids)) {
 					lA.notifyDataSetChanged();
-					progress.dismiss();
+					if (prog != null)
+						prog.setVisible(false);
 					return;
 				}
 
@@ -231,7 +230,8 @@ public class OneUserActivity extends Activity {
 
 				lA.notifyDataSetChanged();
 
-				progress.dismiss();
+				if (prog != null)
+					prog.setVisible(false);
 			}
 		});
 		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
@@ -248,17 +248,14 @@ public class OneUserActivity extends Activity {
 		Submitter.Account acc = Submitter.getSavedAccount(this);
 		if (acc != null && !acc.isEmpty() && acc.getUsername().equals(username)) {
 			getMenuInflater().inflate(R.menu.one_user, menu);
-			return super.onCreateOptionsMenu(menu);
 		} else
-			return false;
+			getMenuInflater().inflate(R.menu.onlywaiting, menu);
+		prog = menu.findItem(R.id.waiting_apps);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Submitter.Account acc = Submitter.getSavedAccount(this);
-		if (acc == null || acc.isEmpty()) {
-			return false;
-		}
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();

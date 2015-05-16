@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/waiting_apps" android:showAsAction="always" android:actionLayout="@layout/actionbar_wait" android:title="@string/str_waiting_apps" android:icon="@drawable/ic_action_import_export"></item>
     <item android:id="@+id/action_notifications" android:title="@string/str_action_notifications" android:showAsAction="ifRoom" android:icon="@drawable/ic_action_make_available_offline" android:enabled="true" android:visible="true"></item>
     <item android:id="@+id/action_goto_user" android:visible="true" android:enabled="true" android:showAsAction="never" android:title="@string/str_action_goto_user"></item>
     <item android:id="@+id/action_goto_my" android:visible="true" android:enabled="true" android:title="@string/str_action_goto_my" android:showAsAction="never"></item>

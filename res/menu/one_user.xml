@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.woalk.apps.xposed.ttsb.OneUserActivity" >
+    <item android:id="@+id/waiting_apps" android:showAsAction="always" android:actionLayout="@layout/actionbar_wait" android:title="@string/str_waiting_apps" android:icon="@drawable/ic_action_import_export"></item>
     <item android:id="@+id/action_edit_name" android:title="@string/str_action_edit_name" android:showAsAction="never"></item>
     <item android:id="@+id/action_new_pw" android:title="@string/str_action_new_pw" android:showAsAction="never"></item>
     <item android:id="@+id/action_logout" android:title="@string/str_action_logout" android:showAsAction="never"></item>

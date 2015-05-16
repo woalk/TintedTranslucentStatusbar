@@ -29,7 +29,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.woalk.apps.xposed.ttsb.Helpers;
 import com.woalk.apps.xposed.ttsb.R;
@@ -45,6 +44,8 @@ public class MyAppsActivity extends Activity {
 
 	protected List<ApplicationInfo> all_apps;
 	protected SortedMap<String, ApplicationInfo> all_apps_p = null;
+
+	private MenuItem prog;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -81,20 +82,14 @@ public class MyAppsActivity extends Activity {
 		getSyncables();
 	}
 
-	private AlertDialog progress;
-
 	protected void getSyncables() {
 		Q q = new Q(Database.DATABASE_URL);
 		q.setPreExecuteListener(new Q.PreExecuteListener() {
 
 			@Override
 			public void onPreExecute() {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						MyAppsActivity.this);
-				builder.setMessage(R.string.loadingsync_msg);
-				builder.setView(new ProgressBar(MyAppsActivity.this));
-				progress = builder.create();
-				progress.show();
+				if (prog != null)
+					prog.setVisible(true);
 			}
 		});
 		final String key_apps = "apps";
@@ -187,7 +182,8 @@ public class MyAppsActivity extends Activity {
 
 					lv.setFastScrollEnabled(true);
 				}
-				progress.dismiss();
+				if (prog != null)
+					prog.setVisible(false);
 			}
 		});
 		q.addNameValuePair(Database.POST_PIN, Database.COMMUNITY_PIN);
@@ -206,6 +202,7 @@ public class MyAppsActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.myapps, menu);
+		prog = menu.findItem(R.id.waiting_apps);
 		return super.onCreateOptionsMenu(menu);
 	}
 

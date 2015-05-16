@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/waiting_apps" android:showAsAction="always" android:actionLayout="@layout/actionbar_wait" android:title="@string/str_waiting_apps" android:icon="@drawable/ic_action_import_export"></item>  
+</menu>

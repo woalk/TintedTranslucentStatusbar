@@ -41,7 +41,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.woalk.apps.xposed.ttsb.Helpers;
@@ -55,6 +54,8 @@ public class AppDetailsActivity extends Activity {
 
 	protected ListView lv;
 	protected SubmitsAdapter lA;
+
+	protected MenuItem prog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,16 +112,11 @@ public class AppDetailsActivity extends Activity {
 
 	private class readDatabaseTask extends
 			AsyncTask<String, String, SubmitsAdapter> {
-		private AlertDialog progress;
 
 		@Override
 		protected void onPreExecute() {
-			AlertDialog.Builder builder = new AlertDialog.Builder(
-					AppDetailsActivity.this);
-			builder.setMessage(R.string.loadingsync_msg);
-			builder.setView(new ProgressBar(AppDetailsActivity.this));
-			progress = builder.create();
-			progress.show();
+			if (prog != null)
+				prog.setVisible(true);
 		}
 
 		@SuppressLint("SimpleDateFormat")
@@ -254,7 +250,8 @@ public class AppDetailsActivity extends Activity {
 
 				lv.setFastScrollEnabled(true);
 			}
-			progress.dismiss();
+			if (prog != null)
+				prog.setVisible(false);
 		}
 	}
 
@@ -268,6 +265,7 @@ public class AppDetailsActivity extends Activity {
 		menu.findItem(R.id.action_show_only_current_ver)
 				.setVisible(!isFiltered);
 		menu.findItem(R.id.action_show_all).setVisible(isFiltered);
+		prog = menu.findItem(R.id.waiting_apps);
 		return super.onCreateOptionsMenu(menu);
 	}
 

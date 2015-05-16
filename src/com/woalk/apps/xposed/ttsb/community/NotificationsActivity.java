@@ -7,12 +7,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.woalk.apps.xposed.ttsb.R;
 import com.woalk.apps.xposed.ttsb.community.SQL_Operations.Q;
@@ -21,6 +22,8 @@ public class NotificationsActivity extends Activity {
 
 	protected ListView lv;
 	protected NotificationsAdapter lA;
+
+	protected MenuItem prog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +51,11 @@ public class NotificationsActivity extends Activity {
 			q.addNameValuePair(Database.POST_FUNCTION,
 					Database.FUNCTION_GET_NOTIFICATIONS);
 			acc.addToQ(q);
-			final AlertDialog progress = new AlertDialog.Builder(this)
-					.setMessage(R.string.loadingsync_msg)
-					.setView(new ProgressBar(this)).create();
 			q.setPreExecuteListener(new Q.PreExecuteListener() {
 				@Override
 				public void onPreExecute() {
-					progress.show();
+					if (prog != null)
+						prog.setVisible(true);
 				}
 			});
 			final String KEY_NOTIFICATIONS = "notifs";
@@ -97,10 +98,19 @@ public class NotificationsActivity extends Activity {
 							.getParcelableArrayList(KEY_NOTIFICATIONS);
 					lA.addAll(notifs);
 					lA.notifyDataSetChanged();
-					progress.dismiss();
+					if (prog != null)
+						prog.setVisible(false);
 				}
 			});
 			q.exec();
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.onlywaiting, menu);
+		prog = menu.getItem(0);
+		return super.onCreateOptionsMenu(menu);
 	}
 }
