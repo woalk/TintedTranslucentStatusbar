@@ -6,14 +6,29 @@
     <string name="title_activity_settings">TTSB General Settings</string>
     <string name="str_action_settings">General Settings</string>
     <string name="str_action_update">Refresh list</string>
-    <string name="showActivityToasts">Show the Activity name on entering an activity to determine their names</string>
-    <string name="version_prefix">TTSB version</string>
-    <string name="tintengine_ver_prefix">Tinting engine version</string>
-    <string name="ui_ver_prefix">UI version</string>
-    <string name="database_prefix">App database last update</string>
-    <string name="never">-never-</string>
-    <string name="copyright_info">Developed by Woalk Software\nxda-developers user woalk</string>
-    <string name="thanks_to_info">Using code from SystemBarTint by Jeff Gilfelt\n(readyState Software Ltd) / Github user jgilfelt</string>
+
+    <string name="pref_cat_settings">Settings</string>
+    <string name="pref_activity_toast_title">Activity name Toast</string>
+    <string name="pref_activity_toast_summary">Show the Activity name on entering an activity to determine their names.</string>
+    <string name="pref_log_title">Enable debug logging</string>
+    <string name="pref_log_summary">Enable verbose log of every action of the Tinting Engine\'s actions, as well as logging the hierarchical content construction of an app to determine new user-defined layout options.</string>
+    <string name="pref_immersive_title">Immersive-aware</string>
+    <string name="pref_immersive_summary">Hide tint automatically when hiding StatusBar and NavigationBar. If not selected, a colored box may cover fullscreen content in TTSBed apps.</string>
+    <string name="pref_cat_info">Info</string>
+    <string name="pref_main_version">TTSB version</string>
+    <string name="pref_tintengine_version">Tinting engine version</string>
+    <string name="pref_ui_version">UI version</string>
+    <string name="pref_version_string">%1$s</string>
+    <string name="pref_version_unknown">Version unknown</string>
+    <string name="pref_copyright_info_title">Copyright information</string>
+    <string name="pref_copyright_info_summary">Developed by Woalk Software,
+        \nxda-developers &amp; GitHub user woalk.
+        \n\nUsing code from SystemBarTint by Jeff Gilfelt
+        \n(readyState Software Ltd) / Github user jgilfelt.</string>
+    <string name="pref_ad_translucentstyle_title">More customization options?</string>
+    <string name="pref_ad_translucentstyle_summary">Try “Translucent Style” Xposed module to make your translucent modes appear way different than usually!
+        \nClick here to open its download page on Xposed Repo.</string>
+
     <string name="title_activity_activities">Activities from</string>
     <string name="title_activity_easy_settings">Settings for</string>
     <string name="all_activities">All Activities</string>
@@ -75,20 +90,14 @@
     <string name="delete_pkg_msg">Do you want to delete all the settings for this app permanently?</string>
     <string name="settings_suggest_success">The selected settings have been published successfully in the Community.</string>
     <string name="suggestsync_msg">Please wait while TTSB sends your submit to the TTSB Community&#8230;</string>
-    <string name="suggest_qu_title">Submit this app settings</string>
-    <string name="suggest_qu_msg">Do you want to send your settings for this app to TTSB\'s suggestions, so Woalk can check and include them in the database?\n\n<i>No other data will be submitted or saved.</i></string>
     <string name="no_connection_e">Seems like you don\'t have an internet connection.\nCheck your Wifi or mobile data settings.</string>
-    <string name="str_check_log">Enable debug logging</string>
     <string name="no_settings_e">You must have settings set before you can edit advanced rules.</string>
     <string name="prefix_timestamp">Entry timestamp:</string>
-    <string name="advertise_translucentstyle_text">Do you want some more uniqueness in look of TTSB?\nTry “Translucent Style” Xposed module to make your translucent modes appear way different than usually!</string>
-    <string name="advertise_translucentstyle_btn">Get it from Xposed Repository!</string>
     <string name="title_activity_my_apps">Community: My apps</string>
     <string name="str_action_goto_user">Find user by name&#8230;</string>
     <string name="msg_action_goto_user">Please enter the user name you\'re looking for:</string>
     <string name="str_action_goto_my">My profile</string>
     <string name="title_versionselect">Select version</string>
-    <string name="msg_versionselect">There are multiple versions of this app in the TTSB Community. Please select the version you\'re looking for:</string>
     <string name="suffix_installedversion">(Currently installed)</string>
     <string name="prefix_community_appversion">Version </string>
     <string name="title_activity_app_details">Community: Submits for this app</string>
@@ -148,6 +157,5 @@
     <string name="signuo_your_pw">Your password has been autogenerated.\n<b>Please save it somewhere safe!</b>\n\nYour password is:</string>
     <string name="str_action_new_pw">Generate new password</string>
     <string name="msg_generate_pw">Do you really want to generate a new autogenerated password?</string>
-    <string name="str_check_immersive">Hide tint when hiding status bar/nav bar</string>
 
 </resources>

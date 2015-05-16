@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <PreferenceCategory android:title="@string/pref_cat_settings">
+        <CheckBoxPreference
+            android:key="com.woalk.apps.xposed.ttsb.SHOW_TOAST"
+            android:title="@string/pref_activity_toast_title"
+            android:summary="@string/pref_activity_toast_summary"
+            android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="com.woalk.apps.xposed.ttsb.DEBUGLOG"
+            android:title="@string/pref_log_title"
+            android:summary="@string/pref_log_summary"
+            android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="com.woalk.apps.xposed.ttsb.IMMERSIVE"
+            android:title="@string/pref_immersive_title"
+            android:summary="@string/pref_immersive_summary"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/pref_cat_info">
+        <Preference
+            android:key="main_ver"
+            android:title="@string/pref_main_version"
+            android:summary="@string/pref_version_unknown" />
+        <Preference
+            android:key="te_ver"
+            android:title="@string/pref_tintengine_version"
+            android:summary="@string/pref_version_unknown" />
+        <Preference
+            android:key="ui_ver"
+            android:title="@string/pref_ui_version"
+            android:summary="@string/pref_version_unknown" />
+        <Preference
+            android:key="copyright"
+            android:title="@string/pref_copyright_info_title"
+            android:summary="@string/pref_copyright_info_summary" />
+        <Preference
+            android:key="ad_translucentstyle"
+            android:title="@string/pref_ad_translucentstyle_title"
+            android:summary="@string/pref_ad_translucentstyle_summary" />
+        </PreferenceCategory>
+    
+</PreferenceScreen>
