@@ -1,7 +1,7 @@
 TintedTranslucentStatusbar
 ==========================
 Current build status for newest commit:
-[![Build Status](https://travis-ci.org/woalk/TintedTranslucentStatusbar.svg?branch=android-studio)](https://travis-ci.org/woalk/TintedTranslucentStatusbar)
+[![Build Status](https://travis-ci.org/woalk/TintedTranslucentStatusbar.svg?branch=master)](https://travis-ci.org/woalk/TintedTranslucentStatusbar)
 
 ##Xposed Framework Module for Android, to tint the statusbar on 4.4+ with gradient
 This module is a powerful style changer for Android 4.4.x and 5.0.x (and most likely 5.x),
