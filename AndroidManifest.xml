@@ -91,7 +91,7 @@
             android:value="\ 2.3" />
         <meta-data
             android:name="ui_version"
-            android:value="\ 2.3" />
+            android:value="\ 3.0" />
 
         <activity
             android:name="com.woalk.apps.xposed.ttsb.community.NotificationsActivity"
