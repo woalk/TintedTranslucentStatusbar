@@ -35,7 +35,10 @@ public class ViewSettingsPackDialog extends DialogFragment {
 
 	ViewSettingsPackDialogListener listener;
 
-	public ViewSettingsPackDialog(Settings.Setting.ViewSettingsPack vsetpk) {
+	public ViewSettingsPackDialog() {
+	}
+
+	public void setVsetpk(Settings.Setting.ViewSettingsPack vsetpk) {
 		this.vsetpk = vsetpk;
 	}
 

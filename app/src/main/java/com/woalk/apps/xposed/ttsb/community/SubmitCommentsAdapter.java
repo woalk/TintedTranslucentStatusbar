@@ -302,7 +302,7 @@ public class SubmitCommentsAdapter extends ArrayAdapter<String> {
 			return pbar;
 		} else {
 			View rowView;
-			if (view == null || view.getId() != R.layout.item_comment) {
+			if (view == null || view.getId() != R.id.item_comment) {
 				LayoutInflater inflater = context.getLayoutInflater();
 				rowView = inflater
 						.inflate(R.layout.item_comment, parent, false);

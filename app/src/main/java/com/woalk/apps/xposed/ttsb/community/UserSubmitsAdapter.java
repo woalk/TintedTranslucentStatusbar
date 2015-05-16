@@ -88,7 +88,7 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View view, ViewGroup parent) {
 		if (position == 0) {
 			View rowView;
-			if (view == null || view.getId() != R.layout.item_one_user)
+			if (view == null || view.getId() != R.id.item_one_user)
 				rowView = inflater.inflate(R.layout.item_one_user, parent,
 						false);
 			else
@@ -126,7 +126,7 @@ public class UserSubmitsAdapter extends ArrayAdapter<String> {
 		} else {
 			int pos = position; // for quick changing
 			View rowView;
-			if (view == null || view.getId() != R.layout.item_submit) {
+			if (view == null || view.getId() != R.id.item_submit) {
 				rowView = inflater.inflate(R.layout.item_submit, parent, false);
 			} else
 				rowView = view;

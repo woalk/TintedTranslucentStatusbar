@@ -136,7 +136,7 @@ public final class SQL_Operations {
 		}
 
 		/**
-		 * Adds a new NameValuePair to include in the {@link HTTPPost}.
+		 * Adds a new NameValuePair to include in the {@link HttpPost}.
 		 * 
 		 * @param name
 		 *            The name key.
@@ -246,7 +246,7 @@ public final class SQL_Operations {
 			/**
 			 * Called in the <b>worker</b> thread when the data is retrieved.
 			 * 
-			 * @param data
+			 * @param result
 			 *            The data that was loaded, to process it further.
 			 * @return A {@link Bundle} with data that is passed to
 			 *         {@link PostExecuteListener#onPostExecute(Bundle)} to make
@@ -336,7 +336,7 @@ public final class SQL_Operations {
 		}
 
 		/**
-		 * Adds a new NameValuePair to include in the {@link HTTPPost}.
+		 * Adds a new NameValuePair to include in the {@link HttpPost}.
 		 * 
 		 * @param name
 		 *            The name key.

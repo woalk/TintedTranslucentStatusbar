@@ -98,8 +98,8 @@ public class RulesActivity extends Activity {
 		btn_cview.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ViewSettingsDialog fragment = new ViewSettingsDialog(
-						setting.rules.cview);
+				ViewSettingsDialog fragment = new ViewSettingsDialog();
+				fragment.setVset(setting.rules.cview);
 				fragment.setTitle(R.string.cview_edit_title);
 				fragment.setViewSettingsDialogListener(new ViewSettingsDialog.ViewSettingsDialogListener() {
 					@Override
@@ -126,8 +126,8 @@ public class RulesActivity extends Activity {
 		btn_content.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ViewSettingsDialog fragment = new ViewSettingsDialog(
-						setting.rules.content);
+				ViewSettingsDialog fragment = new ViewSettingsDialog();
+				fragment.setVset(setting.rules.content);
 				fragment.setTitle(R.string.content_edit_title);
 				fragment.setViewSettingsDialogListener(new ViewSettingsDialog.ViewSettingsDialogListener() {
 					@Override
@@ -154,8 +154,8 @@ public class RulesActivity extends Activity {
 		btn_decview.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ViewSettingsDialog fragment = new ViewSettingsDialog(
-						setting.rules.decview);
+				ViewSettingsDialog fragment = new ViewSettingsDialog();
+				fragment.setVset(setting.rules.decview);
 				fragment.setTitle(R.string.decview_edit_title);
 				fragment.setViewSettingsDialogListener(new ViewSettingsDialog.ViewSettingsDialogListener() {
 					@Override
@@ -183,8 +183,8 @@ public class RulesActivity extends Activity {
 		btn_add.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ViewSettingsPackDialog fragment = new ViewSettingsPackDialog(
-						new Settings.Setting.ViewSettingsPack());
+				ViewSettingsPackDialog fragment = new ViewSettingsPackDialog();
+				fragment.setVsetpk(new Settings.Setting.ViewSettingsPack());
 				fragment.setViewSettingsDialogListener(new ViewSettingsPackDialog.ViewSettingsPackDialogListener() {
 					@Override
 					public void onDialogPositiveClick(
@@ -209,8 +209,8 @@ public class RulesActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				ViewSettingsPackDialog fragment = new ViewSettingsPackDialog(lA
-						.getItem(position));
+				ViewSettingsPackDialog fragment = new ViewSettingsPackDialog();
+				fragment.setVsetpk(lA.getItem(position));
 				final int pos = position;
 				fragment.setViewSettingsDialogListener(new ViewSettingsPackDialog.ViewSettingsPackDialogListener() {
 					@Override

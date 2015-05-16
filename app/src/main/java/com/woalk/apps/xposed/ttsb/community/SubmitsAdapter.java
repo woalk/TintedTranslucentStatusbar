@@ -100,7 +100,7 @@ public class SubmitsAdapter extends ArrayAdapter<String> {
 		} else {
 			int pos = position; // for quick changing
 			View rowView;
-			if (view == null || view.getId() != R.layout.item_submit) {
+			if (view == null || view.getId() != R.id.item_submit) {
 				LayoutInflater inflater = context.getLayoutInflater();
 				rowView = inflater.inflate(R.layout.item_submit, parent, false);
 			} else

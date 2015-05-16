@@ -393,9 +393,7 @@ public class X_TranslucentTint implements IXposedHookZygoteInit {
 	 * Sets all TTSB layout options from a ViewSettingsPack in an Activity.
 	 * ViewSettingsPack contains how to find the View in the Activity, and a
 	 * ViewSettings object that will be applied to this View.
-	 * 
-	 * @param currentActivity
-	 *            The Activity containing the View.
+	 *
 	 * @param vsetpk
 	 *            The options to apply.
 	 * @param landscape

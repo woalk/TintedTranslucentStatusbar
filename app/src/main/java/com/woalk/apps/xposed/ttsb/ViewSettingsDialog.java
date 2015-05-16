@@ -32,7 +32,10 @@ public class ViewSettingsDialog extends DialogFragment {
 
 	ViewSettingsDialogListener listener;
 
-	public ViewSettingsDialog(Settings.Setting.ViewSettings vset) {
+	public ViewSettingsDialog() {
+	}
+
+	public void setVset(Settings.Setting.ViewSettings vset) {
 		if (vset != null)
 			this.vset = vset;
 		else
