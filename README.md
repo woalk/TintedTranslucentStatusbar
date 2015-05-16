@@ -1,5 +1,6 @@
 TintedTranslucentStatusbar
 ==========================
+[![Build Status](https://travis-ci.org/woalk/TintedTranslucentStatusbar.svg?branch=android-studio)](https://travis-ci.org/woalk/TintedTranslucentStatusbar)
 
 Xposed Framework Module for Android, to tint the statusbar on KitKat with gradient
 
