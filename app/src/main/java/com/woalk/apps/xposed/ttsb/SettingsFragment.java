@@ -21,6 +21,7 @@ public class SettingsFragment extends PreferenceFragment {
 
 		getPreferenceManager().setSharedPreferencesMode(
 				Context.MODE_WORLD_READABLE);
+		getPreferenceManager().setSharedPreferencesName(Helpers.TTSB_PREFERENCES);
 		addPreferencesFromResource(R.xml.preferences);
 
 		PackageInfo pInfo = null;
